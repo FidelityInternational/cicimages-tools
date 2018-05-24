@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'support/ruby/lib/commandline'
+
+# rubocop:disable Style/MixinUsage
+include Commandline::Output
+# rubocop:enable Style/MixinUsage
+
+course_image = 'lvlup/ci_course'
+current_dir = Dir.pwd
+
+command = <<~COMMAND
+  docker run \
+  --privileged\
+  --network bridge \
+  -v #{current_dir}:/mnt/workdir \
+  -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+  -w /mnt/workdir \
+  #{course_image} \
+  ansible-playbook #{ARGV.join(' ')}
+COMMAND
+
+result = system(command)
+container_id = `docker ps -ql`.chomp.strip
+
+tag = "#{course_image}:#{container_id}"
+system "docker commit #{container_id} #{tag} > /dev/null"
+
+message = if result
+            ok "FINISHED - connect with: cic start #{tag}"
+          else
+            error "FAILED - connect with: cic start #{tag}"
+          end
+say message

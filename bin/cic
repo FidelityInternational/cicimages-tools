@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'thor'
+require 'open3'
+require_relative 'support/ruby/lib/commandline'
+require_relative 'support/ruby/lib/docker'
+
+class CIC < Thor
+  desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
+  option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
+  def connect(container_name)
+    command = "-it #{container_name} "
+    command << (options[:command] || 'bash -l')
+    docker_exec(command)
+  end
+
+  desc 'start', 'log in to a container and see what happened'
+  option :image_tag, desc: 'the docker image'
+  def start(image_tag)
+    container_name = normalise(image_tag)
+
+    say ok start_help_msg(container_name)
+    if container_exists?(container_name)
+      restart_container(container_name)
+    else
+      create_container(container_name, image_tag)
+    end
+  rescue SystemExit, Interrupt
+    remove_container(container_name)
+    say ok 'stopping container and removing container'
+  end
+
+  no_commands do
+    include Commandline::Output
+    include Docker
+
+    private
+
+    def start_help_msg(container_name)
+      <<-MESSAGE
+      Starting container: #{container_name}
+
+      connect to it with the 'cic connect' command.
+      E.g. cic connect #{container_name}
+      For more info run: cic help connect
+      MESSAGE
+    end
+
+    def normalise(string)
+      string.gsub(%r{[:/]}, '-')
+    end
+  end
+end
+
+CIC.start(ARGV)

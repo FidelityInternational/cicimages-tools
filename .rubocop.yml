@@ -1,0 +1,13 @@
+Metrics/LineLength:
+  Max: 120
+
+AllCops:
+  TargetRubyVersion: 2.4
+    - '.idea/**/*'
+    - '*.gemspec'
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 11
