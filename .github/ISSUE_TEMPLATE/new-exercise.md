@@ -28,7 +28,7 @@ about: Create a request for a new exercise to be added
 `# required - Following the tutorial, provide an exercise that requires the participant use the knowledge that they have gained through the intro and tutorial`
 
 ### Verification test
-`# Ideal but optional - We want participants to get used to the style of our exercises. I.e. There will be a test that they can execute that verifies that they have completed the exercise correctly. As part of the first exercise we should supply them a test.`
+`# Ideal but optional - Supply an acceptance test that participants can execute to validate that they have completed the exercise`
 
 
 ## Other
