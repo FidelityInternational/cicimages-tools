@@ -1,6 +1,6 @@
 ---
 name: New Exercise
-about: Describe this issue template's purpose here.
+about: Create a request for a new exercise to be added
 
 ---
 
