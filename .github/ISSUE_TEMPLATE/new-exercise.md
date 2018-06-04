@@ -9,6 +9,8 @@ about: Create a request for a new exercise to be added
 ## Brief
 `# required - A description of the topic and the need for an exercise`
 
+## Learning Objectives
+`# required - the learning objectives for participants that take this exercise`
 
 ## Suggested Exercise
 `# Optional - If clear direction on the content of the exercise is required then put it in here.`
@@ -16,7 +18,7 @@ about: Create a request for a new exercise to be added
 
 ## Acceptance Criteria:
 ### Introduction
-`# Required - Give a written explanation of the purpose of playbooks in Ansible`
+`# Required - Give a written explanation of the purpose of the topic this exercise is based on`
 
 
 ### Tutorial
