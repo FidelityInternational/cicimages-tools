@@ -16,7 +16,9 @@ For this material you will need the following:
  - git
  - Editor of your choice
 
-For convenience, there's a Vagrantfile in this repository. This will build a virtual machine on your local machine with the above requirements met. You can then use `vagrant ssh` to login to the machine, clone the repo following the instructions below and work on the exercises. 
+For convenience, there's a Vagrantfile in this repository. Running `vagrant up` while in the same directory will build a virtual machine with the above requirements met. You can then use `vagrant ssh` to login to the machine, clone the repo following the instructions below and work on the exercises. 
+
+Note: this Vagrantfile assumes you're using the 'virtualbox' provider. If you want to use a different provider, you'll need to modify the Vagrantfile before running `vagrant up`.
  
 ### Setting up 
 1. Clone the repo: `git clone https://github.com/lvl-up/ci-cd-training.git`
