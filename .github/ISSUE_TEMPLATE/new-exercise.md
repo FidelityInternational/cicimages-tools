@@ -17,9 +17,10 @@ about: Create a request for a new exercise to be added
 
 
 ## Acceptance Criteria:
+The readme to the exercise should include the following:
+
 ### Introduction
 `# Required - Give a written explanation of the purpose of the topic this exercise is based on`
-
 
 ### Tutorial
 `# Ideal but optional - this section should guided exercise showing participants how to use the subject of the exercise`
