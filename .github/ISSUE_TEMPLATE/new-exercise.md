@@ -11,6 +11,7 @@ about: Create a request for a new exercise to be added
 
 ## Learning Objectives
 `# required - the learning objectives for participants that take this exercise`
+- Pitfalls to be avoided.
 
 ## Suggested Exercise
 `# Optional - If clear direction on the content of the exercise is required then put it in here.`
