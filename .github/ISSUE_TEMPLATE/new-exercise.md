@@ -13,6 +13,12 @@ about: Create a request for a new exercise to be added
 `# required - the learning objectives for participants that take this exercise`
 - Pitfalls to be avoided.
 
+## Useful Terminology
+`# Optional - any key terms you intend to use in your exercise, if appropriate, could be listed here`
+
+## Required prequisite knowledge
+`# Optional - if knowledge of certain topics are needed to be able to complete this exercise, list them here. Provide links to information on these topics where possible`
+
 ## Suggested Exercise
 `# Optional - If clear direction on the content of the exercise is required then put it in here.`
 
