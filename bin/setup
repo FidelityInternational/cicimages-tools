@@ -7,6 +7,7 @@ source "${CURRENT_PATH}/support/sh/functions/output.sh"
 export PATH=${CURRENT_PATH}:$PATH
 say "$(ok "Setup path: ${CURRENT_PATH}")"
 
+source "${CURRENT_PATH}/install_ubuntu_prereqs"
 bash "${CURRENT_PATH}/configure_environment"
 
 
