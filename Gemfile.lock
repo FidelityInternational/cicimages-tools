@@ -329,6 +329,7 @@ PLATFORMS
 DEPENDENCIES
   colorize
   inspec
+  json
   rubocop
   thor
 

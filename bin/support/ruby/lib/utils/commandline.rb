@@ -4,6 +4,7 @@ require 'open3'
 module Commandline
   class Return
     attr_reader :stdout, :stderr, :exit_code
+
     def initialize(stdout:, stderr:, exit_code:)
       @stdout = normalise(stdout)
       @stderr = normalise(stderr)
@@ -23,7 +24,7 @@ module Commandline
 
         STDERR:
         #{stderr}
-OUTPUT
+      OUTPUT
     end
 
     private
@@ -34,35 +35,33 @@ OUTPUT
   end
 
   def run(command)
-    stdout, stderr, status = Open3.capture3(command)
+    stdout, stderr, status = Open3.capture3("bash -c '#{command}'")
     Return.new(stdout: stdout, stderr: stderr, exit_code: status.exitstatus)
   end
 
   module Output
+    def output
+      @output ||= STDOUT
+    end
+
     def say(msg)
-      puts msg
+      output.puts msg
     end
 
     def ok(text)
       lines = text.lines
       prefix = '[OK] '
-      padding = prefix.size
       message = "#{prefix}#{lines[0].strip}\n"
-      lines[1..-1].each do |line|
-        line = line.chomp.strip
-        message << "#{line.rjust(line.length + padding)}\n"
+      lines[1..-1].each_with_index do |line, index|
+        line = line.strip
+        line = line.rjust(line.length + prefix.size)
+        message << line.prepend("\n") unless index.zero?
       end
       message.green
     end
 
     def error(text)
       "[ERROR] #{text}".red
-    end
-
-    private
-
-    def no_colour
-      '\033[0m'
     end
   end
 end

@@ -5,9 +5,19 @@ AllCops:
   TargetRubyVersion: 2.4
     - '.idea/**/*'
     - '*.gemspec'
+  Exclude:
+    - '**/.vagrant/**'
 
 Style/Documentation:
   Enabled: false
 
 Metrics/MethodLength:
   Max: 11
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/*_spec.rb'

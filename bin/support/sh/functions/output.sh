@@ -7,10 +7,10 @@ function red(){
 }
 
 function green(){
-    local red='\033[0;32m'
+    local green='\033[0;32m'
     local no_colour='\033[0m'
     local text=$1
-    echo "${red}${text}${no_colour}"
+    echo "${green}${text}${no_colour}"
 }
 
 function error() {

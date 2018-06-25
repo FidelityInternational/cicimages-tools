@@ -3,10 +3,10 @@
 current_dir = Dir.pwd
 command = <<~COMMAND
   docker run \
-  --network bridge \
+  --network cic \
   -v #{current_dir}:/mnt/workdir \
   -w /mnt/workdir \
   lvlup/ci_course \
-  ansible #{ARGV.join(' ')}
+  pytest #{ARGV.join(' ')}
 COMMAND
-system(command)
+exit 1 unless system(command)

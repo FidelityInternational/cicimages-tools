@@ -1,0 +1,13 @@
+---
+- name: Setup a webserver.
+  hosts: webserver
+  become: sudo
+  tasks:
+    - name: install apache2
+      apt: name=apache2 update_cache=yes state=latest
+
+    - name: Start service apache2, if not running
+      service:
+        name: apache2
+        enabled: yes
+        state: started

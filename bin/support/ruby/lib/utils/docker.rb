@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'commandline'
+require 'json'
 module Docker
   class Error < StandardError
     include Commandline::Output
@@ -16,8 +17,14 @@ module Docker
     false
   end
 
+  def docker_container_running?(name)
+    result = JSON(run("docker inspect #{name}").stdout, symbolize_names: true)
+    return false if result.empty?
+    result.first[:State][:Status] == 'running'
+  end
+
   def container_id(container_name)
-    id = docker(%(container ps -aq --filter "name=#{container_name}")).stdout
+    id = docker(%(container ps -q --filter "name=#{container_name}")).stdout
     id.empty? ? raise(Error, "container with name #{container_name} does not exist") : id
   end
 
@@ -31,7 +38,10 @@ module Docker
   end
 
   def create_container(container_name, image_tag)
-    docker("run --privileged --name #{container_name} -v /sys/fs/cgroup:/sys/fs/cgroup:ro #{image_tag} /sbin/init")
+    network = 'cic'
+    volume_mapping = '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    cmd = '/sbin/init'
+    docker("run --network #{network} -d --privileged --name #{container_name} -v #{volume_mapping} #{image_tag} #{cmd}")
   end
 
   def docker_exec(command)

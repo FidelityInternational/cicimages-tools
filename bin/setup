@@ -10,4 +10,4 @@ say "$(ok "Setup path: ${CURRENT_PATH}")"
 source "${CURRENT_PATH}/install_ubuntu_prereqs"
 bash "${CURRENT_PATH}/configure_environment"
 
-
+docker network create cic
