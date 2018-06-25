@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require_relative '../lib/commands/cic'
+
+Commands::CIC.start(ARGV)

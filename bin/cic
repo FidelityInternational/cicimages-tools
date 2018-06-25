@@ -1,4 +1,25 @@
-#!/usr/bin/env ruby
-require_relative 'support/ruby/lib/commands/cic'
+#!/usr/bin/env bash
 
-Commands::CIC.start(ARGV)
+subcommand=$1
+image=$2
+switch=$3
+container_command=$4
+
+# shellcheck disable=SC2016
+rbenv_init='eval "$(rbenv init -)"'
+command="${rbenv_init} && /cic/bin/support/ruby/bin/cic ${subcommand} ${image} ${switch}"
+
+if [ "${container_command}" != "" ]; then
+    command="${command} '${container_command}'"
+fi
+
+options=""
+if [ "${subcommand}" == "connect" ]; then
+    options='-it'
+fi
+
+docker run ${options} \
+    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    lvlup/ci_course \
+    /bin/bash -c "${command}"

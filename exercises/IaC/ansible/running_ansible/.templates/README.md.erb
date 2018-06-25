@@ -125,7 +125,7 @@ In just a second or so the test has validated that:
 Now that the acceptance tests are passing we can be very confident that the system has been configured as required.
 
 #### Manual inspection
-Using the actual container name given from the `cic start` command run: `<%=command(cic_connect_command) %>`
+Using the actual container name given from the `cic start` command run: `<%= cic_connect_command %>`
 
 You will now be in a bash shell on the container itself. From here run: `curl localhost:80` to see that apache is alive and well.
 
