@@ -9,8 +9,13 @@ sudo apt-get -y install git
 sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
 
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash
+
+# shellcheck disable=SC2016
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+# shellcheck disable=SC2016
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+
+# shellcheck disable=SC1090
 source ~/.bashrc
 
 rbenv install 2.4.3
