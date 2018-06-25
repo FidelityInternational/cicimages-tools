@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# shellcheck source=/dev/null
+# shellcheck source=bin/support/sh/functions/output.sh
 source "${CURRENT_PATH}/support/sh/functions/output.sh"
 
 export PATH=${CURRENT_PATH}:$PATH
 say "$(ok "Setup path: ${CURRENT_PATH}")"
 
+# shellcheck source=bin/install_ubuntu_prereqs
 source "${CURRENT_PATH}/install_ubuntu_prereqs"
+
 bash "${CURRENT_PATH}/configure_environment"
 
 docker network create cic
