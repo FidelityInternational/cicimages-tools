@@ -1,12 +1,11 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
 
-current_dir = Dir.pwd
-command = <<~COMMAND
-  docker run \
+current_dir=$(pwd)
+
+docker run \
   --network cic \
-  -v #{current_dir}:/mnt/workdir \
+  -v "${current_dir}:/mnt/workdir" \
   -w /mnt/workdir \
   lvlup/ci_course \
-  pytest #{ARGV.join(' ')}
-COMMAND
-exit 1 unless system(command)
+  pytest "$@"
+

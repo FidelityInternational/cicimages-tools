@@ -1,36 +1,25 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-require_relative 'support/ruby/lib/utils/commandline'
+# shellcheck source=bin/support/sh/functions/output.sh
+source "${CURRENT_PATH}/support/sh/functions/output.sh"
 
-# rubocop:disable Style/MixinUsage
-include Commandline::Output
-# rubocop:enable Style/MixinUsage
+course_image='lvlup/ci_course'
+current_dir=$(pwd)
 
-course_image = 'lvlup/ci_course'
-current_dir = Dir.pwd
+if docker run --privileged \
+    --network cic \
+    -v "${current_dir}:/mnt/workdir" \
+    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    -w /mnt/workdir \
+    ${course_image} ansible-playbook "$@"
+then
+    container_id=$(docker ps -ql)
 
-command = <<~COMMAND
-  docker run \
-  --privileged\
-  --network cic \
-  -v #{current_dir}:/mnt/workdir \
-  -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-  -w /mnt/workdir \
-  #{course_image} \
-  ansible-playbook #{ARGV.join(' ')}
-COMMAND
+    tag="${course_image}:${container_id}"
+    docker commit "${container_id}" "${tag}" > /dev/null
 
-result = system(command)
-container_id = `docker ps -ql`.chomp.strip
-
-tag = "#{course_image}:#{container_id}"
-system "docker commit #{container_id} #{tag} > /dev/null"
-
-message = if result
-            ok "FINISHED - connect with: cic start #{tag}"
-          else
-            error "FAILED - connect with: cic start #{tag}"
-          end
-say message
-
-exit 1 unless result
+    say "$(ok "FINISHED - start container with: cic start ${tag}")"
+else
+    exit 1
+fi

@@ -67,8 +67,7 @@ changed: [localhost]
 PLAY RECAP *********************************************************************
 localhost                  : ok=3    changed=2    unreachable=0    failed=0   
 
-[OK] FINISHED - connect with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
-
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
 ```
 
 > So what just happened?
@@ -108,8 +107,7 @@ localhost                  : ok=3    changed=2    unreachable=0    failed=0
 
 > What about the last line of output?
 ```
-[OK] FINISHED - connect with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
-
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
 ```
 
 This line wasn't outputed by Ansible itself, but actually the courseware supporting this tutorial. This line gives you the command that you can use to start to the temporary container that was created on your behalf for the Ansible to run against.
@@ -171,7 +169,7 @@ collected 1 item
 
 tests/apache_ansible_test.py .                                           [100%]
 
-=========================== 1 passed in 1.08 seconds ===========================
+=========================== 1 passed in 1.18 seconds ===========================
 ```
 
 In just a second or so the test has validated that:

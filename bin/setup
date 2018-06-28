@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
+set -e
+
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # shellcheck source=bin/support/sh/functions/output.sh
 source "${CURRENT_PATH}/support/sh/functions/output.sh"
 
-export PATH=${CURRENT_PATH}:$PATH
+say "$(ok "Installing OS prerequisites for Ubuntu")"
+bash "${CURRENT_PATH}/support/sh/install_docker_ubuntu.sh"
+
+say "$(ok "Fetching course images from dockerhub")"
+if ! (docker pull lvlup/ci_course  && docker pull codeclimate/codeclimate)
+then
+    say "$(error "Failed to pull course images")"
+    exit 1
+fi
+
+say "$(ok "Setting up docker network")"
+docker network create cic
+
+# shellcheck source=.env
+source "${CURRENT_PATH}/../.env"
 say "$(ok "Setup path: ${CURRENT_PATH}")"
 
-# shellcheck source=bin/install_ubuntu_prereqs
-source "${CURRENT_PATH}/install_ubuntu_prereqs"
-
-bash "${CURRENT_PATH}/configure_environment"
-
-docker network create cic
+say "$(ok "environment setup complete :)")"

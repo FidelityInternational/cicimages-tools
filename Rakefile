@@ -29,12 +29,13 @@ task :rubocop do
 end
 
 desc 'generate project exercises from .templates/*.erb templates'
-task :generate_exercises do
+task :generate_exercises, :mode do |_task, args|
+  quiet = args[:mode] != 'verbose'
   begin
     current_dir = Dir.pwd
     Dir["#{__dir__}/exercises/**/.templates"].each do |templates_dir|
       Dir.chdir("#{templates_dir}/..")
-      Exercise::Command.new([], { quiet: true }, {}).generate
+      Exercise::Command.new([], { quiet: quiet }, {}).generate
     end
   ensure
     Dir.chdir(current_dir)
