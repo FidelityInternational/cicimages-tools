@@ -2,131 +2,27 @@
 <module type="RUBY_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/bin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/.pytest_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/.vagrant" />
+    </content>
     <orderEntry type="jdk" jdkName="RVM: ruby-2.4.3 [ci-cd-training]" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="addressable (v2.5.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ast (v2.4.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="aws-sdk (v2.11.52, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="aws-sdk-core (v2.11.52, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="aws-sdk-resources (v2.11.52, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="aws-sigv4 (v1.0.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="azure_mgmt_resources (v0.16.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.16.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="coderay (v1.1.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="colorize (v0.8.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.0.5, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="declarative (v0.0.10, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="declarative-option (v0.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="digest-crc (v0.4.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="docile (v1.3.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="docker-api (v1.34.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20180417, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="erubis (v2.7.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="excon (v0.62.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="faraday (v0.15.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="faraday-cookie_jar (v0.0.6, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="faraday_middleware (v0.12.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="ffi (v1.9.23, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-api-client (v0.19.8, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud (v0.51.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-bigquery (v1.4.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-bigquery-data_transfer (v0.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-container (v0.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-core (v1.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-dataproc (v0.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-datastore (v1.4.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-dlp (v0.4.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-dns (v0.28.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-env (v1.0.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-error_reporting (v0.30.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-firestore (v0.21.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-language (v0.30.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-logging (v1.5.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-monitoring (v0.28.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-os_login (v0.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-pubsub (v0.30.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-resource_manager (v0.29.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-spanner (v1.4.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-speech (v0.29.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-storage (v1.12.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-trace (v0.33.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-translate (v1.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-video_intelligence (v1.0.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-cloud-vision (v0.28.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-gax (v1.0.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="google-protobuf (v3.5.1.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="googleapis-common-protos (v1.3.7, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="googleapis-common-protos-types (v1.0.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="googleauth (v0.6.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="grpc (v1.11.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="grpc-google-iam-v1 (v0.6.9, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="gssapi (v1.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="gyoku (v1.3.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="hashie (v3.5.7, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="htmlentities (v4.3.4, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="http-cookie (v1.0.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="httpclient (v2.8.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="inifile (v3.0.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="inspec (v2.1.81, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="jmespath (v1.4.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="json (v2.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="jwt (v2.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="little-plugger (v1.1.4, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="logging (v2.2.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="memoist (v0.16.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="method_source (v0.9.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="mime-types (v3.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="mime-types-data (v3.2016.0521, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="mixlib-log (v2.0.4, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="mixlib-shellout (v2.3.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="ms_rest (v0.7.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="ms_rest_azure (v0.10.7, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.13.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="multipart-post (v2.0.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="net-scp (v1.2.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="net-ssh (v4.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="nori (v2.6.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="os (v0.9.6, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="parallel (v1.12.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="parser (v2.5.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="parslet (v1.8.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="powerpack (v0.1.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="pry (v0.11.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="public_suffix (v3.0.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rainbow (v3.0.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rake (v12.3.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="representable (v3.0.4, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="retriable (v3.1.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rly (v0.2.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec (v3.7.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-core (v3.7.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v3.7.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-its (v1.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.7.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.7.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rubocop (v0.56.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.9.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rubyntlm (v0.6.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.2.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="semverse (v2.0.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="signet (v0.8.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="simplecov (v0.16.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="simplecov-html (v0.10.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="sslshake (v1.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="stackdriver-core (v1.3.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="thor (v0.20.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="timeliness (v0.3.8, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="tomlrb (v1.2.6, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="train (v1.4.11, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="uber (v0.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="unf (v0.1.4, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="unf_ext (v0.0.7.5, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v1.3.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="winrm (v2.2.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="winrm-fs (v1.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="zonefile (v1.06, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
   </component>
 </module>

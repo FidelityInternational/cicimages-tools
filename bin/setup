@@ -5,19 +5,33 @@ CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # shellcheck source=bin/support/sh/functions/output.sh
 source "${CURRENT_PATH}/support/sh/functions/output.sh"
+# shellcheck source=bin/support/sh/functions/cic_docker.sh
+source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
-say "$(ok "Installing OS prerequisites for Ubuntu")"
-bash "${CURRENT_PATH}/support/sh/install_docker_ubuntu.sh"
+if ! which docker
+then
+    say "$(ok "Installing docker")"
+    bash "${CURRENT_PATH}/support/sh/install_docker_ubuntu.sh"
+fi
 
 say "$(ok "Fetching course images from dockerhub")"
-if ! (docker pull lvlup/ci_course  && docker pull codeclimate/codeclimate)
+if ! (docker pull "$(cic_image)"  && docker pull codeclimate/codeclimate)
 then
     say "$(error "Failed to pull course images")"
     exit 1
 fi
 
-say "$(ok "Setting up docker network")"
-docker network create cic
+if ! (docker network inspect "$(cic_network)" > /dev/null)
+then
+    say "$(ok "Setting up docker network")"
+    docker network create "$(cic_network)"
+fi
+
+if ! (docker container inspect "$(cic_volumes_container)" > /dev/null)
+then
+    say "$(ok "Setting up docker shared volume container")"
+    docker create -v /vols --name "$(cic_volumes_container)" alpine:3.4 /bin/true
+fi
 
 # shellcheck source=.env
 source "${CURRENT_PATH}/../.env"
