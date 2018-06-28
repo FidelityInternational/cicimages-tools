@@ -1,43 +1,20 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift("#{__dir__}/bin/support/ruby/lib")
-require 'commands/exercise/command'
-require 'utils/commandline'
+require 'bundler'
+Bundler.require :development, :default
 
-module Lint
-  extend Commandline
+import "#{__dir__}/tasks/lint.rake"
+import "#{__dir__}/tasks/exercises.rake"
 
-  def self.run_linter(linter)
-    result = run "codeclimate analyze -e #{linter} ."
-    puts result.stdout
-    raise unless result.stdout.include? 'Found 0 issues'
-  end
+RSpec::Core::RakeTask.new(:spec) do
+  ENV['COVERAGE'] = 'true'
 end
 
-default_tasks = %i[generate_exercises rubocop shellcheck]
+task :clean do
+  require 'fileutils'
+  FileUtils.rm_rf("#{__dir__}/coverage")
+end
+
+default_tasks = %i[clean spec generate_exercises rubocop shellcheck coverage_check]
 desc default_tasks.join(',')
 task default: default_tasks
-
-desc 'lint project shellscripts'
-task :shellcheck do
-  Lint.run_linter(:shellcheck)
-end
-
-desc 'lint project ruby source code'
-task :rubocop do
-  Lint.run_linter(:rubocop)
-end
-
-desc 'generate project exercises from .templates/*.erb templates'
-task :generate_exercises, :mode do |_task, args|
-  quiet = args[:mode] != 'verbose'
-  begin
-    current_dir = Dir.pwd
-    Dir["#{__dir__}/exercises/**/.templates"].each do |templates_dir|
-      Dir.chdir("#{templates_dir}/..")
-      Exercise::Command.new([], { quiet: quiet }, {}).generate
-    end
-  ensure
-    Dir.chdir(current_dir)
-  end
-end

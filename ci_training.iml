@@ -21,6 +21,7 @@
     <orderEntry type="library" scope="PROVIDED" name="declarative-option (v0.1.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="digest-crc (v0.4.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="docile (v1.3.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="docker-api (v1.34.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20180417, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubis (v2.7.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
@@ -96,6 +97,7 @@
     <orderEntry type="library" scope="PROVIDED" name="pry (v0.11.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="public_suffix (v3.0.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rainbow (v3.0.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rake (v12.3.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="representable (v3.0.4, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="retriable (v3.1.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rly (v0.2.3, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
@@ -111,6 +113,8 @@
     <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.2.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="semverse (v2.0.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="signet (v0.8.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="simplecov (v0.16.1, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="simplecov-html (v0.10.2, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sslshake (v1.2.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stackdriver-core (v1.3.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="thor (v0.20.0, RVM: ruby-2.4.3 [ci-cd-training]) [gem]" level="application" />
