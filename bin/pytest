@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
-current_dir=$(pwd)
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=bin/support/sh/functions/cic_docker.sh
+source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
+
+
+volume_path="$(volume_path pytest)"
+copy_to_cic_volume "$(pwd)" "${volume_path}"
 
 docker run \
-  --network cic \
-  -v "${current_dir}:/mnt/workdir" \
-  -w /mnt/workdir \
-  lvlup/ci_course \
+  --network "$(cic_network)" \
+  --volumes-from "$(cic_volumes_container)" \
+  -w "${volume_path}" \
+   "$(cic_image)" \
   pytest "$@"
 

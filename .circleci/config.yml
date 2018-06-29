@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - checkout
-       - setup_remote_docker
+      - setup_remote_docker
 
       # Download and cache dependencies
       - restore_cache:
@@ -26,7 +26,8 @@ jobs:
           - v1-dependencies-{{ checksum "Gemfile.lock" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
+      - run: bin/setup
+      - run: echo 'export PATH="$(pwd)/bin:$PATH"' >> $BASH_ENV
       - run:
           name: install dependencies
           command: |
@@ -38,7 +39,8 @@ jobs:
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
       # build
-      - run: rake
+      - run: bundle exec rake
+
 
 
       # collect reports
