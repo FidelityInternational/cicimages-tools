@@ -36,8 +36,6 @@ module Exercise
   end
 
   module Instructions
-    class CommandError < StandardError
-    end
 
     include Commandline
     include Commandline::Output

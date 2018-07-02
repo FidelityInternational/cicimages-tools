@@ -17,7 +17,7 @@ module Exercise
       context 'command fails' do
         it 'raises an error' do
           cmd = 'bad command'
-          expect{subject.command(cmd)}.to raise_error(described_class::CommandError)
+          expect{subject.command(cmd)}.to raise_error(CommandError)
         end
       end
 

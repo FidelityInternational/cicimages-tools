@@ -5,6 +5,9 @@ require_relative 'instructions'
 require_relative 'render_methods'
 
 module Exercise
+  class CommandError < StandardError
+  end
+
   class Command < Thor
     BANNER =
 
