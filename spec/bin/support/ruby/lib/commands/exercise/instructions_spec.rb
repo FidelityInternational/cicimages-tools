@@ -1,7 +1,6 @@
 module Exercise
   describe Instructions do
-
-    let(:output){StringIO.new}
+    let(:output) { StringIO.new }
     subject do
       Object.new.tap do |o|
         o.extend(described_class)
@@ -15,9 +14,16 @@ module Exercise
 
     describe '#command' do
       context 'command fails' do
+        let(:cmd) { 'bad command' }
+
         it 'raises an error' do
-          cmd = 'bad command'
-          expect{subject.command(cmd)}.to raise_error(CommandError)
+          expect { subject.command(cmd) }.to raise_error(CommandError)
+        end
+
+        context 'fail_on_error: false' do
+          it 'does not raise an error' do
+            expect { subject.command(cmd, fail_on_error: false) }.to_not raise_error
+          end
         end
       end
 
@@ -28,11 +34,9 @@ module Exercise
     end
 
     describe '#test_command' do
-
-      let(:cmd){'echo hello'}
+      let(:cmd) { 'echo hello' }
 
       context 'not quiet' do
-
         before do
           allow(subject).to receive(:quiet?).and_return(true)
         end
@@ -52,7 +56,7 @@ module Exercise
         end
 
         context 'command fails' do
-          let(:cmd){'bad command'}
+          let(:cmd) { 'bad command' }
           it 'says there has been an error' do
             subject.test_command(cmd)
             expect(output.string).to include("ERROR] failed to run: #{cmd}")
@@ -73,13 +77,31 @@ module Exercise
         end
 
         context 'command fails' do
-          let(:cmd){'bad command'}
+          let(:cmd) { 'bad command' }
           it 'says there has been an error' do
             subject.test_command(cmd)
             expect(output.string).to include("ERROR] failed to run: #{cmd}")
           end
         end
+      end
+    end
 
+    describe '#write_to_file' do
+      require 'tmpdir'
+      around do |spec|
+        Dir.mktmpdir do |path|
+          Dir.chdir(path) do
+            spec.call
+          end
+        end
+      end
+
+      it 'writes content to the given path' do
+        expected_path = 'a/path/file.txt'
+        expected_content = 'content'
+        expect(subject.write_to_file(expected_path, expected_content)).to eq(expected_path)
+
+        expect(File.read(expected_path)).to eq(expected_content)
       end
     end
   end

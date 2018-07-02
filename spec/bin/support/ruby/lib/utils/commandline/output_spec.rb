@@ -1,8 +1,7 @@
 module Commandline
   describe Output do
-
     subject do
-      Object.new.tap {|o| o.extend(described_class)}
+      Object.new.tap { |o| o.extend(described_class) }
     end
     describe '#output' do
       it 'defaults to STDOUT' do
@@ -11,12 +10,12 @@ module Commandline
     end
 
     describe '#say' do
-      let(:output) {StringIO.new('')}
+      let(:output) { StringIO.new('') }
       subject do
         Class.new do
           include Output
 
-          def initialize output
+          def initialize(output)
             @output = output
           end
         end.new(output)
@@ -49,17 +48,16 @@ module Commandline
     describe '#prefix' do
       context 'one line in message' do
         it 'a appends the prefix' do
-
           message = 'message'
-          expect(subject.prefix(message, :prefix)).to eq("#{:prefix}#{message}\n")
+          expect(subject.prefix(message, :prefix)).to eq("prefix#{message}\n")
         end
       end
 
       context 'multiple lines in message' do
         it 'tabs in the message' do
-          expected_message =<<-MESSAGE
-prefixLine 1
-      Line 2
+          expected_message = <<~MESSAGE
+            prefixLine 1
+                  Line 2
           MESSAGE
 
           text = <<-TEXT

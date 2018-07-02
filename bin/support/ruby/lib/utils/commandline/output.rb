@@ -23,11 +23,7 @@ module Commandline
         line = line.strip.chomp
         line = line.rjust(line.length + prefix.size)
 
-        if index.zero?
-          message << line
-        else
-          message << line.prepend("\n")
-        end
+        message << (index.zero? ? line : line.prepend("\n"))
       end
       message
     end

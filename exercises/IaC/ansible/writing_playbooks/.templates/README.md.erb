@@ -13,191 +13,222 @@ Ansible has lots of features that you will learn about in future exercises. The 
     - configure a webserver and deploy a website
     - successfully pass a ready-made set of functional tests.
 
-# Useful terms:
+## Useful terms:
 - Inventory - these are the hosts that the Ansible will run against. Hosts can be provided in a number of different ways. For now it is not essential to know more than this but if you're interested in finding out more [click here](http://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
 - Playbook - The term playbook comes from sports, a playbook contains the named plays or moves that a team might execute in a game.
 
-## Exercise
-Your team of devoted and talented web developers have spent several weeks beavering away on possibly the most advanced, inspiring and responsive website ever created.
-They have now passed the website code over to your for deployment.
-The exercise `running_ansible` which you may have already completed provided you with a ready-made template for setting up a host running apache2, but just hosted the default Ubuntu webpage.
-You now need to write a playbook which will take the website code your developers have provided you with and deploy it onto a webserver.
-The webserver_tests.py file is provided with a test which will ensure that you have completed the exercise correctly and deployed your web developers site in a functional state.
 
-The website code that your developers have provided you with can be found in the 'resources' folder.
-You will need to create a playbook which will:
-  - install apache2 (hint: The playbook from the 'running_ansible' exercise may help here)
-  - ensure that the service is started and running (hint: The playbook from the 'running_ansible' exercise helps with this too)
-  - copies the files from the 'resources' directory to the directory '/var/www/html' on the webserver
-
-### start here
-For this exercise the acceptance tests have been provided. Tests live (somewhat unsurprisingly) inside the 'tests' folder.
-
-You can run the tests by executing the 'pytest' command
-`<%= command('pytest') %>`
-
-You should see the following output which shows us that there were two tests attempted, and two tests which failed:
-```
-<%= last_command_output %>
-```
-
-Let's create our first playbook now. 
-Create a file inside the `ansible` folder called `webserver.yml`
-The exercise 'running_ansble' (you probably already completed this one) contained a playbook which installed apache2 and configured it to start and run. You will need exactly the same steps to install and enable apache within your webserver.yml playbook too. Below is the code from the apache2 playbook we used last time.
-
+## Introduction to YAML
+Before we go any further let's break down the anatomy of playbooks. Playbooks are written in [YAML](http://yaml.org/spec/1.2/spec.html). YAML used in playbooks typically takes the following form:
 ```YAML
 ---
+# Comment
+- attribute1: name
+  attribute2:
+    - item1_attribute1: value
+    - item2_attribute1: value
+```
+
+- `---` : this denotes the start of a file and is actually optional in both YAML and Playbooks. We've used it here because it is something that
+ is quite often seen in Playbooks, but is present by convention rather than requirement.
+- `#` Anything following a hash symbol is a comment meant human readers. Therefore, comments are not interpreted.
+- `-` a single hyphen denotes a list. Content that is on the same line and imeditately tabbed in on the following lines is a member of that list entry. In the case of the example above. the YAML consist of a single item list. That item has attributes, one of which (attribute2), is itself a list that contains 2 items.
+- `attribute_name:value` entries followed by a colon `:` are called attributes, the value assigned to the attribute follows the colon. Value's can be simple values or complex entities themselves. For example 'attribute2' has a list assigned as it's value.
+
+**Note:** YAML is white space sensitive. Data belonging to entities must be tabbed/spaced in by the same amount in order to be valid.
+
+There is a lot more that could be said about YAML, but the above is enough for us to be able to write pretty much everything we need to write in most Ansible playbooks.
+
+The following is an example Playbook that could be used to install a webserver.
+
+
+```YAML
+<%= yaml =<<YAML
+---
+# Playbook containing a single play
 - name: Setup a webserver.
   hosts: webserver
   become: sudo
   tasks:
     - name: install apache2
-      apt: name=apache2 update_cache=yes state=latest
+      apt:
+        name: apache2
+        update_cache: yes
+        state: latest
 
     - name: Start service apache2, if not running
       service:
         name: apache2
         enabled: yes
         state: started
+YAML
+%>
+
 ```
 
-Once you have this code inside your `webserver.yml` try executing the playbook with the following command.
+Given what we now know about YAML, what can we say about the YAML for this PlayBook?
+- 1 play: At the top level the YAML represents a single item list. This single entry, unsurprisingly, is called a play. Playbooks can include one or more plays
+- `name:` An attribute called 'name' is used to name plays. In the case of our play, it is called 'Setup a webserver'.
+- `tasks:` The play consists of 2 tasks. These are given in the list assigned to the tasks attribute.
 
-`ansible-playbook ansible/webserver.yml`
+We are using just a few of the attributes that Ansible provides for customising plays. If you are interested in find out about the others, take a [look here](https://docs.ansible.com/ansible/2.5/reference_appendices/playbooks_keywords.html#play). The list is a long one so don't worry about remembering everything. Do however bookmark this URL to help you with things that might come up further down the line as you get in to using Ansible more deeply.
 
-<output of ansible command goes here>
-
-CIC Start the container you just created, and note the container ID.
-
-Run the tests to see if you have successfully completed the exercise now.
-
-To run this script, execute the following command: `<%= command("pytest --ansible-host #{container_id}") %>`
-
-This should output the following:
-```
-<%= anonymise(last_command_output)%>
-```
-
-You will see that only one of the two tests passed. 
-The first of the tests checked to see if apache2 was installed, running and listening on port 80.
-The second of the tests checks that the website content being served was correct - This test failed because apache did not serve a page which contained the words 'High Five'
-
-
-Ansible contains a few different ways of copying and transferring files from place to place. For this exercise we recommend that you look into the 'synchronize' module which is a wrapper around the unix rsync command (Remote Synchronization) and is very efficient at copying files and directories from place to place.
-
-run the tests again...
-Hopefully it passed now.
-
-Yay!!
-
-
-There are several different methods for creating/copying/transferring files with ansible.
-
-
+## Exercise
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `<%= cd('./exercises/IaC/ansible/writing_playbooks')%>`
 
-### ansible-playbook
-The `ansible-playbook` command is used to execute a group of plays against servers identified in the supplied inventory.
+### Scenario
+Your team of devoted and talented web developers have spent several weeks beavering away on possibly the most advanced, inspiring and responsive website ever created. They have now passed the website code over to your for deployment. The website code that your developers have provided you with can be found in the `<%=path('./resources')%>` folder.
 
-To see what this command can do run: `<%= command('ansible-playbook --help') %>`. Along with documentation on a large number of options, the following top level documentation should be displayed:
-```
-<%= last_command_output.lines[0..2].join.chomp %>
-```
-At the simplest level, all that the `ansible-playbook` command requires is to be pointed at a playbook. One has been supplied for you in `./ansible/apache.yml`:
+To complete this exercise you will need to write a playbook which will take the website code your developers have provided you with and deploy it onto a webserver.
 
-```YAML
- <%= command_output('cat ansible/apache.yml') %>
-```
+Your playbook will need to:
+  - install apache2
+  - ensure that the service is started and running
+  - copies the files from the `<%=path('./resources') %>`resources' directory to the directory '/var/www/html' on the webserver
 
-
-> So what just happened?
-
-Well you ran your very first ansible playbook!
-
-> What did it do?
-
-Well the first thing it did was to look at the `./ansible/apache.yml` and found the plays defined in there. In the [writing a playbook exercise]() you'll look in detail at the what the entries in this file actually do. For now, feel free to take a look at this file, its very small and pretty clear about what it's doing.
-
-The terminal output shows us that:
- - It has detected a playbook containing a play called 'Setup a webserver'.
- <% ansible_output = last_command_output.to_ansible_output %>
-```
- <%= ansible_output.play %>
-```
- - Has detected what hosts (inventory) this playbook is to run against.
- ```
- <%= ansible_output.tasks[0] %>
-```
- - Has installed apache2
-```
- <%= ansible_output.tasks[1] %>
-```
- - Has started apache2
-```
-<%= ansible_output.tasks[2] %>
-```
- - Given us a summary of the number of actions that is has taken.
-```
- <%= ansible_output.play_recap %>
+Because the team wants you to be sure everything is working before you tell them that you're finished, they've helpfully supplied a set of automated acceptance tests for your drive the code that you write. The tests can be found in <% path('./tests') %> and read as follows:
+```PYTHON
+<%= command_output('cat ./tests/webserver_test.py') %>
 ```
 
-> What about the last line of output?
-```
-<%= last_command_output.lines.last %>
-```
-
-This line wasn't outputed by Ansible itself, but actually the courseware supporting this tutorial. This line gives you the command that you can use to start to the temporary container that was created on your behalf for the Ansible to run against.
-
-### Validating that everything has worked
-Start the container that was built for ansible-playbook by running the command that was outputted on your console, e.g: `<%= command(last_command_output.to_cic_output.cic_start_command) %>`
-
-<% cic_output = last_command_output.to_cic_output %>
-<% cic_stop_command = cic_output.cic_stop_command %>
-<% cic_connect_command = cic_output.cic_connect_command %>
-<% container_id = cic_output.container_id %>
-
+Execute the tests by running: `<%= command('pytest --ansible-host container_hostname', fail_on_error: false) %>`
+**Note** We haven't built anything yet so it's fine to have run the command as it was specified.
 This outputs the following:
 ```
 <%= last_command_output %>
 ```
+The output shows us that two tests attempted to verify:
+1. The webserver was installed and running
+2. The website in the resources folder was deployed correctly
 
-The container built out for ansible-playbook is now up and running and ready to be looked at.
+Both of these failed because they are unable to connect to the server we specified (see the lines that in the output prefixed with 'E'). This is totally correct and makes sense given we gave an incorrect hostname and seeing as we have not yet run any ansible to build out our webserver.
 
-**Note:** to stop the container simply run `<%= after_all(cic_stop_command) %>`
+### Writing a playbook
+Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `<%= playbook_yml = write_to_file('ansible/webserver.yml', yaml) %>`
 
-#### Testing via automation
-Automation must be trustworthy if it is to be relied upon. Although we trust that Ansible attempted to do all the things that we asked it to, that doesn't mean that we haven't made a mistake and told it to do the wrong things!
+**Note:** Playbooks can be named anything. By convention we will store them in a folder called 'ansible'.
 
-For this reason we always want to be able to run acceptance test(s) to confirm that the delivered system is configured in the way that we were expecting it to be.
-
-Having tests that can be run on demand provides great power. These tests can be used to verify that last minute changes don't break the intended functionality and can even be used post deployment to verify that a system is configured correctly.
-
-This exercise contains a test called <%= path("./tests/apache_ansible_test.py") %> written in python using the pytest and testinfra APIs. This contains the following
-
-```python
-<%= command_output('cat ./tests/apache_ansible_test.py') %>
+```YAML
+<%= yaml %>
 ```
 
-To run this script, execute the following command: `<%= command("pytest --ansible-host #{container_id}") %>`
+Now execute playbook with the following command: `<%= command("ansible-playbook #{playbook_yml}")%>`
+<% ansible_output = last_command_output.to_ansible_output %>
+```
+<%= last_command_output %>
+```
+
+> So what just happened?
+
+Well the first thing the ansible-playbook command did was to look at `<%= playbook_yml %>` and find the play defined in there.
+
+The terminal output shows us that our 2 tasks ran:
+ - installing apache2
+```
+ <%= ansible_output.tasks[1] %>
+```
+ - starting apache2
+```
+<%= ansible_output.tasks[2] %>
+```
+
+The last line of output came from the courseware installed on your machine and gives us the ID we need to start the container up and run our tests again.
+```
+<%= last_command_output.lines.last %>
+```
+
+Using the actual ID that came out on your console, let's cic start the container that was created, run: `<%= command(last_command_output.to_cic_output.cic_start_command) %>`
+
+<% cic_output = last_command_output.to_cic_output %>
+<% container_id = cic_output.container_id %>
+<% after_all(cic_output.cic_stop_command) %>
 
 This should output the following:
 ```
-<%= anonymise(last_command_output)%>
+<%= last_command_output %>
+```
+Run the test again, this time however we'll point it at the container that we want to run the test against.
+To do this run: `<%= command("pytest --ansible-host #{container_id}", fail_on_error: false) %>`
+
+We can see from the output that the first of the two tests is now passing telling us that Apache is now up and running.
+```
+<%= last_command_output %>
 ```
 
-In just a second or so the test has validated that:
-- the correct package was installed.
-- apache2 daemon had been started
-- the apache2 process is listening on port 80
+The second of the tests checks that the website content being served was correct - This test failed because apache did not serve a page which contained the words 'High Five'
+Now it's time to pass the 2nd of the two tests.
 
-Now that the acceptance tests are passing we can be very confident that the system has been configured as required.
+### Modules
+Out of the box Ansible comes with a number of modules
 
-#### Manual inspection
-Using the actual container name given from the `cic start` command run: `<%= cic_connect_command %>`
+> What's a module?
 
-You will now be in a bash shell on the container itself. From here run: `curl localhost:80` to see that apache is alive and well.
+Module's are discrete units of code that are available to use either within a playbook or directly from the commandline. Ansible comes bundle with a whole bunch of them! The community has written modules for performing all sorts of different kings of task. [Take a look!](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html).
+
+We've actually already been using modules in the ansible that we wrote earlier.
+```YAML
+tasks:
+  - name: install apache2
+    apt:
+      name: apache2
+      update_cache: yes
+      state: latest
+```
+in the above YAML [apt](https://docs.ansible.com/ansible/latest/modules/apt_module.html) is the module that we are instructing Ansible to use in this task. Each of the attributes supplied inside apt are supplied as parameters to the apt module. You should be able to find the documentation regarding these parameters and others on the [apt module](https://docs.ansible.com/ansible/latest/modules/apt_module.html) documentation page.
+
+```YAML
+tasks:
+  - name: Start service apache2, if not running
+    service:
+      name: apache2
+      enabled: yes
+      state: started
+```
+> What module is used in the above task definition?
+
+That's right, it's the [service](https://docs.ansible.com/ansible/latest/modules/service_module.html)
+
+When it comes to copying files you find relevant modules under the [Files modules section](https://docs.ansible.com/ansible/devel/modules/list_of_files_modules.html).
+
+The one that we are going have a try at using is the [synchronize module](https://docs.ansible.com/ansible/devel/modules/synchronize_module.html#synchronize-module).
+
+### Now it's your turn
+Add a task, using the synchronise module, to deploy the code supplied in the `<%= path('./resources') %>` directory to /var/www/html on the webserver.
+
+
+
+<% hash = YAML.load(yaml)
+
+   hash.first['tasks'] << {'name' => 'Synchronize Website Files',
+      'synchronize' => {
+      'src' => '../resources/',
+       'dest' => '/var/www/html',
+       'recursive' => 'yes'}
+   }
+
+
+ write_to_file(playbook_yml, hash.to_yaml )
+
+ command("ansible-playbook #{playbook_yml}")
+ command(last_command_output.to_cic_output.cic_start_command)
+
+ cic_output = last_command_output.to_cic_output
+ after_all(cic_output.cic_stop_command)
+%>
+
+You'll you've got it right when the acceptance tests pass and showing thing like the following :)
+
+```
+<%= command_output("pytest --ansible-host #{cic_output.container_id}") %>
+```
+
+Good luck!
 
 ## Summary
-Ansible is a great tool for configuring infrastructure. Baked in to its philosophy is that all configuration is code and so can and should be version controlled. In the other exercises in this module you will learn how to write and test your own playbooks as well as learn about Ansible's other powerful features.
+Ansible playbooks contain plays and are written in [YAML](http://yaml.org/spec/1.2/spec.html).
+
+Plays specify a group of tasks and the context in which they should be executed.
+
+Tasks make use of modules, of which Ansible has [many](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html)! Modules are wrappers around code that can be executed within your plays or on the command line via the `ansible` command.

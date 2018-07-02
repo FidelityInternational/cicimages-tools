@@ -1,4 +1,6 @@
 require_relative '../../utils/commandline'
+require 'fileutils'
+require 'yaml'
 module Exercise
   class Output < String
     class AnsibleOutput
@@ -36,7 +38,6 @@ module Exercise
   end
 
   module Instructions
-
     include Commandline
     include Commandline::Output
 
@@ -50,10 +51,10 @@ module Exercise
       path
     end
 
-    def test_command(command)
+    def test_command(command, fail_on_error: true)
       say "running: #{command}" unless quiet?
       result = @result = run(command)
-      if result.error?
+      if result.error? && fail_on_error
         say error("failed to run: #{command}\n\n#{result}")
       elsif quiet?
         output.print '.'.green
@@ -78,9 +79,9 @@ module Exercise
       last_command_output
     end
 
-    def command(command)
-      result = test_command(command)
-      raise CommandError if result.error?
+    def command(command, fail_on_error: true)
+      result = test_command(command, fail_on_error: fail_on_error)
+      raise CommandError if result.error? && fail_on_error
       command
     end
 
@@ -89,6 +90,13 @@ module Exercise
       bytes = string.bytes.delete_if { |byte| byte == 27 }
       string = bytes.pack('U*')
       Output.new(normalise(string.chomp))
+    end
+
+    def write_to_file(path, content)
+      directory = File.dirname(path)
+      FileUtils.mkdir_p(directory)
+      File.write(path, content)
+      path
     end
 
     private
