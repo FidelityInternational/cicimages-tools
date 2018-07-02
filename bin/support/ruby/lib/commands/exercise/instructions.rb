@@ -36,6 +36,9 @@ module Exercise
   end
 
   module Instructions
+    class CommandError < StandardError
+    end
+
     include Commandline
     include Commandline::Output
 
@@ -55,7 +58,7 @@ module Exercise
       if result.error?
         say error("failed to run: #{command}\n\n#{result}")
       elsif quiet?
-        print '.'.green
+        output.print '.'.green
       else
         say ok("Successfully ran: #{command}")
       end
