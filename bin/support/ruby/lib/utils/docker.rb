@@ -17,8 +17,6 @@ module Docker
     false
   end
 
-
-
   def docker_container_running?(name)
     result = docker_container_info(name)
     return false if result.empty?
@@ -40,11 +38,17 @@ module Docker
   end
 
   def create_container(container_name, image_tag, port_mapping: nil)
-    network = 'cic'
-    port_mapping = port_mapping && "-p #{port_mapping}"
-    volume_mapping = '/sys/fs/cgroup:/sys/fs/cgroup:ro'
-    cmd = '/sbin/init'
-    docker("run --network #{network} -d --privileged --name #{container_name} -v #{volume_mapping} #{port_mapping} #{image_tag} #{cmd}")
+    port_mapping &&= "-p #{port_mapping}"
+    docker_command = <<COMMAND
+    run --network cic \
+    -d \
+    --privileged \
+    --name #{container_name} \
+    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    #{port_mapping} \
+    #{image_tag} /sbin/init"
+COMMAND
+    docker(docker_command)
   end
 
   def docker_exec(command)

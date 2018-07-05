@@ -8,7 +8,7 @@ module Commands
     include Commandline
     include Docker
 
-    let(:container_name){'lvlup-ci_course'}
+    let(:container_name) { 'lvlup-ci_course' }
     around do |example|
       example.call
       remove_container(container_name) if docker_container_running?(container_name)
@@ -41,7 +41,7 @@ module Commands
 
       context '--map-port' do
         it 'maps the host port to the container port' do
-          subject.options = {map_port: '8080:80'}
+          subject.options = { map_port: '8080:80' }
           subject.start(image)
           expect(`docker port #{container_name}`.chomp).to eq('80/tcp -> 0.0.0.0:8080')
         end
