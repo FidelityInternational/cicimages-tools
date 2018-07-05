@@ -12,19 +12,17 @@ module Commands
 
     desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
     option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
-
     def connect(container_name)
       command = "-it #{container_name} "
       command << (options[:command] || 'bash -l')
       docker_exec(command)
     end
 
-    desc 'start', 'log in to a container and see what happened'
-    option :image_tag, desc: 'the docker image'
-
+    desc 'start IMAGE_TAG', 'log in to a container and see what happened'
+    option :map_port, desc: 'map hostport to container port'
     def start(image_tag)
       container_name = normalise(image_tag)
-      create_container(container_name, image_tag) unless docker_container_running?(container_name)
+      create_container(container_name, image_tag, port_mapping: options[:map_port]) unless docker_container_running?(container_name)
       say ok start_help_msg(container_name)
     end
 

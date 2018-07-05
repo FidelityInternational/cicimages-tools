@@ -17,8 +17,10 @@ module Docker
     false
   end
 
+
+
   def docker_container_running?(name)
-    result = JSON(run("docker inspect #{name}").stdout, symbolize_names: true)
+    result = docker_container_info(name)
     return false if result.empty?
     result.first[:State][:Status] == 'running'
   end
@@ -37,11 +39,12 @@ module Docker
     docker "container rm -f #{container_id(container_name)}"
   end
 
-  def create_container(container_name, image_tag)
+  def create_container(container_name, image_tag, port_mapping: nil)
     network = 'cic'
+    port_mapping = port_mapping && "-p #{port_mapping}"
     volume_mapping = '/sys/fs/cgroup:/sys/fs/cgroup:ro'
     cmd = '/sbin/init'
-    docker("run --network #{network} -d --privileged --name #{container_name} -v #{volume_mapping} #{image_tag} #{cmd}")
+    docker("run --network #{network} -d --privileged --name #{container_name} -v #{volume_mapping} #{port_mapping} #{image_tag} #{cmd}")
   end
 
   def docker_exec(command)
@@ -50,8 +53,13 @@ module Docker
 
   def docker(command)
     command = "docker #{command}"
+    puts command
     run(command).tap do |output|
       raise(Error, "Failed to run: #{command}\n#{output}") if output.error?
     end
+  end
+
+  def docker_container_info(name)
+    JSON(run("docker inspect #{name}").stdout, symbolize_names: true)
   end
 end
