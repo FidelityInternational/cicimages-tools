@@ -10,4 +10,4 @@ def test_apache_installed_enabled_running(cmdopt):
 def test_website_deployed_(cmdopt):
     host=testinfra.get_host("paramiko://root@" + cmdopt, ssh_config="/root/.ssh/config")
     cmd=host.run('wget -qO- http://localhost/index.html')
-    assert 'High Five' in cmd.stdout 
+    assert 'High Five' in cmd.stdout, "Expected response from website not found!" 
