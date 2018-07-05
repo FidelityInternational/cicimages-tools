@@ -22,8 +22,15 @@ module Commands
     option :map_port, desc: 'map hostport to container port'
     def start(image_tag)
       container_name = normalise(image_tag)
-      create_container(container_name, image_tag, port_mapping: options[:map_port]) unless docker_container_running?(container_name)
-      say ok start_help_msg(container_name)
+
+      msg = if docker_container_running?(container_name)
+        "Container already running (any supplied options ignored)"
+      else
+        create_container(container_name, image_tag, port_mapping: options[:map_port])
+        "Starting container"
+      end
+
+      say ok "#{msg}\n#{start_help_msg(container_name)}"
     end
 
     desc 'stop[CONTAINER_NAME]', 'Stop running container'
@@ -44,15 +51,8 @@ module Commands
 
       def start_help_msg(container_name)
         <<-MESSAGE
-      Starting container: #{container_name}
-
-      connect to it with the 'cic connect' command.
-      E.g. cic connect #{container_name}
-      For more info run: cic help connect
-
-      stop the container with the 'cic stop' command
-      E.g. cic stop #{container_name}
-      For more info run: cic help stop
+          Connect with: cic connect #{container_name}
+          Stop with   : cic stop #{container_name}
         MESSAGE
       end
 
