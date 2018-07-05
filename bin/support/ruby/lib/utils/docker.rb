@@ -53,7 +53,6 @@ module Docker
 
   def docker(command)
     command = "docker #{command}"
-    puts command
     run(command).tap do |output|
       raise(Error, "Failed to run: #{command}\n#{output}") if output.error?
     end
