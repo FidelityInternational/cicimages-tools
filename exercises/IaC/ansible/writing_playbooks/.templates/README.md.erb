@@ -165,7 +165,7 @@ Out of the box Ansible comes with a number of modules
 
 > What's a module?
 
-Module's are discrete units of code that are available to use either within a playbook or directly from the commandline. Ansible comes bundle with a whole bunch of them! The community has written modules for performing all sorts of different kings of task. [Take a look!](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html).
+Module's are discrete units of code that are available to use either within a playbook or directly from the commandline. Ansible comes bundled with a whole bunch of them! The community has written modules for performing all sorts of different kings of task. [Take a look!](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html).
 
 We've actually already been using modules in the ansible that we wrote earlier.
 ```YAML
@@ -188,14 +188,14 @@ tasks:
 ```
 > What module is used in the above task definition?
 
-That's right, it's the [service](https://docs.ansible.com/ansible/latest/modules/service_module.html)
+That's right, it's the [service](https://docs.ansible.com/ansible/latest/modules/service_module.html) module.
 
 When it comes to copying files you find relevant modules under the [Files modules section](https://docs.ansible.com/ansible/devel/modules/list_of_files_modules.html).
 
 The one that we are going have a try at using is the [synchronize module](https://docs.ansible.com/ansible/devel/modules/synchronize_module.html#synchronize-module).
 
 ### Now it's your turn
-Add a task, using the synchronise module, to deploy the code supplied in the `<%= path('./resources') %>` directory to /var/www/html on the webserver.
+Add a task, using the synchronise module, to deploy the code supplied in the `<%= path('./resources') %>` directory `/var/www/html` on the webserver.
 
 
 
@@ -218,7 +218,7 @@ Add a task, using the synchronise module, to deploy the code supplied in the `<%
  after_all(cic_output.cic_stop_command)
 %>
 
-You'll you've got it right when the acceptance tests pass and showing thing like the following :)
+You'll know that you've got it right when the acceptance tests pass and showing something like the following :)
 
 ```
 <%= command_output("pytest --ansible-host #{cic_output.container_id}") %>
@@ -231,4 +231,11 @@ Ansible playbooks contain plays and are written in [YAML](http://yaml.org/spec/1
 
 Plays specify a group of tasks and the context in which they should be executed.
 
-Tasks make use of modules, of which Ansible has [many](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html)! Modules are wrappers around code that can be executed within your plays or on the command line via the `ansible` command.
+Tasks make use of modules, of which Ansible has [many](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html)!
+Modules are wrappers around code that can be executed within your plays or on the command line via the `ansible` command.
+
+You have just learned how to:
+- write a playbook.
+- use the ansible documentation to find out about different modules.
+- use the [synchronize module](https://docs.ansible.com/ansible/devel/modules/synchronize_module.html#synchronize-module) to copy the contents of a folder from one place to another.
+- write code to satisfy a condition within a set of tests.
