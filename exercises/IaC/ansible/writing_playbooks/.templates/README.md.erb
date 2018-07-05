@@ -1,4 +1,4 @@
-# Run Ansible
+# Writing a PlayBook
 
 ## Introduction
 
@@ -13,7 +13,7 @@ Ansible has lots of features that you will learn about in future exercises. The 
     - configure a webserver and deploy a website
     - successfully pass a ready-made set of functional tests.
 
-## Useful terms:
+## Useful terms
 - Inventory - these are the hosts that the Ansible will run against. Hosts can be provided in a number of different ways. For now it is not essential to know more than this but if you're interested in finding out more [click here](http://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
 - Playbook - The term playbook comes from sports, a playbook contains the named plays or moves that a team might execute in a game.
 
@@ -39,6 +39,7 @@ Before we go any further let's break down the anatomy of playbooks. Playbooks ar
 
 There is a lot more that could be said about YAML, but the above is enough for us to be able to write pretty much everything we need to write in most Ansible playbooks.
 
+## Anatomy of Playbook
 The following is an example Playbook that could be used to install a webserver.
 
 
@@ -67,7 +68,7 @@ YAML
 ```
 
 Given what we now know about YAML, what can we say about the YAML for this PlayBook?
-- 1 play: At the top level the YAML represents a single item list. This single entry, unsurprisingly, is called a play. Playbooks can include one or more plays
+- It contains a singe play: At the top level the YAML represents a single item list. This single entry, unsurprisingly, is called a play. Playbooks can include one or more plays
 - `name:` An attribute called 'name' is used to name plays. In the case of our play, it is called 'Setup a webserver'.
 - `tasks:` The play consists of 2 tasks. These are given in the list assigned to the tasks attribute.
 
