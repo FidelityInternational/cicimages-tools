@@ -33,7 +33,7 @@ Before we go any further let's break down the anatomy of playbooks. Playbooks ar
  is quite often seen in Playbooks, but is present by convention rather than requirement.
 - `#` Anything following a hash symbol is a comment meant human readers. Therefore, comments are not interpreted.
 - `-` a single hyphen denotes a list. Content that is on the same line and imeditately tabbed in on the following lines is a member of that list entry. In the case of the example above. the YAML consist of a single item list. That item has attributes, one of which (attribute2), is itself a list that contains 2 items.
-- `attribute_name:value` entries followed by a colon `:` are called attributes, the value assigned to the attribute follows the colon. Value's can be simple values or complex entities themselves. For example 'attribute2' has a list assigned as it's value.
+- `attribute_name: value` entries followed by a colon `:` are called attributes, the value assigned to the attribute follows the colon. Value's can be simple values or complex entities themselves. For example 'attribute2' has a list assigned as it's value.
 
 **Note:** YAML is white space sensitive. Data belonging to entities must be tabbed/spaced in by the same amount in order to be valid.
 
