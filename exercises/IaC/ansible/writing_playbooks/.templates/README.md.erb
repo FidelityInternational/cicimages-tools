@@ -139,7 +139,7 @@ The last line of output came from the courseware installed on your machine and g
 <%= last_command_output.lines.last %>
 ```
 
-Using the actual ID that came out on your console, let's cic start the container that was created, run: `<%= command(last_command_output.to_cic_output.cic_start_command) %>`
+Using the actual ID that came out on your console, let's cic start the container that was created, but this time we'll also make the webserver port 80 available locally as port 8080, run: `<%= command("#{last_command_output.to_cic_output.cic_start_command} --map-port 8080:80") %>`
 
 <% cic_output = last_command_output.to_cic_output %>
 <% container_id = cic_output.container_id %>
@@ -158,6 +158,9 @@ We can see from the output that the first of the two tests is now passing tellin
 ```
 
 The second of the tests checks that the website content being served was correct - This test failed because apache did not serve a page which contained the words 'High Five'
+
+You can see what website was served up by the webserver by browsing to [http://localhost:8080](http://localhost:8080)
+
 Now it's time to pass the 2nd of the two tests.
 
 ### Modules
@@ -239,3 +242,4 @@ You have just learned how to:
 - use the ansible documentation to find out about different modules.
 - use the [synchronize module](https://docs.ansible.com/ansible/devel/modules/synchronize_module.html#synchronize-module) to copy the contents of a folder from one place to another.
 - write code to satisfy a condition within a set of tests.
+- put more funny cats onto the Internet
