@@ -18,3 +18,7 @@ sudo add-apt-repository -y \
 
 sudo apt-get update
 sudo apt-get -y install docker-ce
+
+docker version > /dev/null 2>&1 || (sudo usermod -aG docker "${USER}" && newgrp - )
+
+
