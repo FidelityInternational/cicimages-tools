@@ -17,13 +17,12 @@ Ansible has lots of features that you will learn about in future exercises. The 
 - Playbook - The term playbook comes from sports, a playbook contains the named plays or moves that a team might execute in a game.
 
 ## Exercise
-
-**Notes:** 
-- So that you don't have to worry about supplying your own infrastructure for ansible to work upon, we have configured the courseware to run ansible against docker containers that we stand up for you. You don't need to know how this works simply that when we mention containers we simply mean where you ansible as run. In the exercise, we'll show you how to connect to these containers to inspect them.
+**Notes**
 - Before going any further do the following:
   - `cd YOUR_CLONE_OF_THIS REPO`
   - `source .env`
   - `cd ./exercises/IaC/ansible/running_ansible`
+- So that you don't have to worry about supplying your own infrastructure for ansible to work upon, we have configured the courseware to run ansible against docker containers that we stand up for you. You don't need to know how this works simply that when we mention containers we simply mean where you ansible as run. In the exercise, we'll show you how to connect to these containers to inspect them.
 
 ### ansible-playbook
 The `ansible-playbook` command is used to execute a group of plays against servers identified in the supplied inventory.
@@ -74,7 +73,7 @@ changed: [localhost]
 PLAY RECAP *********************************************************************
 localhost                  : ok=3    changed=2    unreachable=0    failed=0   
 
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-23357
 ```
 
 Looking at the output in detail:
@@ -106,7 +105,7 @@ localhost                  : ok=3    changed=2    unreachable=0    failed=0
 
 The last line of output looked like this:
 ```
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-23357
 ```
 
 This line wasn't outputed by Ansible itself, but actually the courseware supporting this tutorial. This line gives you the command that you can use to start to the temporary container that was created on your behalf for the Ansible to run against.
@@ -114,7 +113,7 @@ This line wasn't outputed by Ansible itself, but actually the courseware support
 ### Validating that everything has worked
 In order to look at what our ansible did, we must first start the container that it ran against.
 
-Start the container that was built for ansible-playbook by running the command that was outputted on your console, e.g: `cic start lvlup/ci_course:xxxxxxxxxxxxxxxx`
+Start the container that was built for ansible-playbook by running the command that was outputted on your console, e.g: `cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-23357`
 
 
 
@@ -124,15 +123,15 @@ Start the container that was built for ansible-playbook by running the command t
 This outputs the following:
 ```
 [OK] Starting container
-     Connect with: cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx
-     Stop with   : cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx
+     Connect with: cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx-23357
+     Stop with   : cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx-23357
 ```
 
 The container built out for ansible-playbook is now up and running and ready to be looked at.
 
-**Note:** to stop the container simply run `cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx`
+**Note:** to stop the container simply run `cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx-23357`
 
-Using the actual container name given from the `cic start` command run: `cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx`
+Using the actual container name given from the `cic start` command run: `cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx-23357`
 
 You will now be in a bash shell on the container itself. From here run: `curl localhost:80` to see that apache is alive and well.
 
@@ -145,14 +144,14 @@ Having tests that can be run on demand provides great power. These tests can be 
 
 This exercise contains a test called ./tests/apache_ansible_test.py written in python using the pytest and testinfra APIs.
 
-To run this script, execute the following command: `pytest --ansible-host lvlup-ci_course-xxxxxxxxxxxxxxxx`
+To run this script, execute the following command: `pytest --ansible-host lvlup-ci_course-xxxxxxxxxxxxxxxx-23357`
 
 This should output the following:
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.6.2, py-1.5.3, pluggy-0.6.0 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_2180, inifile: pytest.ini
+rootdir: /vols/pytest_2343, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 3 items
 
@@ -160,7 +159,7 @@ tests/apache_ansible_test.py::test_apache_installed PASSED               [ 33%]
 tests/apache_ansible_test.py::test_apache_is_enabled_as_service PASSED   [ 66%]
 tests/apache_ansible_test.py::test_apache_installed_is_running PASSED    [100%]
 
-=========================== 3 passed in 1.01 seconds ===========================
+=========================== 3 passed in 0.96 seconds ===========================
 ```
 
 In just a second or so the test has validated that:

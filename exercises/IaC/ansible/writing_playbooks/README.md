@@ -90,9 +90,9 @@ Execute the tests by running: `pytest --hostname unavailable_host`
 This outputs the following. (We've omitted the stack traces):
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.6.2, py-1.5.3, pluggy-0.6.0 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_20297, inifile: pytest.ini
+rootdir: /vols/pytest_12590, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -155,7 +155,7 @@ changed: [localhost]
 PLAY RECAP *********************************************************************
 localhost                  : ok=3    changed=2    unreachable=0    failed=0   
 
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-17075
 ```
 
 The terminal output shows us that our 2 tasks ran:
@@ -172,10 +172,10 @@ changed: [localhost]
 
 The last line of output came from the courseware installed on your machine and gives us the ID we need to start the container up and run our tests again.
 ```
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-17075
 ```
 
-Using the actual ID that came out on your console, cic start the container that was created, this time we'll also make the webserver port 80 available locally as port 8080, run: `cic start lvlup/ci_course:xxxxxxxxxxxxxxxx --map-port 8080:80`
+Using the actual ID that came out on your console, cic start the container that was created, this time we'll also make the webserver port 80 available locally as port 8080, run: `cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-17075 --map-port 8080:80`
 
 
 
@@ -183,14 +183,28 @@ Using the actual ID that came out on your console, cic start the container that 
 
 This should output the following:
 ```
-
+[OK] Starting container
+     Connect with: cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx-17075
+     Stop with   : cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx-17075
 ```
 Run the test again, this time however we'll point it at the host that we want to run the test against.
-To do this run: `pytest --host `
+To do this run: `pytest --hostname lvlup-ci_course-xxxxxxxxxxxxxxxx-17075`
 
 We can see from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
+============================= test session starts ==============================
+platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
+cachedir: .pytest_cache
+rootdir: /vols/pytest_27921, inifile: pytest.ini
+plugins: testinfra-1.14.0
+collecting ... collected 4 items
 
+tests/webserver_test.py::test_apache_installed PASSED                    [ 25%]
+tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
+tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
+tests/webserver_test.py::test_website_deployed FAILED                    [100%]
+
+=================================== FAILURES ===================================
 ```
 
 The remaining tests is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when it apache is installed.
@@ -234,9 +248,9 @@ You'll know that you've got it right when the acceptance tests pass :)
 
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.6.2, py-1.5.3, pluggy-0.6.0 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_24434, inifile: pytest.ini
+rootdir: /vols/pytest_11392, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -245,7 +259,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 1.02 seconds ===========================
+=========================== 4 passed in 0.98 seconds ===========================
 ```
 
 Good luck!

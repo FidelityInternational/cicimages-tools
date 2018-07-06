@@ -143,11 +143,11 @@ This should output the following:
 <%= last_command_output %>
 ```
 Run the test again, this time however we'll point it at the host that we want to run the test against.
-To do this run: `<%= command("pytest --host #{container_id}", fail_on_error: false) %>`
+To do this run: `<%= command("pytest --hostname #{container_id}", fail_on_error: false) %>`
 
 We can see from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
-<%= last_command_output %>
+<%= last_command_output.to_pytest_output.summary %>
 ```
 
 The remaining tests is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when it apache is installed.
