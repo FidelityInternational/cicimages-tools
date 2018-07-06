@@ -3,9 +3,9 @@ module Exercise
     include Commandline::Output
 
     def render(template)
-      result = ERB.new(File.read(template)).result(binding)
-      after_all_commands.each { |command| test_command(command) }
-      result
+      ERB.new(File.read(template)).result(binding)
+    ensure
+      after_all_commands.each {|command| test_command(command)}
     end
 
     def render_exercise(original_dir, template)
@@ -51,7 +51,7 @@ module Exercise
 
     def anonymise(string)
       string.gsub(/course-[\w\d]+/, 'course-xxxxxxxxxxxxxxxx')
-            .gsub(/course:[\w\d]+/, 'course:xxxxxxxxxxxxxxxx')
+          .gsub(/course:[\w\d]+/, 'course:xxxxxxxxxxxxxxxx')
     end
   end
 end

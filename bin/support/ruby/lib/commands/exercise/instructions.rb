@@ -47,7 +47,7 @@ module Exercise
     end
 
     def path(path)
-      raise "#{path} does not exit" unless File.exist?(path)
+      raise "#{path} does not exist" unless File.exist?(path)
       path
     end
 
