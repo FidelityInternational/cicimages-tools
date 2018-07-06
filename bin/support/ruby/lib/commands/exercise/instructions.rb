@@ -28,12 +28,28 @@ module Exercise
       end
     end
 
+    class PytestOutput
+      attr_reader :summary
+
+      def initialize(string)
+        @summary = chomp(string[/(=+[\w\s]+=+$.*?^=+[\w\s]+=+)/m, 1])
+      end
+
+      def chomp(string)
+        string&.chomp
+      end
+    end
+
     def to_ansible_output
       AnsibleOutput.new(self)
     end
 
     def to_cic_output
       CICOutput.new(self)
+    end
+
+    def to_pytest_output
+      PytestOutput.new(self)
     end
   end
 

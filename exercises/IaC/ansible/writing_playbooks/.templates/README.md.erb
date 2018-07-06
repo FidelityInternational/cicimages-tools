@@ -34,7 +34,7 @@ Before we go any further let's break down the anatomy of playbooks. Playbooks ar
 
 There is a lot more that could be said about YAML, but the above is enough for us to be able to write pretty much everything we need to write in most Ansible playbooks.
 
-## Anatomy of Playbook
+## Anatomy of a Playbook
 The following is an example Playbook that could be used to install a webserver.
 
 
@@ -89,9 +89,9 @@ Because the team wants you to be sure everything is working before you tell them
 
 Execute the tests by running: `<%= command('pytest --hostname unavailable_host', fail_on_error: false) %>`
 **Note** We haven't built anything yet so it's fine to have run the command as it was specified.
-This outputs the following:
+This outputs the following. (We've omitted the stack traces):
 ```
-<%= last_command_output %>
+<%= last_command_output.to_pytest_output.summary %>
 ```
 The output shows us that two tests attempted to verify:
 - the apache2 package was installed.
