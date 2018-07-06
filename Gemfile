@@ -7,6 +7,7 @@ gem 'json'
 gem 'thor'
 
 group :development do
+  gem 'bump'
   gem 'rake'
   gem 'rspec', require: 'rspec/core/rake_task'
   gem 'rubocop'
