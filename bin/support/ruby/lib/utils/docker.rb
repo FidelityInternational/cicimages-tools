@@ -46,7 +46,7 @@ module Docker
     --name #{container_name} \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     #{port_mapping} \
-    #{image_tag} /sbin/init"
+    #{image_tag} /sbin/init
 COMMAND
     docker(docker_command)
   end
