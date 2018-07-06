@@ -11,6 +11,7 @@ module Docker
   end
 
   include Commandline
+
   def container_exists?(container_name)
     container_id(container_name) && true
   rescue Error
@@ -26,11 +27,6 @@ module Docker
   def container_id(container_name)
     id = docker(%(container ps -q --filter "name=#{container_name}")).stdout
     id.empty? ? raise(Error, "container with name #{container_name} does not exist") : id
-  end
-
-  def restart_container(container_name)
-    container_id = container_id(container_name)
-    docker("container start #{container_id} -i")
   end
 
   def remove_container(container_name)
