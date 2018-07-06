@@ -1,4 +1,6 @@
 require_relative '../../utils/commandline'
+require 'fileutils'
+require 'yaml'
 module Exercise
   class Output < String
     class AnsibleOutput
@@ -15,10 +17,22 @@ module Exercise
       attr_reader :container_id, :cic_start_command, :cic_connect_command, :cic_stop_command
 
       def initialize(string)
-        @container_id = chomp(string[/Starting container: (.*)/, 1])
+        @container_id = chomp(string[/cic connect (.*)/, 1])
         @cic_start_command = chomp(string[/(cic start .*)/, 1])
         @cic_connect_command = chomp(string[/(cic connect .*)/, 1])
         @cic_stop_command = chomp(string[/(cic stop .*)/, 1])
+      end
+
+      def chomp(string)
+        string&.chomp
+      end
+    end
+
+    class PytestOutput
+      attr_reader :summary
+
+      def initialize(string)
+        @summary = chomp(string[/(=+[\w\s]+=+$.*?^=+[\w\s]+=+)/m, 1])
       end
 
       def chomp(string)
@@ -33,6 +47,10 @@ module Exercise
     def to_cic_output
       CICOutput.new(self)
     end
+
+    def to_pytest_output
+      PytestOutput.new(self)
+    end
   end
 
   module Instructions
@@ -45,17 +63,17 @@ module Exercise
     end
 
     def path(path)
-      raise "#{path} does not exit" unless File.exist?(path)
+      raise "#{path} does not exist" unless File.exist?(path)
       path
     end
 
-    def test_command(command)
+    def test_command(command, fail_on_error: true)
       say "running: #{command}" unless quiet?
       result = @result = run(command)
-      if result.error?
+      if result.error? && fail_on_error
         say error("failed to run: #{command}\n\n#{result}")
       elsif quiet?
-        print '.'.green
+        output.print '.'.green
       else
         say ok("Successfully ran: #{command}")
       end
@@ -77,9 +95,9 @@ module Exercise
       last_command_output
     end
 
-    def command(command)
-      result = test_command(command)
-      raise CommandError if result.error?
+    def command(command, fail_on_error: true)
+      result = test_command(command, fail_on_error: fail_on_error)
+      raise CommandError if result.error? && fail_on_error
       command
     end
 
@@ -88,6 +106,13 @@ module Exercise
       bytes = string.bytes.delete_if { |byte| byte == 27 }
       string = bytes.pack('U*')
       Output.new(normalise(string.chomp))
+    end
+
+    def write_to_file(path, content)
+      directory = File.dirname(path)
+      FileUtils.mkdir_p(directory)
+      File.write(path, content)
+      path
     end
 
     private

@@ -11,6 +11,7 @@ module Docker
   end
 
   include Commandline
+
   def container_exists?(container_name)
     container_id(container_name) && true
   rescue Error
@@ -18,7 +19,7 @@ module Docker
   end
 
   def docker_container_running?(name)
-    result = JSON(run("docker inspect #{name}").stdout, symbolize_names: true)
+    result = docker_container_info(name)
     return false if result.empty?
     result.first[:State][:Status] == 'running'
   end
@@ -28,20 +29,22 @@ module Docker
     id.empty? ? raise(Error, "container with name #{container_name} does not exist") : id
   end
 
-  def restart_container(container_name)
-    container_id = container_id(container_name)
-    docker("container start #{container_id} -i")
-  end
-
   def remove_container(container_name)
     docker "container rm -f #{container_id(container_name)}"
   end
 
-  def create_container(container_name, image_tag)
-    network = 'cic'
-    volume_mapping = '/sys/fs/cgroup:/sys/fs/cgroup:ro'
-    cmd = '/sbin/init'
-    docker("run --network #{network} -d --privileged --name #{container_name} -v #{volume_mapping} #{image_tag} #{cmd}")
+  def create_container(container_name, image_tag, port_mapping: nil)
+    port_mapping &&= "-p #{port_mapping}"
+    docker_command = <<COMMAND
+    run --network cic \
+    -d \
+    --privileged \
+    --name #{container_name} \
+    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    #{port_mapping} \
+    #{image_tag} /sbin/init
+COMMAND
+    docker(docker_command)
   end
 
   def docker_exec(command)
@@ -53,5 +56,9 @@ module Docker
     run(command).tap do |output|
       raise(Error, "Failed to run: #{command}\n#{output}") if output.error?
     end
+  end
+
+  def docker_container_info(name)
+    JSON(run("docker inspect #{name}").stdout, symbolize_names: true)
   end
 end

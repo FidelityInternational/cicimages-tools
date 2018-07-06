@@ -12,7 +12,7 @@ module Exercise
     BANNER =
 
       desc 'generate', 'render templates'
-    option :quiet, default: 'false'
+    option :quiet, default: false
 
     def generate
       say <<~MESSAGE
