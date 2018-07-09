@@ -8,20 +8,29 @@ module Commands
     include Commandline
     include Docker
 
+    include_context :command
+
     let(:container_name) { 'lvlup-ci_course' }
+    let(:image) { 'lvlup/ci_course' }
+
     around do |example|
       example.call
       remove_container(container_name) if docker_container_running?(container_name)
     end
 
-    let(:image) { 'lvlup/ci_course' }
-    let(:stdout) { StringIO.new }
-    subject do
-      stdout = stdout()
-      described_class.new.tap do |instance|
-        instance.define_singleton_method :output do
-          stdout
-        end
+    describe '#connect' do
+
+      context 'command option specified' do
+       it 'runs the command against the container' do
+         subject.options = {command: 'command'}
+         expect(subject).to receive(:docker_exec).with("-it container command")
+         subject.connect('container')
+       end
+      end
+
+      it 'connects to the given container' do
+        expect(subject).to receive(:docker_exec).with("-it container bash -l")
+        subject.connect('container')
       end
     end
 

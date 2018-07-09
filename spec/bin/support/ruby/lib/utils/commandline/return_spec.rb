@@ -1,5 +1,16 @@
 module Commandline
   describe Return do
+
+    described_class.class_eval do
+      def ==(other)
+        other.stdout == stdout &&
+            other.stderr == stderr &&
+            other.exit_code == exit_code
+      rescue NoMethodError
+        false
+      end
+    end
+
     subject { described_class.new(stdout: "stdout\n", stderr: "stderr\n", exit_code: 0) }
     describe '#initialize' do
       it 'takes newline characters off of stdout and stderr' do

@@ -7,18 +7,19 @@ describe Docker do
     end
   end
 
-  describe '#container_exists?' do
-    context 'container exists' do
-      it 'returns true' do
-        container_name = create_container
-        expect(subject.container_exists?(container_name)).to eq(true)
+  describe '#docker' do
+    context 'command fails' do
+      it 'raises an error' do
+        expect{subject.docker("bad")}.to raise_error(described_class::Error)
       end
     end
+  end
 
-    context 'container does not exist' do
-      it 'returns false' do
-        expect(subject.container_exists?(:invalid)).to eq(false)
-      end
+  describe '#docker exec' do
+    it 'executes the given command' do
+      command = 'command'
+      expect(subject).to receive(:system).with("docker exec #{command}")
+      subject.docker_exec(command)
     end
   end
 

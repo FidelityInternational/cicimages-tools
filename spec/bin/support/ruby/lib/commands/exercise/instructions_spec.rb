@@ -1,6 +1,7 @@
 module Exercise
+
+  # TODO - test remaining methods
   describe Instructions do
-    let(:output) { StringIO.new }
     subject do
       Object.new.tap do |o|
         o.extend(described_class)
@@ -8,7 +9,65 @@ module Exercise
           true
         end
 
-        allow(o).to receive(:output).and_return(output)
+        allow(o).to receive(:output).and_return(StringIO.new)
+      end
+    end
+
+    describe '#after_all' do
+      it 'registers the given command to be run later' do
+        command = :command
+        subject.after_all(command)
+        expect(subject.after_all_commands).to eq([:command])
+      end
+
+      it 'returns the given command' do
+        expect(subject.after_all(:command)).to eq(:command)
+      end
+    end
+
+    describe '#cd' do
+      let(:expected_directory) do
+        "#{Dir.pwd}/test".tap do |path|
+          FileUtils.mkdir(path)
+        end
+      end
+
+      it 'changes the current directory' do
+        subject.cd(expected_directory)
+        expect(Dir.pwd).to eq(expected_directory)
+      end
+
+      it 'returns the command for changing directory' do
+        expect(subject.cd(expected_directory)).to eq("cd #{expected_directory}")
+      end
+    end
+
+    describe '#command_output' do
+      it 'returns the output from running the command' do
+        expect(subject).to receive(:last_command_output).and_call_original
+        expect(subject.command_output('echo hello')).to eq('hello')
+      end
+    end
+
+    describe '#last_command_output' do
+      it 'returns the output of the last command' do
+        subject.command_output('echo hello')
+        expected_output = Exercise::Output.new('hello')
+        expect(subject.last_command_output).to be_a(expected_output.class).and eq(expected_output)
+      end
+    end
+
+    describe '#path' do
+      context 'path exists' do
+        it 'returns the given path' do
+          expect(subject.path(Dir.pwd)).to eq(Dir.pwd)
+        end
+      end
+
+      context 'path does not exist' do
+        it 'raises and error' do
+          expect{subject.path('missing')}.to raise_error(RuntimeError)
+        end
       end
     end
 
@@ -36,66 +95,65 @@ module Exercise
     describe '#test_command' do
       let(:cmd) { 'echo hello' }
 
-      context 'not quiet' do
-        before do
-          allow(subject).to receive(:quiet?).and_return(true)
+      context 'console output' do
+        include Commandline::Output
+
+        context 'quiet' do
+
+          before :each do
+            allow(subject).to receive(:quiet?).and_return(true)
+          end
+
+          context 'command passes' do
+            it 'prints out a quiet report' do
+              subject.test_command(cmd)
+              expect(output.string.uncolorize).to eq('.')
+            end
+          end
+
+          context 'command fails' do
+            let(:cmd) { 'bad command' }
+
+            it 'says there has been an error' do
+              allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return("error")
+              expected_error =  error("failed to run: #{cmd}\n\nerror")
+              subject.test_command(cmd)
+              expect(subject.output.string.chomp).to eq(expected_error)
+            end
+          end
+
         end
 
-        it 'prints out the command that is running' do
-          allow(subject).to receive(:quiet?).and_return(false)
-          subject.test_command(cmd)
-          expect(output.string.uncolorize).to include("running: #{cmd}")
-        end
-
-        context 'command passes' do
-          it 'reports the command that has run' do
+        context 'not quiet' do
+          before :each do
             allow(subject).to receive(:quiet?).and_return(false)
-            subject.test_command(cmd)
-            expect(output.string.uncolorize).to include("[OK] Successfully ran: #{cmd}")
           end
-        end
 
-        context 'command fails' do
-          let(:cmd) { 'bad command' }
-          it 'says there has been an error' do
-            subject.test_command(cmd)
-            expect(output.string).to include("ERROR] failed to run: #{cmd}")
+          context 'command passes' do
+
+            it 'reports the command that has run' do
+              expected_message =  "running: #{cmd}\n #{ok("Successfully ran: #{cmd}")}"
+
+              subject.test_command(cmd)
+              expect(subject.output.string.chomp).to eq(expected_message)
+            end
           end
-        end
-      end
 
-      context 'quiet' do
-        before do
-          allow(subject).to receive(:quiet?).and_return(true)
-        end
+          context 'command fails' do
+            let(:cmd) { 'bad command' }
+            it 'says there has been an error' do
+              allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return("error")
+              expected_message = "running: #{cmd}\n#{error("failed to run: bad command\n\n error")}"
 
-        context 'command passes' do
-          it 'prints a dot' do
-            subject.test_command(cmd)
-            expect(output.string.uncolorize).to eq('.')
-          end
-        end
-
-        context 'command fails' do
-          let(:cmd) { 'bad command' }
-          it 'says there has been an error' do
-            subject.test_command(cmd)
-            expect(output.string).to include("ERROR] failed to run: #{cmd}")
+              subject.test_command(cmd)
+              expect(subject.output.string.chomp).to eq(expected_message)
+            end
           end
         end
       end
     end
 
     describe '#write_to_file' do
-      require 'tmpdir'
-      around do |spec|
-        Dir.mktmpdir do |path|
-          Dir.chdir(path) do
-            spec.call
-          end
-        end
-      end
-
       it 'writes content to the given path' do
         expected_path = 'a/path/file.txt'
         expected_content = 'content'

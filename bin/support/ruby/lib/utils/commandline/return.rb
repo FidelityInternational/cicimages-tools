@@ -24,14 +24,6 @@ module Commandline
       OUTPUT
     end
 
-    def ==(other)
-      other.stdout == stdout &&
-        other.stderr == stderr &&
-        other.exit_code == exit_code
-    rescue NoMethodError
-      false
-    end
-
     private
 
     def normalise(string)
