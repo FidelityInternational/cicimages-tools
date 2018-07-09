@@ -7,5 +7,4 @@ shared_context :command do
       stdout
     end
   end
-
 end

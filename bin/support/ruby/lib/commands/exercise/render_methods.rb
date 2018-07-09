@@ -3,12 +3,12 @@ module Exercise
     include Commandline::Output
     include Instructions
 
-    def render_exercises(dir = Dir.pwd)
+    def render_exercises(dir)
       status = true
       original_dir = Dir.pwd
       templates(dir).each do |template|
         begin
-          render_exercise(original_dir, template)
+          render_exercise(dir, template)
         rescue StandardError
           status = false
         end
@@ -18,8 +18,8 @@ module Exercise
       status
     end
 
-    def render_exercise(original_dir, template)
-      exercise_name = File.basename(original_dir)
+    def render_exercise(exercise_directory, template)
+      exercise_name = File.basename(exercise_directory)
       say "Generating file for: #{exercise_name}"
 
       result = anonymise(render(template))
@@ -34,6 +34,7 @@ module Exercise
     end
 
     private
+
     def anonymise(string)
       string.gsub(/course-[\w\d]+/, 'course-xxxxxxxxxxxxxxxx')
             .gsub(/course:[\w\d]+/, 'course:xxxxxxxxxxxxxxxx')

@@ -26,5 +26,4 @@ shared_context :docker_containers do
   rescue Error
     false
   end
-
 end

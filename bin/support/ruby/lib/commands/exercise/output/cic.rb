@@ -1,5 +1,5 @@
 module Exercise
-  class Output  < String
+  class Output < String
     class CIC < String
       attr_reader :container_id, :cic_start_command, :cic_connect_command, :cic_stop_command
 

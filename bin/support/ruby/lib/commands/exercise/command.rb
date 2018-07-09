@@ -9,15 +9,14 @@ module Exercise
   end
 
   class Command < Thor
-
     def self.exit_on_failure?
       true
     end
 
-      desc 'generate', 'render templates'
+    desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
 
-    def generate(path=Dir.pwd)
+    def generate(path = Dir.pwd)
       say <<~MESSAGE
         #############################
         # Generating exercise files #

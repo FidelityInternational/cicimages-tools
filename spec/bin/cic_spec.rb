@@ -19,17 +19,16 @@ module Commands
     end
 
     describe '#connect' do
-
       context 'command option specified' do
-       it 'runs the command against the container' do
-         subject.options = {command: 'command'}
-         expect(subject).to receive(:docker_exec).with("-it container command")
-         subject.connect('container')
-       end
+        it 'runs the command against the container' do
+          subject.options = { command: 'command' }
+          expect(subject).to receive(:docker_exec).with('-it container command')
+          subject.connect('container')
+        end
       end
 
       it 'connects to the given container' do
-        expect(subject).to receive(:docker_exec).with("-it container bash -l")
+        expect(subject).to receive(:docker_exec).with('-it container bash -l')
         subject.connect('container')
       end
     end

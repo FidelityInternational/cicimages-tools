@@ -1,11 +1,10 @@
 module Commandline
   describe Return do
-
     described_class.class_eval do
       def ==(other)
         other.stdout == stdout &&
-            other.stderr == stderr &&
-            other.exit_code == exit_code
+          other.stderr == stderr &&
+          other.exit_code == exit_code
       rescue NoMethodError
         false
       end

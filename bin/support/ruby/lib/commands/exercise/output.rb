@@ -3,8 +3,7 @@ require_relative 'output/pytest'
 require_relative 'output/cic'
 module Exercise
   class Output < String
-
-    def initialize string
+    def initialize(string)
       string = string.scrub
       bytes = string.bytes.delete_if { |byte| byte == 27 }
       string = bytes.pack('U*')
@@ -24,6 +23,7 @@ module Exercise
     end
 
     private
+
     def normalise(string)
       string.gsub(/\[[\d;]+m/, '')
     end

@@ -1,7 +1,6 @@
 module Exercise
-  class Output  < String
+  class Output < String
     class Ansible < String
-
       attr_reader :tasks, :play, :play_recap
 
       def initialize(string)

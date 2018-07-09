@@ -1,7 +1,5 @@
 module Exercise
-
   describe Instructions do
-
     include_context :command
     include_context :module_spec
 
@@ -64,7 +62,7 @@ module Exercise
 
       context 'path does not exist' do
         it 'raises and error' do
-          expect{subject.path('missing')}.to raise_error(RuntimeError)
+          expect { subject.path('missing') }.to raise_error(RuntimeError)
         end
       end
     end
@@ -97,7 +95,6 @@ module Exercise
         include Commandline::Output
 
         context 'quiet' do
-
           before :each do
             allow(subject).to receive(:quiet?).and_return(true)
           end
@@ -113,13 +110,12 @@ module Exercise
             let(:cmd) { 'bad command' }
 
             it 'says there has been an error' do
-              allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return("error")
-              expected_error =  error("failed to run: #{cmd}\n\nerror")
+              allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return('error')
+              expected_error = error("failed to run: #{cmd}\n\nerror")
               subject.test_command(cmd)
               expect(subject.output.string.chomp).to eq(expected_error)
             end
           end
-
         end
 
         context 'not quiet' do
@@ -128,9 +124,8 @@ module Exercise
           end
 
           context 'command passes' do
-
             it 'reports the command that has run' do
-              expected_message =  "running: #{cmd}\n#{ok("Successfully ran: #{cmd}")}"
+              expected_message = "running: #{cmd}\n#{ok("Successfully ran: #{cmd}")}"
 
               subject.test_command(cmd)
               expect(subject.output.string.chomp).to eq(expected_message)
@@ -140,7 +135,7 @@ module Exercise
           context 'command fails' do
             let(:cmd) { 'bad command' }
             it 'says there has been an error' do
-              allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return("error")
+              allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return('error')
               expected_message = "running: #{cmd}\n#{error("failed to run: bad command\n\n error")}"
 
               subject.test_command(cmd)
