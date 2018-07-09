@@ -1,15 +1,13 @@
 module Exercise
 
-  # TODO - test remaining methods
   describe Instructions do
-    subject do
-      Object.new.tap do |o|
-        o.extend(described_class)
-        def o.quiet?
-          true
-        end
 
-        allow(o).to receive(:output).and_return(StringIO.new)
+    include_context :command
+    include_context :module_spec
+
+    before(:each) do
+      subject.define_singleton_method :quiet? do
+        true
       end
     end
 
@@ -107,7 +105,7 @@ module Exercise
           context 'command passes' do
             it 'prints out a quiet report' do
               subject.test_command(cmd)
-              expect(output.string.uncolorize).to eq('.')
+              expect(subject.output.string).to eq('.'.green)
             end
           end
 
@@ -132,7 +130,7 @@ module Exercise
           context 'command passes' do
 
             it 'reports the command that has run' do
-              expected_message =  "running: #{cmd}\n #{ok("Successfully ran: #{cmd}")}"
+              expected_message =  "running: #{cmd}\n#{ok("Successfully ran: #{cmd}")}"
 
               subject.test_command(cmd)
               expect(subject.output.string.chomp).to eq(expected_message)

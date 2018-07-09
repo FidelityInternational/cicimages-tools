@@ -3,12 +3,12 @@ module Exercise
     include Commandline::Output
     include Instructions
 
-    def render_exercises(dir = Dir.pwd, quiet: true)
+    def render_exercises(dir = Dir.pwd)
       status = true
       original_dir = Dir.pwd
       templates(dir).each do |template|
         begin
-          render_exercise(original_dir, template, quiet: quiet)
+          render_exercise(original_dir, template)
         rescue StandardError
           status = false
         end
@@ -16,6 +16,21 @@ module Exercise
       end
 
       status
+    end
+
+    def render_exercise(original_dir, template)
+      exercise_name = File.basename(original_dir)
+      say "Generating file for: #{exercise_name}"
+
+      result = anonymise(render(template))
+
+      File.write(exercise_filename(template), result)
+
+      say '' if quiet?
+      say ok "Finished: #{exercise_name}"
+    rescue StandardError => e
+      say error "Failed to generate file from: #{template}"
+      raise e
     end
 
     private
@@ -32,21 +47,6 @@ module Exercise
       ERB.new(File.read(template)).result(binding)
     ensure
       after_all_commands.each { |command| test_command(command) }
-    end
-
-    def render_exercise(original_dir, template, quiet:)
-      exercise_name = File.basename(original_dir)
-      say "Generating file for: #{exercise_name}"
-
-      result = anonymise(render(template))
-
-      File.write(exercise_filename(template), result)
-
-      say '' if quiet
-      say ok "Finished: #{exercise_name}"
-    rescue CommandError => e
-      say error "Failed to generate file from: #{template}"
-      raise e
     end
 
     def templates(dir)
