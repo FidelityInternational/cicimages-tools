@@ -12,12 +12,6 @@ module Docker
 
   include Commandline
 
-  def container_exists?(container_name)
-    container_id(container_name) && true
-  rescue Error
-    false
-  end
-
   def docker_container_running?(name)
     result = docker_container_info(name)
     return false if result.empty?

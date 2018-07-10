@@ -9,27 +9,28 @@ module Exercise
   end
 
   class Command < Thor
-    BANNER =
+    def self.exit_on_failure?
+      true
+    end
 
-      desc 'generate', 'render templates'
-    option :quiet, default: false
+    desc 'generate', 'render templates'
+    option :quiet, type: :boolean, default: false
 
-    def generate
+    def generate(path = Dir.pwd)
       say <<~MESSAGE
         #############################
         # Generating exercise files #
         #############################
       MESSAGE
 
-      exit 1 unless render_exercises(Dir.pwd)
+      raise Thor::Error unless render_exercises(path)
     end
 
     no_commands do
-      include Instructions
       include RenderMethods
 
       def quiet?
-        options[:quiet]
+        options[:quiet] == true
       end
     end
   end
