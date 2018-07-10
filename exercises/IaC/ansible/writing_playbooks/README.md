@@ -92,7 +92,7 @@ This outputs the following. (We've omitted the stack traces):
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_12590, inifile: pytest.ini
+rootdir: /vols/pytest_31806, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -155,7 +155,7 @@ changed: [localhost]
 PLAY RECAP *********************************************************************
 localhost                  : ok=3    changed=2    unreachable=0    failed=0   
 
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-17075
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
 ```
 
 The terminal output shows us that our 2 tasks ran:
@@ -172,10 +172,10 @@ changed: [localhost]
 
 The last line of output came from the courseware installed on your machine and gives us the ID we need to start the container up and run our tests again.
 ```
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-17075
+[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
 ```
 
-Using the actual ID that came out on your console, cic start the container that was created, this time we'll also make the webserver port 80 available locally as port 8080, run: `cic start lvlup/ci_course:xxxxxxxxxxxxxxxx-17075 --map-port 8080:80`
+Using the actual ID that came out on your console, cic start the container that was created, this time we'll also make the webserver port 80 available locally as port 8080, run: `cic start lvlup/ci_course:xxxxxxxxxxxxxxxx --map-port 8080:80`
 
 
 
@@ -184,18 +184,18 @@ Using the actual ID that came out on your console, cic start the container that 
 This should output the following:
 ```
 [OK] Starting container
-     Connect with: cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx-17075
-     Stop with   : cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx-17075
+     Connect with: cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx
+     Stop with   : cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx
 ```
 Run the test again, this time however we'll point it at the host that we want to run the test against.
-To do this run: `pytest --hostname lvlup-ci_course-xxxxxxxxxxxxxxxx-17075`
+To do this run: `pytest --hostname lvlup-ci_course-xxxxxxxxxxxxxxxx`
 
 We can see from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_27921, inifile: pytest.ini
+rootdir: /vols/pytest_15586, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -250,7 +250,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_11392, inifile: pytest.ini
+rootdir: /vols/pytest_26799, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -259,7 +259,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.98 seconds ===========================
+=========================== 4 passed in 1.05 seconds ===========================
 ```
 
 Good luck!
