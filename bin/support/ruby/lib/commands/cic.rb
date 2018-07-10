@@ -2,6 +2,8 @@ require 'thor'
 require 'open3'
 require_relative '../utils/commandline'
 require_relative '../utils/docker'
+require_relative 'track'
+
 module Commands
   class CIC < Thor
     CONTAINER_NOT_RUNNING_MSG = 'Container is not running'.freeze
@@ -9,6 +11,9 @@ module Commands
 
     class ContainerAlreadyRunningError < StandardError
     end
+
+    desc 'track', 'thing'
+    subcommand 'track', Track
 
     desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
     option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
@@ -20,7 +25,6 @@ module Commands
 
     desc 'start IMAGE_TAG', 'log in to a container and see what happened'
     option :map_port, desc: 'map hostport to container port'
-
     def start(image_tag)
       container_name = normalise(image_tag)
 

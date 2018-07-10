@@ -6,10 +6,7 @@ if ENV['COVERAGE']
   SimpleCov.start('rspec')
 end
 
-require 'docker_containers_context'
-require 'command_context'
-require 'run_in_temp_directory_context'
-require 'module_spec_context'
+require 'shared_contexts'
 
 require 'commands'
 

@@ -18,6 +18,10 @@ module Commands
       remove_container(container_name) if docker_container_running?(container_name)
     end
 
+    it 'has a track subcommand' do
+      expect(described_class.subcommand_classes['track']).to be(Track)
+    end
+
     describe '#connect' do
       context 'command option specified' do
         it 'runs the command against the container' do
