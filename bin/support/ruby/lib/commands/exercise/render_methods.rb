@@ -36,8 +36,8 @@ module Exercise
     private
 
     def anonymise(string)
-      string.gsub(/course-[\w\d]+/, 'course-xxxxxxxxxxxxxxxx')
-            .gsub(/course:[\w\d]+/, 'course:xxxxxxxxxxxxxxxx')
+      string.gsub(/course-[\w\d-]+/, 'course-xxxxxxxxxxxxxxxx')
+            .gsub(/course:[\w\d-]+/, 'course:xxxxxxxxxxxxxxxx')
     end
 
     def exercise_filename(template)

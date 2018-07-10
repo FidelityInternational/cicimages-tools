@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+CIC_DOCKER_CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 function volume_path() {
     local prefix=$1
     echo "/vols/${prefix}_${RANDOM}"
@@ -12,12 +13,20 @@ function cic_network() {
     echo "cic"
 }
 
+function cic_image_repository() {
+    cat "${CIC_DOCKER_CURRENT_PATH}/../../../../.courseware-image"
+}
+
+function cic_image_version() {
+    cat "${CIC_DOCKER_CURRENT_PATH}/../../../../.courseware-version"
+}
+
 function cic_image() {
-    echo "lvlup/ci_course"
+    echo "$(cic_image_repository):$(cic_image_version)"
 }
 
 function cic_tag() {
-    echo "$(cic_image):${RANDOM}"
+    echo "$(cic_image_repository):temp-${RANDOM}"
 }
 
 

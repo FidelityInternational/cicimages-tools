@@ -5,6 +5,7 @@ Bundler.require :development, :default
 
 import "#{__dir__}/tasks/lint.rake"
 import "#{__dir__}/tasks/exercises.rake"
+import "#{__dir__}/tasks/courseware.rake"
 
 RSpec::Core::RakeTask.new(:spec) do
   ENV['COVERAGE'] = 'true'
