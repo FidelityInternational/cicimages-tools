@@ -1,54 +1,23 @@
 require 'mirage/client'
 require 'mirage/template/json_requirements'
+require 'mirage/rspec/expectations'
 require 'github/api'
 require 'github/api/mocks'
 require_relative 'github_api_context/mirage_request_matcher'
 
-module GithubApiExpectations
-  API_METHODS = { project_api: Github::Api::Mocks::Project::CreateResponse,
-                  project_column_api: Github::Api::Mocks::Project::Column::CreateResponse,
-                  issue_api: Github::Api::Mocks::Issue::CreateResponse,
-                  project_card_api: Github::Api::Mocks::Project::Card::CreateResponse,
-                  repos_api: Github::Api::Mocks::Repos::GetResponse }.freeze
-
-  API_METHODS.each do |api_method, mock_response_class|
-    define_method api_method do
-      @expectation_chain = MirageRequestMatcher.new(self, mirage, mock_response_class, api_method)
-    end
-  end
-
-  def be_called
-    @expectation_chain
-  end
-
-  def be_called_with(attribute_hash)
-    @expectation_chain.expects(attribute_hash)
-  end
-
-  def with_uri(uri)
-    @expectation_chain.with_uri(uri)
-  end
-end
-
 shared_context :github_api do
-  include GithubApiExpectations
+  include_context :mirage
 
-  MIRAGE_CLIENT = Mirage.start
+  API_METHODS = { project: Github::Api::Mocks::Project::CreateResponse,
+                  project_column: Github::Api::Mocks::Project::Column::CreateResponse,
+                  issue: Github::Api::Mocks::Issue::CreateResponse,
+                  project_card: Github::Api::Mocks::Project::Card::CreateResponse,
+                  repos: Github::Api::Mocks::Repos::GetResponse }.freeze
 
-  def mirage
-    MIRAGE_CLIENT
-  end
+  API_METHODS.each { |api, mock_response_class| define_api_method(api, mock_response_class) }
 
   before(:each) do |*_args|
     mirage.clear
     Github::Api.mock(mirage)
-  end
-
-  after(:each) do |example|
-    after_actions.each(&:call) unless example.exception
-  end
-
-  let(:after_actions) do
-    @after_actions ||= []
   end
 end

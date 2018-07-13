@@ -19,7 +19,7 @@ module Commands
     end
 
     it 'has a track subcommand' do
-      expect(described_class.subcommand_classes['track']).to be(Track)
+      expect(described_class.subcommand_classes['track']).to be(Track::Command)
     end
 
     describe '#connect' do

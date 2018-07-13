@@ -1,5 +1,0 @@
-tracks:
-  - name: ansible
-    exercises:
-      - running_ansible: 'IaC/ansible/running_ansible'
-      - writing_playbooks: 'IaC/ansible/writing_playbooks'

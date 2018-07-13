@@ -1,14 +1,15 @@
 class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
   include RSpec::Mocks::Matchers::Matcher
 
-  attr_reader :expectations, :template_id, :mirage, :state, :api_name
+  attr_reader :expectations, :template_id, :mirage, :state, :api_name, :state_class
 
   def initialize(matcher_execution_context, mirage, state_class, api_name)
+    @state_class = state_class
     @state = state_class.new
     @expectations = {}
     @mirage = mirage
     @api_name = api_name
-    super :_not_set, proc {}, matcher_execution_context
+    super api_name, proc {}, matcher_execution_context
   end
 
   def setup_allowance(*_args)
@@ -27,7 +28,7 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
 
   def does_not_match?(_arg)
     after_actions << proc do
-      raise failure_message('should') if called?
+      raise failure_message('should NOT') if called?
     end
 
     put(state)
@@ -35,7 +36,7 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
 
   def matches?(_arg)
     after_actions << proc do
-      raise failure_message('should NOT') unless called?
+      raise failure_message('should') unless called?
     end
 
     put(state)

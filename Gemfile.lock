@@ -20,7 +20,7 @@ GEM
     httparty (0.16.2)
       multi_xml (>= 0.5.2)
     json (2.1.0)
-    mirage (4.0.0.alpha8)
+    mirage (4.0.0.alpha9)
       childprocess
       haml
       hashie
@@ -91,7 +91,7 @@ DEPENDENCIES
   bump
   colorize
   json
-  mirage (= 4.0.0.alpha8)
+  mirage (= 4.0.0.alpha9)
   netrc
   octokit
   rake

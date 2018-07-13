@@ -13,7 +13,7 @@ module Commands
     end
 
     desc 'track', 'thing'
-    subcommand 'track', Track
+    subcommand 'track', Track::Command
 
     desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
     option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
