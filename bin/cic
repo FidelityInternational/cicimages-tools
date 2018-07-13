@@ -4,26 +4,39 @@ CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=bin/support/sh/functions/cic_docker.sh
 source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
-subcommand=$1
-image=$2
-switch=$3
-container_command=$4
-
 # shellcheck disable=SC2016
 rbenv_init='eval "$(rbenv init -)"'
-command="${rbenv_init} && /cic/bin/support/ruby/bin/cic ${subcommand} ${image} ${switch}"
-
-if [ "${container_command}" != "" ]; then
-    command="${command} '${container_command}'"
-fi
+cic_command="${rbenv_init} && /cic/bin/support/ruby/bin/cic"
 
 options=""
-if [ "${subcommand}" == "connect" ]; then
-    options='-it'
+subcommand=$1
+
+if [ "${subcommand}" == "track" ]; then
+    command="${cic_command} $*"
+else
+
+    if [ "${subcommand}" == "connect" ]; then
+        options='-it'
+    fi
+
+    image=$2
+    switch=$3
+    container_command=$4
+    option=$5
+
+    command="${cic_command} ${subcommand} ${image} ${switch}"
+
+    if [ "${container_command}" != "" ]; then
+        command="${command} '${container_command}'"
+    fi
 fi
+
 
 docker run ${options} \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "${CURRENT_PATH}/../tracks":/cic/tracks \
+    -v "${CURRENT_PATH}/../exercises":/cic/exercises \
+    -v "${HOME}/.netrc":/root/.netrc \
     "$(cic_image)" \
     /bin/bash -c "${command}"
