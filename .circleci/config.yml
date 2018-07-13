@@ -28,6 +28,9 @@ jobs:
           - v1-dependencies-
       - run: bin/setup
       - run: echo 'export PATH="$(pwd)/bin:$PATH"' >> $BASH_ENV
+      - run: echo 'machine 127.0.0.1' >> $HOME/.netrc && chmod 0600 $HOME/.netrc
+      - run: echo 'export PATH="$(pwd)/bin:$PATH"' >> $BASH_ENV
+
       - run:
           name: install dependencies
           command: |
