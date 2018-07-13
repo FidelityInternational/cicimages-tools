@@ -8,7 +8,8 @@ module GithubApiExpectations
   API_METHODS = { project_api: Github::Api::Mocks::Project::CreateResponse,
                   project_column_api: Github::Api::Mocks::Project::Column::CreateResponse,
                   issue_api: Github::Api::Mocks::Issue::CreateResponse,
-                  project_card_api: Github::Api::Mocks::Project::Card::CreateResponse }.freeze
+                  project_card_api: Github::Api::Mocks::Project::Card::CreateResponse,
+                  repos_api: Github::Api::Mocks::Repos::GetResponse }.freeze
 
   API_METHODS.each do |api_method, mock_response_class|
     define_method api_method do
@@ -16,7 +17,11 @@ module GithubApiExpectations
     end
   end
 
-  def to_be_called_with(attribute_hash)
+  def be_called
+    @expectation_chain
+  end
+
+  def be_called_with(attribute_hash)
     @expectation_chain.expects(attribute_hash)
   end
 
@@ -40,7 +45,7 @@ shared_context :github_api do
   end
 
   after(:each) do |example|
-    after_actions.each(&:validate) unless example.exception
+    after_actions.each(&:call) unless example.exception
   end
 
   let(:after_actions) do

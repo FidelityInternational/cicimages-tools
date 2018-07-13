@@ -1,4 +1,6 @@
 class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
+  include RSpec::Mocks::Matchers::Matcher
+
   attr_reader :expectations, :template_id, :mirage, :state, :api_name
 
   def initialize(matcher_execution_context, mirage, state_class, api_name)
@@ -7,6 +9,10 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
     @mirage = mirage
     @api_name = api_name
     super :_not_set, proc {}, matcher_execution_context
+  end
+
+  def setup_allowance(*_args)
+    put(state)
   end
 
   def expects(expectation)
@@ -19,26 +25,33 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
     put(state)
   end
 
-  def do_something_on_mirage(_mock_response_class)
-    after_actions << self unless after_actions.include?(self)
+  def does_not_match?(_arg)
+    after_actions << proc do
+      raise failure_message('should') if called?
+    end
+
     put(state)
   end
 
-  alias matches? do_something_on_mirage
+  def matches?(_arg)
+    after_actions << proc do
+      raise failure_message('should NOT') unless called?
+    end
 
-  def validate
-    raise failure_message if mirage.requests(template_id).empty?
+    put(state)
   end
 
-  def failure_message
+  def failure_message(status)
     <<~MESSAGE
-      "#{api_name} not called:
+      "#{api_name} #{status} have been called:
+      TemplateID: #{template_id}
       Request Requirements:
       \t path: #{state.endpoint}
       \t method: #{state.http_method}
       \t required body_content: #{state.required_body_content}
       \t required headers: #{state.required_headers}
       \t required required request parameters: #{state.required_parameters}
+
     MESSAGE
   end
 
@@ -48,6 +61,10 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
   end
 
   private
+
+  def called?
+    !mirage.requests(template_id).empty?
+  end
 
   def put(state)
     apply_expectations(state)

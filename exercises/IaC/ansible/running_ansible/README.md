@@ -151,7 +151,7 @@ This should output the following:
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_26412, inifile: pytest.ini
+rootdir: /vols/pytest_20156, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 3 items
 
@@ -159,7 +159,7 @@ tests/apache_ansible_test.py::test_apache_installed PASSED               [ 33%]
 tests/apache_ansible_test.py::test_apache_is_enabled_as_service PASSED   [ 66%]
 tests/apache_ansible_test.py::test_apache_installed_is_running PASSED    [100%]
 
-=========================== 3 passed in 0.98 seconds ===========================
+=========================== 3 passed in 0.90 seconds ===========================
 ```
 
 In just a second or so the test has validated that:

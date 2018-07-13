@@ -23,6 +23,8 @@ module Commands
     option :fork, desc: 'the account/repo of your fork'
 
     def start(track_name)
+      validate!(track_name)
+
       project = create_project("Learn #{track_name}")
 
       todo_column = create_column(project.id, 'TODO')
@@ -36,6 +38,10 @@ module Commands
     no_commands do
       private
 
+      def create_column(project_id, name)
+        github_client.create_project_column(project_id, name, default_projects_options)
+      end
+
       def create_exercises(client, todo_column, track_name)
         track(track_name)['exercises'].each do |exercise|
           name = exercise.keys.first
@@ -46,28 +52,49 @@ module Commands
         end
       end
 
-      def track(track_name)
-        tracks.find do |track|
-          track['name'] == track_name
-        end
-      end
-
       def create_project(board_name)
         github_client.create_project(fork, board_name, default_projects_options)
       end
 
-      def create_column(project_id, name)
-        github_client.create_project_column(project_id, name, default_projects_options)
+      def default_projects_options
+        { accept: 'application/vnd.github.inertia-preview+json' }
       end
 
       def fork
         options[:fork]
       end
 
-      def default_projects_options
-        { accept: 'application/vnd.github.inertia-preview+json' }
+      def track(track_name)
+        tracks.find do |track|
+          track['name'] == track_name
+        end
+      end
+
+      def track_exists?(track_name)
+        !track(track_name).nil?
+      end
+
+      def track_names
+        tracks.collect { |track| track['name'] }
+      end
+
+      def track_missing_msg(track_name)
+        "Track #{track_name} not found.\nPlease choose from:#{track_names.join("\n")}"
+      end
+
+      def repo_error_msg
+        "#{fork} is not a fork. Please for the CIC repo and try again"
+      end
+
+      def validate!(track_name)
+        raise Thor::Error, track_missing_msg(track_name) unless track_exists?(track_name)
+
+        repo = github_client.repo(fork)
+
+        raise Thor::Error, repo_error_msg unless repo['fork'] == true
       end
     end
+
     # rubocop:enable Metrics/BlockLength
   end
 end

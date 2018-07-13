@@ -5,6 +5,7 @@ module Github
 
       Projects.mock(mirage)
       Issues.mock(mirage)
+      Repos.mock(mirage)
     end
 
     module Projects
@@ -20,6 +21,12 @@ module Github
     module Issues
       def self.mock(mirage)
         mirage.put(Mocks::Issue::CreateResponse.new)
+      end
+    end
+
+    module Repos
+      def self.mock(mirage)
+        mirage.put(Mocks::Repos::GetResponse.new)
       end
     end
   end
