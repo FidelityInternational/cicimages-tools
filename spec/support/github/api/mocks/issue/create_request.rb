@@ -6,15 +6,24 @@ module Github
           attr_reader :data
 
           def initialize(data:)
-            @data = data
+            @data = JSON(data, symbolize_names: true)
           end
 
           def title
             data[:title]
           end
 
-          def id
-            data[:id]
+          def body
+            data[:body]
+          end
+
+          def labels
+            data[:labels]
+          end
+
+          def ==(other)
+            title == other.title &&
+              labels == other.labels
           end
         end
       end

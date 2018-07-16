@@ -67,7 +67,7 @@ module Commands
 
       describe '#start' do
         it 'creates a project board' do
-          expect(project_api).to be_called_with(name: "Learn #{track_name}")
+          expect(projects_api).to be_called_with(name: "Learn #{track_name}")
           subject.start(track_name)
         end
 
@@ -75,40 +75,72 @@ module Commands
           let(:project) { Project::CreateResponse.new }
 
           before do
-            allow(project_api).to be_called_with(name: "Learn #{track_name}").and_return(project)
+            allow(projects_api).to be_called.and_return(project)
+          end
+
+          it 'has 3 columns' do
+            expect(projects_columns_api).to be_called.times(3)
+
+            subject.start(track_name)
           end
 
           it 'has a todo column' do
-            expect(project_column_api).to be_called_with(name: 'TODO')
+            expect(projects_columns_api).to be_called_with(name: 'TODO')
+              .and with_uri("/projects/#{project.project_id}/columns")
+
             subject.start(track_name)
           end
 
           it 'has a in-progress column' do
-            expect(project_column_api).to be_called_with(name: 'in-progress')
+            expect(projects_columns_api).to be_called_with(name: 'in-progress')
+              .and with_uri("/projects/#{project.project_id}/columns")
+
             subject.start(track_name)
           end
 
           it 'has a done column' do
-            expect(project_column_api).to be_called_with(name: 'done')
+            expect(projects_columns_api).to be_called_with(name: 'done')
               .and with_uri("/projects/#{project.project_id}/columns")
+
             subject.start(track_name)
           end
         end
 
         context 'cards' do
-          it 'creates cards for the given tracks' do
+          it 'creates issues for each of the exercises' do
+            subject.start(track_name)
+
+            issue1 = Issue::CreateRequest.new(data: { title: 'ex1', labels: [] }.to_json)
+            issue2 = Issue::CreateRequest.new(data: { title: 'ex2', labels: [] }.to_json)
+            expect(issues_api_requests).to match_array([issue1, issue2])
+          end
+
+          it 'creates cards for the issues it creates' do
             issue = Issue::CreateResponse.new
-            expect(issue_api).to be_called_with(title: 'ex1').and_return(issue)
-            expect(project_card_api).to be_called_with(content_id: issue.id)
+            expect(issues_api).to be_called_with(title: 'ex1').and_return(issue)
+            expect(projects_cards_api).to be_called_with(content_id: issue.id)
 
             subject.start(track_name)
+          end
+
+          it 'creates the cards in the correct order' do
+            issue1 = Issue::CreateResponse.new
+            expect(issues_api).to be_called_with(title: 'ex1').and_return(issue1)
+            issue2 = Issue::CreateResponse.new
+            expect(issues_api).to be_called_with(title: 'ex2').and_return(issue2)
+
+            subject.start(track_name)
+
+            card1 = Project::Card::CreateRequest.new(data: { content_id: issue1.id, content_type: 'Issue' }.to_json)
+            card2 = Project::Card::CreateRequest.new(data: { content_id: issue2.id, content_type: 'Issue' }.to_json)
+            expect(projects_cards_api_requests).to eq([card2, card1])
           end
 
           context 'custom preamble given' do
             it 'sets it in the issue detail' do
               message = 'custom preamble'
               write_to_file("tracks/#{track_name}/#{exercise.name}.md", message)
-              expectation = expect(issue_api).to be_called
+              expectation = expect(issues_api).to be_called
 
               subject.start(track_name)
 

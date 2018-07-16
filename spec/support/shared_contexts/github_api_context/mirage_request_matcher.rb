@@ -16,6 +16,15 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
     put(state)
   end
 
+  def times(count)
+    after_actions << proc do
+      num_received = mirage.requests(template_id).size
+      message = "#{state.class} didn't get required number of requests\nExpected: #{count}\nGot: #{num_received}"
+      expect(num_received).to eq(count), message
+    end
+    self
+  end
+
   def expects(expectation)
     expectations.merge!(expectation)
     self

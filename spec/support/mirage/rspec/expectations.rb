@@ -1,15 +1,19 @@
 module Mirage
   module RSpec
     module ClassMethods
-      def define_api_method(api, mock_response_class)
-        api_method = "#{api}_api"
-        define_method api_method do
-          @expectation_chain = MirageRequestMatcher.new(self, mirage, mock_response_class, api_method)
-        end
-      end
     end
 
     module Expectations
+      def define_expectation_method(api_method, mock_response_class)
+        define_singleton_method api_method do
+          @expectation_chain = MirageRequestMatcher.new(self, mirage, mock_response_class.response_class, api_method)
+        end
+      end
+
+      def define_requests_method(api, fixture)
+        define_singleton_method "#{api}_requests", &fixture.finder
+      end
+
       def self.included(clazz)
         clazz.extend ClassMethods
       end

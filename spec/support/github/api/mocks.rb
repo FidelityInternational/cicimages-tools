@@ -12,3 +12,4 @@ require_relative 'mocks/issue/create_response'
 require_relative 'mocks/issue/create_request'
 
 require_relative 'mocks/repos/get_response'
+require_relative 'mocks/repos/get_request'

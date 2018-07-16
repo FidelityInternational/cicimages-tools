@@ -17,6 +17,14 @@ module Github
             def content_id
               data[:content_id]
             end
+
+            def content_type
+              data[:content_type]
+            end
+
+            def ==(other)
+              data == other.data
+            end
           end
         end
       end

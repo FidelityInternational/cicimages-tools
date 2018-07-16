@@ -60,7 +60,7 @@ module Commands
         end
 
         def create_exercises(client, todo_column, track_name)
-          tracks[track_name].exercises.each do |exercise|
+          tracks[track_name].exercises.reverse.each do |exercise|
             issue = client.create_issue(fork, exercise.name, exercise.detail, labels: '')
 
             options = default_projects_options.merge(content_id: issue.id, content_type: 'Issue')
