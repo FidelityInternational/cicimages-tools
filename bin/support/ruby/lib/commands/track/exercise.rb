@@ -39,7 +39,11 @@ module Commands
       end
 
       def preamble_path
-        "#{track}/#{name}.md"
+        "#{track}/#{to_snake_case(name)}.md"
+      end
+
+      def to_snake_case(string)
+        string.downcase.gsub(/\s+/, '_')
       end
     end
   end

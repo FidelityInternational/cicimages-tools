@@ -20,6 +20,15 @@ module Commands
             write_to_file("#{subject.track}/#{subject.name}.md", preamble)
             expect(subject.detail).to start_with(preamble)
           end
+
+          context 'is not in snake case' do
+            let(:name) { 'Name With Spaces' }
+            it 'is converted to snake case to find the preamble' do
+              preamble = 'preamble'
+              write_to_file("#{subject.track}/name_with_spaces.md", preamble)
+              expect(subject.detail).to start_with(preamble)
+            end
+          end
         end
       end
       describe '#validate' do

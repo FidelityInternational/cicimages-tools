@@ -2,7 +2,7 @@
 namespace :courseware do
   require 'pty'
 
-  def run command
+  def run(command)
     stdout, _stdin, _pid = PTY.spawn command
     while (string = stdout.gets)
       print string
@@ -24,7 +24,7 @@ namespace :courseware do
     image = File.read('.courseware-image')
     version = File.read('.courseware-version')
 
-    puts "publishing image (docker output is hidden: takes a while)"
+    puts 'publishing image (docker output is hidden: takes a while)'
     `docker push #{image}:#{version}`
   end
 
