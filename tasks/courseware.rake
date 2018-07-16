@@ -1,28 +1,43 @@
+# rubocop:disable Metrics/BlockLength
 namespace :courseware do
-
   require 'pty'
-  task :build do
-    image = File.read("#{__dir__}/.courseware-image")
-    version = File.read("#{__dir__}/.courseware-version")
 
-    stdout, _stdin, _pid = PTY.spawn "docker build #{__dir__} -t #{image}:#{version}"
+  def run(command)
+    stdout, _stdin, _pid = PTY.spawn command
     while (string = stdout.gets)
-      puts string
+      print string
     end
+  end
+
+  desc 'build course image'
+  task :build do
+    Dir.chdir("#{__dir__}/../") do
+      image = File.read('.courseware-image')
+      version = File.read('.courseware-version')
+
+      run "docker build . -t #{image}:#{version}"
+    end
+  end
+
+  desc 'publish course image'
+  task :publish do
+    image = File.read('.courseware-image')
+    version = File.read('.courseware-version')
+
+    puts 'publishing image (docker output is hidden: takes a while)'
+    `docker push #{image}:#{version}`
   end
 
   require 'bump'
   class CoursewareVersionBumper < Bump::Bump
     def self.current_info
-
-      [File.read('/Users/leon/Projects/ci_training/.courseware-version'),
-       '/Users/leon/Projects/ci_training/.courseware-version']
+      version_file = "#{__dir__}/../.courseware-version"
+      [File.read(version_file), version_file]
     end
   end
 
   namespace :bump do
-    %i(patch minor major).each do |bump_type|
-
+    %i[patch minor major].each do |bump_type|
       desc "Bump #{bump_type} number"
       task bump_type do
         CoursewareVersionBumper.run(bump_type.to_s, commit: false)
@@ -30,3 +45,4 @@ namespace :courseware do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

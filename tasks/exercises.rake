@@ -10,7 +10,6 @@ task :generate_exercises, :mode do |_task, args|
     current_dir = Dir.pwd
     Dir["#{__dir__}/../exercises/**/.templates"].each do |templates_dir|
       Dir.chdir("#{__dir__}/../")
-      puts "about to do it: #{templates_dir}"
       Exercise::Command.new([], { quiet: quiet }, {}).generate(File.expand_path("#{templates_dir}/.."))
     end
   ensure

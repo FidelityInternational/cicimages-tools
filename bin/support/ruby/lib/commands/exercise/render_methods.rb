@@ -3,9 +3,8 @@ module Exercise
     include Commandline::Output
     include Instructions
 
-    def render_exercises(dir)
+    def render_exercises(dir, original_dir = Dir.pwd)
       status = true
-      original_dir = Dir.pwd
       templates(dir).each do |template|
         begin
           render_exercise(dir, template)

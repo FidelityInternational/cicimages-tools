@@ -8,4 +8,9 @@ shared_context :run_in_temp_directory do
       Dir.chdir(current_dir)
     end
   end
+
+  def write_to_file(path, content)
+    FileUtils.mkdir_p(File.dirname(path))
+    File.write(path, content)
+  end
 end

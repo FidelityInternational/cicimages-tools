@@ -1,0 +1,5 @@
+tracks:
+  - name: ansible
+    exercises:
+      - Running Ansible: 'exercises/IaC/ansible/running_ansible/README.md'
+      - Writing Playbooks: 'exercises/IaC/ansible/writing_playbooks/README.md'
