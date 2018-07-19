@@ -22,6 +22,9 @@ The readme to the exercise should include the following:
 ### Introduction
 `# Required - Give a written explanation of the purpose of the topic this exercise is based on`
 
+### Learning Objectives
+`as written above`
+
 ## Useful Terminology
 `# Optional - any key terms you intend to use in your exercise, if appropriate, could be listed here`
 
