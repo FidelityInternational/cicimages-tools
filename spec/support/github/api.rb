@@ -33,9 +33,13 @@ module Github
     module Repos
       def self.mock(mirage)
         {
-          repos_api: Fixture.new(mirage: mirage,
-                                 response_class: Mocks::Repos::GetResponse,
-                                 request_class: Mocks::Repos::GetRequest)
+          repos_get_api: Fixture.new(mirage: mirage,
+                                     response_class: Mocks::Repos::GetResponse,
+                                     request_class: Mocks::Repos::GetRequest),
+
+          repos_edit_api: Fixture.new(mirage: mirage,
+                                      response_class: Mocks::Repos::EditResponse,
+                                      request_class: Mocks::Repos::EditRequest)
         }
       end
     end
