@@ -1,3 +1,24 @@
-#!/usr/bin/env ruby
-require_relative 'support/ruby/lib/commands/exercise/command'
-Exercise::Command.start(ARGV)
+#!/usr/bin/env bash
+
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=bin/support/sh/functions/cic_docker.sh
+source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
+
+# shellcheck disable=SC2016
+rbenv_init='eval "$(rbenv init -)"'
+export_command='. /cic/bin/.env'
+command="${rbenv_init} && ${export_command} && /cic/bin/support/ruby/bin/exercise $@"
+
+volume_path="$(volume_path ansible)/$(basename `pwd`)"
+
+copy_to_cic_volume "$(pwd)/." "${volume_path}"
+
+docker run \
+    --network "$(cic_network)" \
+    --volumes-from "$(cic_volumes_container)" \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -w "${volume_path}" \
+    "$(cic_image)" \
+    /bin/bash -c "${command}"
+
+docker cp "$(cic_volumes_container):${volume_path}/." .

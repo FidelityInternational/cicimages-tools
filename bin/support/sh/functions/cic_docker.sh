@@ -30,9 +30,19 @@ function cic_tag() {
 }
 
 
+function cic_volume_mkdir_p(){
+    local path=$1
+    docker run \
+        --network "$(cic_network)" \
+        --volumes-from "$(cic_volumes_container)" \
+        "$(cic_image)" \
+        /bin/bash -c "mkdir -p ${path}"
+}
 function copy_to_cic_volume() {
     local path=$1
     local volume_path=$2
+
+    cic_volume_mkdir_p ${volume_path}
     docker cp "${path}" "$(cic_volumes_container):${volume_path}" > /dev/null
 }
 

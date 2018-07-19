@@ -34,7 +34,7 @@ then
 fi
 
 # shellcheck source=.env
-source "${CURRENT_PATH}/../.env"
+source "${CURRENT_PATH}/.env"
 say "$(ok "Setup path: ${CURRENT_PATH}")"
 
 say "$(ok "environment setup complete :)")"

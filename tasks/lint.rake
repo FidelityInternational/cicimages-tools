@@ -11,5 +11,6 @@ task :rubocop do
 end
 
 task :coverage_check do
+  require 'simplecov'
   SimpleCov.minimum_coverage 80
 end
