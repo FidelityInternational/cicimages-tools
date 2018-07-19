@@ -1,0 +1,29 @@
+---
+- name: Install and configure ntpd
+  hosts: all
+  tasks:
+    - name: Ensure ntp daemon is installed
+      package:
+        name: ntp
+        state: installed
+
+    - name: Copy ntpd configuration
+      copy:
+        src: ntp.conf.j2
+        dest: /etc/ntp.conf
+        mode: 0644
+        owner: root
+        group: root
+      notify: restart_ntpd
+
+    - name: Ensure ntpd is started
+      service:
+        name: ntpd
+        state: started
+        enabled: true
+
+  handlers:
+    - name: restart_ntpd
+      service:
+        name: ntpd
+        state: restarted
