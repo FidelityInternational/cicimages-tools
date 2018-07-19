@@ -203,6 +203,13 @@ module Commands
             expect { subject.start(track_name) }.to raise_error(CredentialsError)
           end
         end
+
+        context 'invalid format' do
+          let(:target_repo) { 'in-valid' }
+          it 'raises an error' do
+            expect { subject.start(track_name) }.to raise_error(InvalidForkFormatError)
+          end
+        end
       end
     end
   end

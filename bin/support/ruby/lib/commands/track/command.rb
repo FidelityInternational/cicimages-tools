@@ -26,6 +26,7 @@ module Commands
       desc 'start TRACK_NAME', 'start a track'
       option :fork, desc: 'the account/repo of your fork'
 
+      # rubocop:disable Metrics/MethodLength
       def start(track_name)
         Dir.chdir(tracks_dir) do
           setup!(track_name)
@@ -40,7 +41,11 @@ module Commands
         end
       rescue Octokit::Unauthorized
         raise CredentialsError
+      rescue Octokit::InvalidRepository
+        raise InvalidForkFormatError
       end
+      # rubocop:enable Metrics/MethodLength
+
       no_commands do
         include Helpers
       end

@@ -6,6 +6,12 @@ module Commands
       end
     end
 
+    class InvalidForkFormatError < Thor::Error
+      def initialize
+        super 'Fork option container invalid characters. Check you have typed it correctly.'
+      end
+    end
+
     class MissingCredentialsError < Thor::Error
       def initialize(host)
         super ".netrc does not container credentials for #{host}"
