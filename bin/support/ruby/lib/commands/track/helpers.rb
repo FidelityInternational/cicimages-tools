@@ -62,10 +62,6 @@ module Commands
         end
       end
 
-      def repo_error_msg
-        "#{fork} is not a fork. Please for the CIC repo and try again"
-      end
-
       def track_exists?(track_name)
         tracks.key?(track_name)
       end
