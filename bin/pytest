@@ -6,12 +6,13 @@ source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
 
 volume_path="$(volume_path pytest)"
-copy_to_cic_volume "$(pwd)" "${volume_path}"
+copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
 docker run \
   --network "$(cic_network)" \
   --volumes-from "$(cic_volumes_container)" \
   -w "${volume_path}" \
+  -e PYTHONDONTWRITEBYTECODE=1 \
    "$(cic_image)" \
-  pytest "$@"
+   pytest "$@"
 

@@ -8,7 +8,7 @@ source "${CURRENT_PATH}/support/sh/functions/output.sh"
 source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
 volume_path="$(volume_path ansible)"
-copy_to_cic_volume "$(pwd)" "${volume_path}"
+copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
 if docker run --privileged \
     --network "$(cic_network)" \

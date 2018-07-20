@@ -22,7 +22,6 @@ else
     image=$2
     switch=$3
     container_command=$4
-    option=$5
 
     command="${cic_command} ${subcommand} ${image} ${switch}"
 

@@ -33,8 +33,8 @@ then
     docker create -v /vols --name "$(cic_volumes_container)" alpine:3.4 /bin/true
 fi
 
-# shellcheck source=.env
-source "${CURRENT_PATH}/../.env"
+# shellcheck source=bin/.env
+source "${CURRENT_PATH}/.env"
 say "$(ok "Setup path: ${CURRENT_PATH}")"
 
 say "$(ok "environment setup complete :)")"
