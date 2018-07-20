@@ -92,7 +92,7 @@ This outputs the following. (We've omitted the stack traces):
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_30086, inifile: pytest.ini
+rootdir: /vols/pytest_18138, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -194,7 +194,7 @@ We can see from the output that the tests verifying apache2 is installed, up and
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_26427, inifile: pytest.ini
+rootdir: /vols/pytest_6926, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -248,7 +248,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_24282, inifile: pytest.ini
+rootdir: /vols/pytest_28366, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -257,7 +257,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 1.08 seconds ===========================
+=========================== 4 passed in 0.98 seconds ===========================
 ```
 
 Good luck!

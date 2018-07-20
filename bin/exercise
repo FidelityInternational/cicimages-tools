@@ -7,9 +7,10 @@ source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 # shellcheck disable=SC2016
 rbenv_init='eval "$(rbenv init -)"'
 export_command='. /cic/bin/.env'
-command="${rbenv_init} && ${export_command} && /cic/bin/support/ruby/bin/exercise $@"
+command="${rbenv_init} && ${export_command} && /cic/bin/support/ruby/bin/exercise $*"
 
-volume_path="$(volume_path ansible)/$(basename `pwd`)"
+exercise_name="$(basename "$(pwd)")"
+volume_path="$(volume_path ansible)/${exercise_name}"
 
 copy_to_cic_volume "$(pwd)/." "${volume_path}"
 

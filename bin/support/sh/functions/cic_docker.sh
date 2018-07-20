@@ -42,7 +42,7 @@ function copy_to_cic_volume() {
     local path=$1
     local volume_path=$2
 
-    cic_volume_mkdir_p ${volume_path}
+    cic_volume_mkdir_p "${volume_path}"
     docker cp "${path}" "$(cic_volumes_container):${volume_path}" > /dev/null
 }
 
