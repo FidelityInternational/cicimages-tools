@@ -28,10 +28,17 @@ module Commands
 
       let(:target_repo) { 'user/repo' }
       let(:api_endpoint) { "#{mirage.url}/responses" }
+      let(:api_host) { URI(api_endpoint).host }
+
+      let(:netrc_path) { write_to_file("#{Dir.pwd}/.netrc", "machine #{api_host}", mode: 0o600) }
 
       before do
-        allow(repos_api).to be_called.and_return(Repos::GetResponse.new(fork: true))
+        allow(repos_get_api).to be_called.and_return(Repos::GetResponse.new(fork: true))
         write_to_file(tracks_yaml_path, tracks.to_yaml)
+
+        ENV['OCTOKIT_SILENT'] = 'true'
+        ENV['OCTOKIT_NETRC_FILE'] = netrc_path
+        Octokit.setup
       end
 
       subject do
@@ -63,11 +70,33 @@ module Commands
             expect { subject }.to raise_error(ArgumentError)
           end
         end
+
+        context 'netrc' do
+          context 'netrc missing' do
+            let(:netrc_path) { 'missing' }
+            it 'raises and error' do
+              expect { subject.start(track_name) }.to raise_error(NetrcMissingError)
+            end
+          end
+
+          context 'netrc missing entry for api host' do
+            let(:netrc_path) { write_to_file("#{Dir.pwd}/.netrc", '', mode: 0o600) }
+            it 'raises and error' do
+              expected_error = MissingCredentialsError.new(api_host)
+              expect { subject.start(track_name) }.to raise_error(expected_error)
+            end
+          end
+        end
       end
 
       describe '#start' do
         it 'creates a project board' do
           expect(projects_api).to be_called_with(name: "Learn #{track_name}")
+          subject.start(track_name)
+        end
+
+        it 'enables issues for the repo' do
+          expect(repos_edit_api).to be_called_with(has_issues: true)
           subject.start(track_name)
         end
 
@@ -153,8 +182,8 @@ module Commands
           context 'is not a fork' do
             it 'throws an error' do
               repo = Repos::GetResponse.new(fork: false)
-              expect(repos_api).to be_called.and_return(repo)
-              expect { subject.start(track_name) }.to raise_error(Thor::Error, subject.send(:repo_error_msg))
+              expect(repos_get_api).to be_called.and_return(repo)
+              expect { subject.start(track_name) }.to raise_error(RepoIsNotForkError.new(target_repo))
             end
           end
         end
@@ -162,8 +191,23 @@ module Commands
         context 'track does exist' do
           let(:track_name) { 'missing_track' }
           it 'raises an error' do
-            expected_msg = subject.send(:track_missing_msg, track_name)
-            expect { subject.start(track_name) }.to raise_error(Thor::Error, expected_msg)
+            expected_error = TrackNotFoundError.new(track_name: track_name,
+                                                    track_names: subject.send(:track_names))
+            expect { subject.start(track_name) }.to raise_error(expected_error)
+          end
+        end
+
+        context 'authorisation fails' do
+          it 'raises an error' do
+            allow_any_instance_of(Octokit::Client).to receive(:repo).and_raise(Octokit::Unauthorized)
+            expect { subject.start(track_name) }.to raise_error(CredentialsError)
+          end
+        end
+
+        context 'invalid format' do
+          let(:target_repo) { 'in-valid' }
+          it 'raises an error' do
+            expect { subject.start(track_name) }.to raise_error(InvalidForkFormatError)
           end
         end
       end
