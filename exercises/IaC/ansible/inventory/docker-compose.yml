@@ -1,0 +1,16 @@
+version: '3'
+networks:
+  default:
+    external:
+      name: cic
+
+services:
+  server1:
+    image: ${COURSEWARE_IMAGE}:${COURSEWARE_VERSION}
+
+  server2:
+    image: ${COURSEWARE_IMAGE}:${COURSEWARE_VERSION}
+
+  server3:
+    image: ${COURSEWARE_IMAGE}:${COURSEWARE_VERSION}
+
