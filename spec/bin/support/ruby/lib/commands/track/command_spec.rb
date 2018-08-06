@@ -104,9 +104,19 @@ module Commands
       end
 
       describe '#start' do
+        include_context :command
+        include Commandline::Output
+
+        def normalise(string)
+          string.uncolorize.gsub(/\n$/, '')
+        end
+
         it 'creates a project board' do
           expect(projects_api).to be_called_with(name: "Learn #{track_name}")
           subject.start(track_name)
+
+          expected_message = normalise(ok("Project 'Learn #{track_name}' created: #{projects_api.state.html_url}"))
+          expect(normalise(stdout.string)).to eq(expected_message)
         end
 
         it 'enables issues for the repo' do
