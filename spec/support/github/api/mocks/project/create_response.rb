@@ -12,18 +12,19 @@ module Github
 
           json_requirement :name
 
-          attr_reader :project_id
+          attr_reader :project_id, :html_url
 
           def initialize(project_id: rand(999_999))
             super
             @project_id = project_id
+            @html_url = 'https://github.com/api-playground/projects-test/projects/12'
           end
 
           def body
             {
               "owner_url": 'https://api.github.com/repos/api-playground/projects-test',
               "url": 'https://api.github.com/projects/1002604',
-              "html_url": 'https://github.com/api-playground/projects-test/projects/12',
+              "html_url": html_url,
               "columns_url": 'https://api.github.com/projects/1002604/columns',
               "id": project_id,
               "node_id": 'MDc6UHJvamVjdDEwMDI2MDQ=',
