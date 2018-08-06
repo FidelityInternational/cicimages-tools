@@ -28,7 +28,7 @@ Before we go any further let's break down the anatomy of playbooks. Playbooks ar
 - `---` : this denotes the start of a file and is actually optional in both YAML and Playbooks. We've used it here because it is something that's often seen, but is present by convention rather than requirement.
 - `#` Anything following a hash symbol is a comment meant for human readers. Comments are not interpreted.
 - `-` a single hyphen denotes a list. Content that is on the same line and imeditately tabbed in on the following lines is a member of that list entry. In the case of the example above. the YAML consist of a single item list. That item has attributes, one of which (attribute2), is itself a list that contains 2 items.
-- `attribute_name: value` entries followed by a colon `:` are called attributes, the value assigned to the attribute follows the colon. Value's can be simple values or complex entities themselves. For example 'attribute2' has a list assigned as it's value.
+- `attribute_name: value` entries followed by a colon `:` are called attributes, the value assigned to the attribute follows the colon. Values can be simple values or complex entities themselves. For example 'attribute2' has a list assigned as its value.
 
 **Note:** YAML is white space sensitive.
 
@@ -61,7 +61,7 @@ The following is an example Playbook that could be used to install a webserver.
 ```
 
 What can we say about the YAML for this PlayBook?
-- It contains a singe play: The YAML represents a single item list. This single entry, unsurprisingly, is called a play. Playbooks can include one or more plays
+- It contains a single play: The YAML represents a single item list. This single entry, unsurprisingly, is called a play. Playbooks can include one or more plays
 - `name:` An attribute called 'name' is used to name plays. In the case of our play, it is called 'Setup a webserver'.
 - `tasks:` The play consists of 2 tasks. These are given in the list assigned to the tasks attribute.
 
@@ -81,9 +81,9 @@ To complete this exercise you will need to write a playbook which will take the 
 Your playbook will need to:
   - install apache2
   - ensure that the service is started and running
-  - copies the files from the `./resources`resources' directory to the directory '/var/www/html' on the webserver
+  - copies the files from the `./resources` directory to the directory `/var/www/html` on the webserver
 
-Because the team wants you to be sure everything is working before you tell them that you're finished, they've helpfully supplied a set of automated acceptance tests for your drive the code that you write. The tests can be found in .
+Because the team wants you to be sure everything is working before you tell them that you're finished, they've helpfully supplied a set of automated acceptance tests for your drive the code that you write. The tests can be found in `./tests`.
 
 Execute the tests by running: `pytest --hostname unavailable_host`
 **Note** We haven't built anything yet so it's fine to have run the command as it was specified.
@@ -92,7 +92,7 @@ This outputs the following. (We've omitted the stack traces):
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_18138, inifile: pytest.ini
+rootdir: /vols/pytest_606, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -154,7 +154,7 @@ changed: [localhost]
 PLAY RECAP *********************************************************************
 localhost                  : ok=3    changed=2    unreachable=0    failed=0   
 
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 The terminal output shows us that our 2 tasks ran:
@@ -171,10 +171,10 @@ changed: [localhost]
 
 The last line of output came from the courseware installed on your machine and gives us the ID we need to start the container up and run our tests again.
 ```
-[ OK ] FINISHED - start container with: cic start lvlup/ci_course:xxxxxxxxxxxxxxxx
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
-Using the actual ID that came out on your console, cic start the container that was created, this time we'll also make the webserver port 80 available locally as port 8080, run: `cic start lvlup/ci_course:xxxxxxxxxxxxxxxx --map-port 8080:80`
+Using the actual ID that came out on your console, cic start the container that was created, this time we'll also make the webserver port 80 available locally as port 8080, run: `cic start cic_container-xxxxxxxxxxxxxxxx --map-port 8080:80`
 
 
 
@@ -183,18 +183,18 @@ Using the actual ID that came out on your console, cic start the container that 
 This should output the following:
 ```
 [OK] Starting container
-     Connect with: cic connect lvlup-ci_course-xxxxxxxxxxxxxxxx
-     Stop with   : cic stop lvlup-ci_course-xxxxxxxxxxxxxxxx
+     Connect with: cic connect cic_container-xxxxxxxxxxxxxxxx
+     Stop with   : cic stop cic_container-xxxxxxxxxxxxxxxx
 ```
 Run the test again, this time however we'll point it at the host that we want to run the test against.
-To do this run: `pytest --hostname lvlup-ci_course-xxxxxxxxxxxxxxxx`
+To do this run: `pytest --hostname cic_container-xxxxxxxxxxxxxxxx`
 
 We can see from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_6926, inifile: pytest.ini
+rootdir: /vols/pytest_5135, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -210,7 +210,7 @@ The remaining tests is checking that the website content being served is correct
 ### Modules
 Out of the box Ansible comes with a number of modules
 
-Module's are discrete units of code that are available to use either within a playbook or directly from the commandline. Ansible comes bundled with a whole bunch of them! The community has written modules for performing all sorts of different kings of task. [Take a look!](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html).
+Modules are discrete units of code that are available to use either within a playbook or directly from the commandline. Ansible comes bundled with a whole bunch of them! The community has written modules for performing all sorts of different kinds of task. [Take a look!](https://docs.ansible.com/ansible/devel/modules/modules_by_category.html)
 
 We've already been using modules in the ansible we wrote earlier.
 ```YAML
@@ -248,7 +248,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_28366, inifile: pytest.ini
+rootdir: /vols/pytest_4133, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -257,7 +257,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.98 seconds ===========================
+=========================== 4 passed in 1.04 seconds ===========================
 ```
 
 Good luck!
