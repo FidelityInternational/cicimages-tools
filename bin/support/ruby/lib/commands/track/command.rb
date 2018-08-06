@@ -35,17 +35,21 @@ module Commands
       desc 'start TRACK_NAME', 'start a track'
       option :fork, desc: 'the account/repo of your fork'
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def start(track_name)
         Dir.chdir(tracks_dir) do
           setup!(track_name)
 
-          project = create_project("Learn #{track_name}")
+          project_name = "Learn #{track_name}"
+          project = create_project(project_name)
 
           todo_column = create_column(project.id, 'TODO')
           create_exercises(github_client, todo_column, track_name)
 
           create_column(project.id, 'in-progress')
           create_column(project.id, 'done')
+
+          say ok "Project '#{project_name}' created: #{project.html_url}"
         end
       rescue Octokit::Unauthorized
         raise CredentialsError
@@ -53,6 +57,7 @@ module Commands
         raise InvalidForkFormatError
       end
       # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       no_commands do
         include Helpers
