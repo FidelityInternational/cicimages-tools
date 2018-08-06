@@ -25,3 +25,11 @@ Metrics/BlockLength:
 Metrics/ModuleLength:
   Exclude:
     - '**/*_spec.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'spec/support/github/api/mocks/**/*.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'spec/support/github/api/mocks/**/*.rb'

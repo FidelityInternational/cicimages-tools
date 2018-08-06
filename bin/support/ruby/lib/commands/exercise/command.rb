@@ -15,7 +15,6 @@ module Exercise
 
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
-
     def generate(path = Dir.pwd)
       say <<~MESSAGE
         #############################

@@ -20,6 +20,7 @@ RUN bash -c "rbenv install 2.4.3 && rbenv global 2.4.3"
 RUN curl -sSL https://get.docker.com/ | sh
 
 ADD ./bin /cic/bin
+ADD .courseware* /cic/
 ADD Gemfile* /cic/
 
 WORKDIR '/cic'

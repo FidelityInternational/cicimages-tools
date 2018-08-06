@@ -70,7 +70,7 @@ We are using just a few of the attributes that Ansible provides for customising 
 ## Exercise
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
-- `source .env
+- `source ./bin/env`
 - `cd ./exercises/IaC/ansible/writing_playbooks`
 
 ### Scenario
@@ -92,7 +92,7 @@ This outputs the following. (We've omitted the stack traces):
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_31806, inifile: pytest.ini
+rootdir: /vols/pytest_18138, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -101,7 +101,6 @@ tests/webserver_test.py::test_apache_is_enabled_as_service FAILED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running FAILED         [ 75%]
 tests/webserver_test.py::test_website_deployed FAILED                    [100%]
 
-=================================== FAILURES ===================================
 ```
 The output shows us that two tests attempted to verify:
 - the apache2 package was installed.
@@ -195,7 +194,7 @@ We can see from the output that the tests verifying apache2 is installed, up and
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_15586, inifile: pytest.ini
+rootdir: /vols/pytest_6926, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -204,7 +203,6 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed FAILED                    [100%]
 
-=================================== FAILURES ===================================
 ```
 
 The remaining tests is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when it apache is installed.
@@ -250,7 +248,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_26799, inifile: pytest.ini
+rootdir: /vols/pytest_28366, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -259,7 +257,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 1.05 seconds ===========================
+=========================== 4 passed in 0.98 seconds ===========================
 ```
 
 Good luck!
