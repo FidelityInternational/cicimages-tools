@@ -26,7 +26,7 @@ function cic_image() {
 }
 
 function cic_tag() {
-    echo "$(cic_image_repository):temp-${RANDOM}"
+    echo "cic_container-${RANDOM}"
 }
 
 
