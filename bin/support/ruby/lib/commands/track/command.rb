@@ -20,12 +20,20 @@ module Commands
         @tracks_yaml = tracks_yaml
 
         @api_endpoint = api_endpoint
+        raise TracksFileNotFoundError.new(path: tracks_yaml) unless File.exist?(tracks_yaml)
         @tracks = load_tracks(YAML.safe_load(File.read(tracks_yaml))['tracks'])
+      end
+
+      desc 'list', 'get a list of available learning tracks'
+      def list
+        Dir.chdir(tracks_dir) do
+          track_names = tracks.keys
+          say "Available Tracks:\n #{track_names.join("\n")}"
+        end
       end
 
       desc 'start TRACK_NAME', 'start a track'
       option :fork, desc: 'the account/repo of your fork'
-
       # rubocop:disable Metrics/MethodLength
       def start(track_name)
         Dir.chdir(tracks_dir) do
@@ -48,6 +56,7 @@ module Commands
 
       no_commands do
         include Helpers
+        include Commandline::Output
       end
     end
   end

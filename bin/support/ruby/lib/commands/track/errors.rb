@@ -47,5 +47,11 @@ module Commands
         to_s == other.to_s
       end
     end
+
+    class TracksFileNotFoundError < Thor::Error
+      def initialize(path:)
+        super "Tracks file not found at: #{path}"
+      end
+    end
   end
 end

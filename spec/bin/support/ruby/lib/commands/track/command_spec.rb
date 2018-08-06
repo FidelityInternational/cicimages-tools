@@ -56,6 +56,12 @@ module Commands
           expect(subject.tracks).to eq(expected_tracks)
         end
 
+        context 'tracks yaml missing' do
+          it 'raises an error' do
+            expect { described_class.new([], {}, {}, api_endpoint, 'missing') }.to raise_error(TracksFileNotFoundError)
+          end
+        end
+
         context 'exercises invalid' do
           let(:tracks) do
             { 'tracks' => [
@@ -86,6 +92,14 @@ module Commands
               expect { subject.start(track_name) }.to raise_error(expected_error)
             end
           end
+        end
+      end
+
+      describe '#list' do
+        include_context :command
+        it 'gives a list of the availble tracks' do
+          subject.list
+          expect(stdout.string).to eq("Available Tracks:\n ansible\n")
         end
       end
 
