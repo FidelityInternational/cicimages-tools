@@ -27,9 +27,10 @@ For this material you will need the following:
       login username
       password password
   ```
+  
 2. Fork this repo
 3. Clone your fork: `git clone https://github.com/youruser/fork.git cic`
-4. cd in to your checkout: `cd cic`
+4. cd into your checkout: `cd cic`
 5. setup the courseware: `./bin/setup`
 6. Put the courseware on to your path: `source bin/.env`
 
