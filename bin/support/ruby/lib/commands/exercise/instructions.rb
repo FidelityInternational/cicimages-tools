@@ -21,10 +21,6 @@ module Exercise
       say "running: #{command}" unless quiet?
 
       result = @result = run(command)
-      unless quiet?
-        say "stdout: #{result.stdout}"
-        say "stderr: #{result.stderr}"
-      end
 
       if result.error? && fail_on_error
         say error("failed to run: #{command}\n\n#{result}")

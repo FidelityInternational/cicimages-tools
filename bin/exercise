@@ -3,21 +3,24 @@
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=bin/support/sh/functions/cic_docker.sh
 source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
-
-# shellcheck disable=SC2016
-rbenv_init='eval "$(rbenv init -)"'
-export_command='. /cic/bin/.env'
-command="${rbenv_init} && ${export_command} && /cic/bin/support/ruby/bin/exercise $*"
+source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
 exercise_name="$(basename "$(pwd)")"
 volume_path="$(volume_path ansible)/${exercise_name}"
 
 copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
-docker run \
+# shellcheck disable=SC2016
+rbenv_init='eval "$(rbenv init -)"'
+export_command='. /cic/bin/.env'
+command="${rbenv_init} && ${export_command} && $(cic_exports) /cic/bin/support/ruby/bin/exercise $*"
+
+echo "tracks path: $(tracks_path)"
+docker run -it \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
     -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$(tracks_path)":/cic/tracks \
     -w "${volume_path}" \
     "$(cic_image)" \
     /bin/bash -c "${command}"

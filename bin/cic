@@ -3,6 +3,7 @@
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=bin/support/sh/functions/cic_docker.sh
 source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
+source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
 # shellcheck disable=SC2016
 rbenv_init='eval "$(rbenv init -)"'
@@ -30,12 +31,11 @@ else
     fi
 fi
 
-
 docker run ${options} \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -v "${CURRENT_PATH}/../tracks":/cic/tracks \
-    -v "${CURRENT_PATH}/../exercises":/cic/exercises \
+    -v "$(tracks_path)":/cic/tracks \
+    -v "$(exercises_path)":/cic/exercises \
     -v "${HOME}/.netrc":/root/.netrc \
     "$(cic_image)" \
     /bin/bash -c "${command}"

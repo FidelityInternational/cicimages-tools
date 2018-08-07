@@ -5,9 +5,11 @@ This course is intended to teach good practices around Infrastructure-as-Code de
 To undertake this course you will need a computer which you have full control over (i.e not your employer's desktop build) - It will need to be on a network with unrestricted access to the Internet (not behind locked-down corporate firewalls) as you will need to download and install a few components before you can begin.
 
 Topics covered in this material:
-<%= command_output('bin/cic track list') %>
+```
+<%= command_output('cic track list') %>
+```
 
-To remove the need for dependencies on an external IaaS (Infrastructure as a Service) solution in order to participate in this course, it has been designed to run inside an Ubuntu virtual machine, using Docker containers to simulate real computers.
+To remove the need for dependencies on an external IaaS (Infrastructure as a Service) solution in order to participate in this course, this course has been designed to use Docker containers to simulate real computers.
 
 The course is being actively built out so be sure to `git pull` regularly to get new exercises as they appear.
 
@@ -31,10 +33,9 @@ For this material you will need the following:
 3. Clone your fork: `git clone https://github.com/youruser/fork.git cic`
 4. cd in to your checkout: `cd cic`
 5. setup the courseware: `./bin/setup`
-6. Put the courseware on to your path: `source bin/.env`
 
 ### Starting a learning track
-To see the Learning tracks that CIC contains run: `<%= command('bin/cic track list') %>`
+To see the Learning tracks that CIC contains run: `<%= command('cic track list') %>`
 This will output the following
 ```
 <%= last_command_output %>
