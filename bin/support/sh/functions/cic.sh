@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 if [ "${TRACKS_PATH}" == "" ]
 then
     TRACKS_PATH="${CURRENT_PATH}/../tracks"

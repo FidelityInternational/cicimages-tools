@@ -3,6 +3,7 @@
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=bin/support/sh/functions/cic_docker.sh
 source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
+# shellcheck source=bin/support/sh/functions/cic.sh
 source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
 exercise_name="$(basename "$(pwd)")"
