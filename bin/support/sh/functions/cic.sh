@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
-if [ "${TRACKS_PATH}" == "" ]
-then
-    TRACKS_PATH="${CURRENT_PATH}/../tracks"
-fi
-
-if [ "${EXERCISES_PATH}" == "" ]
-then
-    EXERCISES_PATH="${CURRENT_PATH}/../exercises"
-fi
+TRACKS_PATH="${TRACKS_PATH:-${CURRENT_PATH}/../tracks}"
+EXERCISES_PATH="${EXERCISES_PATH:-${CURRENT_PATH}/../exercises}"
 
 function tracks_path(){
     echo "${TRACKS_PATH}"

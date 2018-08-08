@@ -21,17 +21,18 @@ For this material you will need the following:
  - git
  - Docker - If you don't have it already, follow the instructions on the [Docker website](https://docs.docker.com/install/#next-release) to install it on your system
  - Editor of your choice
+ - A browser
 
 ### Setup
 1. create a .netrc file in your home directory with your credentials for github in it.
   Your entry should look something like this:
   ```
   machine api.github.com
-      login username
-      password password
+      login <username>
+      password <password>
   ```
 2. Fork this repo
-3. Clone your fork: `git clone https://github.com/youruser/fork.git cic`
+3. Clone your fork: `git clone https://github.com/<youruser>/<fork>.git cic`
 4. cd in to your checkout: `cd cic`
 5. setup the courseware: `./bin/setup`
 
