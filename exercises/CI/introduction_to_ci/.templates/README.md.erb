@@ -1,0 +1,41 @@
+# Introduction to Continuous Integration (CI)
+
+## Introduction
+
+Every modern development environment revolves around a Continuious Integration (CI) solution. CI is an important tool in your arsenal which will allow you to be certain that code changes you make will integrate successfully with changes made at the same time by your colleagues. For a CI system to work effectively, you will need to ensure that every part of your code has tests which will exercise it. The percentage of your code which is covered by tests is known as Code Coverage. It is actually very hard to achieve 100% code coverage on an ongoing basis, but it is important to try. If you have tests which prove that your code is functioning as expected then you can be confident that any changes you make have not broken the core functionality.
+
+CI systems play a vital role in ensuring that teams can collaborate effectively, ensuring that each developer's changes will work in tandem with each other. The code that was 'master' when you began your changes may not be the same by the time you've completed your work, so testing the integration between different parts of code is essential.A CI system can automatically run all of the tests around a project's code every time that a commit is made. It can attempt to merge your changes with upstream branches (i.e. master) and also confirm that all tests on the master branch still pass successfully. This means that changes can be Continously Integrated with the master branch with every single commit.
+
+As complexity of the code base grows, a CI system ensures that the time to test & deploy combinations of changes remains low.
+
+Your local environment may not be the same as your target environment, so you want to be certain that your code changes are tested in an appropriate environment.
+
+## Exercise Learning Objectives
+- Introduction to Concourse CI
+ - Write code to make tests pass.
+ - Pipelines
+ - Resources
+ - Merging
+
+## Exercise
+In this exercise you will be working using a CI system called Concourse.
+
+To begin the exercise, it is first necessary to get Concourse and a git server started up.
+Run <some magical command> to get Concourse started up.
+Run <some other magical command> to get a git server started up.
+You can browse to http://127.0.0.1:8080 to see the concourse user interface and to http://127.0.0.1:9090 to see the git user interface.
+Concourse has not yet been configured to run any jobs, so you won't see much there apart from the links to download the `fly` command which is used to talk to concourse.
+Download the `fly` command which is appropriate for your operating system by clicking on the relevant link.
+Save the downloaded `fly` binary to somewhere in your path (i.e. ${HOME}/bin)
+`chmod +x <path_to_fly>`
+`fly -t local -a some_url login -u test -p test` to tell the `fly` command how to talk to concourse.
+`fly push-pipeline -p <pipeline_file>` to push configuration into Concourse.
+The pipeline file you've just pushed is telling concourse to check on the git server for a repository called <some_repo>
+As that repo doesn't yet exist, the pipeline will show an orange background around the input for the first job.
+To make that bit go green, we're going to need to create a repo.
+
+
+
+
+### Now it's your turn
+## Summary
