@@ -30,7 +30,7 @@ module Exercise
 
     desc 'create <NAME>', 'create a new exercise'
     def create(name)
-      say "Creating exercise: #{name}"
+      say "Creating new exercise: #{name}"
       FileUtils.mkdir_p(name)
 
       exercise_structure['directories'].each do |directory|
@@ -59,12 +59,11 @@ module Exercise
       def scaffold_path
         @scaffold_path ||= ENV['SCAFFOLD_PATH']
       end
+
+      def all_files_in(name)
+        Dir.glob("#{name}/**/*", File::FNM_DOTMATCH).find_all { |file| !%w[. ..].include?(File.basename(file)) }
+      end
     end
 
-    private
-
-    def all_files_in(name)
-      Dir.glob("#{name}/**/*", File::FNM_DOTMATCH).find_all { |file| !%w[. ..].include?(File.basename(file)) }
-    end
   end
 end
