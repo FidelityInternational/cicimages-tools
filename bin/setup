@@ -10,8 +10,12 @@ source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
 if ! which docker
 then
-    say "$(ok "Installing docker")"
-    bash "${CURRENT_PATH}/support/sh/install_docker_ubuntu.sh"
+    say "$(error "Install docker")"
+elif ! docker version > /dev/null 2>&1
+then
+    say "$(error "Docker command not working!")"
+    say "Ensure docker is installed and your user has the correct permissions. I.e. you're able to run: docker version"
+    exit 1
 fi
 
 say "$(ok "Fetching course images from dockerhub")"
