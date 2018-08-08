@@ -15,6 +15,7 @@ elif ! docker version > /dev/null 2>&1
 then
     say "$(error "Docker command not working!")"
     say "Ensure docker is installed and your user has the correct permissions. I.e. you're able to run: docker version"
+    say "Follow the instrcutions at  https://docs.docker.com/install/ to get Docker installed for your O/S"
     exit 1
 fi
 
