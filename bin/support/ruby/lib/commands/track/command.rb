@@ -25,6 +25,7 @@ module Commands
       end
 
       desc 'list', 'get a list of available learning tracks'
+
       def list
         Dir.chdir(tracks_dir) do
           track_names = tracks.keys
@@ -34,34 +35,32 @@ module Commands
 
       desc 'start TRACK_NAME', 'start a track'
       option :fork, desc: 'the account/repo of your fork'
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
       def start(track_name)
         Dir.chdir(tracks_dir) do
           setup!(track_name)
 
-          project_name = "Learn #{track_name}"
-          project = create_project(project_name)
+          project = create_project("Learn #{track_name}")
 
-          todo_column = create_column(project.id, 'TODO')
-          create_exercises(github_client, todo_column, track_name)
+          columns = create_columns(project.id, %w[TODO in-progress done])
 
-          create_column(project.id, 'in-progress')
-          create_column(project.id, 'done')
+          create_exercises(columns['TODO'], track_name)
 
-          say ok "Project '#{project_name}' created: #{project.html_url}"
+          say ok "Project '#{project.name}' created: #{project.html_url}"
         end
-      rescue Octokit::Unauthorized
-        raise CredentialsError
-      rescue Octokit::InvalidRepository
-        raise InvalidForkFormatError
+      rescue StandardError => e
+        raise error_for(e)
       end
-      # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Metrics/AbcSize
 
       no_commands do
         include Helpers
         include Commandline::Output
+
+        def error_for(error)
+          mapped_errors = { Octokit::Unauthorized => CredentialsError,
+                            Octokit::InvalidRepository => InvalidForkFormatError }
+
+          mapped_errors[error.class] || error
+        end
       end
     end
   end

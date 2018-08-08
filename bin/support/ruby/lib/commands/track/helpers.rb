@@ -14,16 +14,24 @@ module Commands
         end
       end
 
+      def create_columns(project_id, names)
+        {}.tap do |columns|
+          names.each do |name|
+            columns[name] = create_column(project_id, name)
+          end
+        end
+      end
+
       def create_column(project_id, name)
         github_client.create_project_column(project_id, name, default_projects_options)
       end
 
-      def create_exercises(client, todo_column, track_name)
-        tracks[track_name].exercises.reverse.each do |exercise|
-          issue = client.create_issue(fork, exercise.name, exercise.detail, labels: '')
+      def create_exercises(todo_column, track_name)
+        exercises(track_name).each do |exercise|
+          issue = github_client.create_issue(fork, exercise.name, exercise.detail, labels: '')
 
           options = default_projects_options.merge(content_id: issue.id, content_type: 'Issue')
-          client.create_project_card(todo_column.id, options)
+          github_client.create_project_card(todo_column.id, options)
         end
       end
 
@@ -37,6 +45,10 @@ module Commands
 
       def enable_issues
         github_client.edit_repository(fork, has_issues: true)
+      end
+
+      def exercises(track_name)
+        tracks[track_name].exercises.reverse
       end
 
       def fork
