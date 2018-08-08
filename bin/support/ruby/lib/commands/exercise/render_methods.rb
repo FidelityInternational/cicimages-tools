@@ -5,37 +5,29 @@ module Exercise
 
     attr_reader :exercise_path
 
-    # rubocop:disable Metrics/MethodLength
     def render_exercises(dir:, original_dir: Dir.pwd, pretty_exercise_path: nil)
       @exercise_path = pretty_exercise_path
-
       status = true
-      templates(dir).each do |template|
-        begin
-          render_exercise(dir, template)
-        rescue StandardError
-          status = false
-        end
+      templates(dir).each do |exercise_name, template|
+        status = false unless render_exercise(exercise_name, template)
         Dir.chdir(original_dir)
       end
-
       status
     end
-    # rubocop:enable Metrics/MethodLength
 
-    def render_exercise(exercise_directory, template)
-      exercise_name = File.basename(exercise_directory)
+    def render_exercise(exercise_name, template)
       say "Generating file for: #{exercise_name}"
 
       result = anonymise(render(template))
 
       File.write(exercise_filename(template), result)
 
-      say '' if quiet?
       say ok "Finished: #{exercise_name}"
+      true
     rescue StandardError => e
       say error "Failed to generate file from: #{template}"
-      raise e
+      say "#{e.message}\n#{e.backtrace}"
+      false
     end
 
     private
@@ -52,10 +44,15 @@ module Exercise
       ERB.new(File.read(template)).result(binding)
     ensure
       after_all_commands.each { |command| test_command(command) }
+      say '' if quiet?
     end
 
     def templates(dir)
-      Dir["#{dir}/.templates/*.md.erb"]
+      templates = {}
+      Dir["#{dir}/.templates/*.md.erb"].each do |template|
+        templates[File.basename(template)] = template
+      end
+      templates
     end
   end
 end
