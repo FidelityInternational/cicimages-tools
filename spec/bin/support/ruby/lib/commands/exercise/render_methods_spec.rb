@@ -17,6 +17,14 @@ module Exercise
       end
     end
 
+    describe '#exercise_path' do
+      it 'returns the directory that the render_methods starts in' do
+        expected_path = 'expected'
+        subject.render_exercises(dir: Dir.pwd, pretty_exercise_path: expected_path)
+        expect(subject.exercise_path).to eq(expected_path)
+      end
+    end
+
     describe '#render_exercise' do
       describe 'console output' do
         include Commandline::Output
@@ -68,7 +76,7 @@ module Exercise
       it 'renders all .erb templates found' do
         template1 = create_template
         template2 = create_template
-        subject.render_exercises(Dir.pwd)
+        subject.render_exercises(dir: Dir.pwd)
         expect(Dir['*.md']).to match_array([template1.expected_rendered_filepath,
                                             template2.expected_rendered_filepath])
       end
@@ -76,14 +84,14 @@ module Exercise
       context 'no error thrown' do
         it 'returns true' do
           create_template
-          expect(subject.render_exercises(Dir.pwd)).to eq(true)
+          expect(subject.render_exercises(dir: Dir.pwd)).to eq(true)
         end
       end
 
       context 'error thrown in template' do
         it 'returns false' do
           expected_file = create_template(content: '<% raise %>')
-          expect(subject.render_exercises(Dir.pwd)).to eq(false)
+          expect(subject.render_exercises(dir: Dir.pwd)).to eq(false)
           expect(File.exist?(expected_file.expected_rendered_filepath)).to eq(false)
         end
 
@@ -91,7 +99,7 @@ module Exercise
           expected_file1 = create_template
           create_template(content: '<% raise %>')
           expected_file2 = create_template
-          expect(subject.render_exercises(Dir.pwd))
+          expect(subject.render_exercises(dir: Dir.pwd))
           expect(Dir['*.md']).to match_array([expected_file1.expected_rendered_filepath,
                                               expected_file2.expected_rendered_filepath])
         end
