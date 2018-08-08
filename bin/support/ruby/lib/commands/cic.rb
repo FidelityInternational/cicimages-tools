@@ -25,7 +25,15 @@ module Commands
 
     desc 'down', 'Bring down environment supporting current exercise'
     def down
-      run "#{courseware_environment} docker-compose down"
+      result = run "#{courseware_environment} docker-compose down"
+
+      say result.stdout
+      if result.error?
+        say result.stderr
+        say error "Failed to cic down the environment see above output for details"
+      else
+        say ok "Environment cic'd down :)"
+      end
     end
 
     desc 'start IMAGE_TAG', 'log in to a container and see what happened'
