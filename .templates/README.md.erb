@@ -2,12 +2,11 @@
 ## Introduction
 This course is intended to teach good practices around Infrastructure-as-Code development. This course contains a set of materials which are designed to teach you how to write tests for and automate the release of the things you build.
 
-To undertake this course you will need a computer over which you have full control (i.e not your employer's desktop build) - It will need to be on a network with unrestricted access to the Internet (not behind locked-down corporate firewalls) as you will need to download and install a few components before you can begin. The computer will need to be reasonably powerful (at least 2 CPU cores and 8GB RAM) as this course relies on virtualisation and containerisation to simulate infrastructure components.
+To undertake this course you will need a computer which you have full control over (i.e not your employer's desktop build) - It will need to be on a network with unrestricted access to the Internet (not behind locked-down corporate firewalls) as you will need to download and install a few components before you can begin.
 
 Topics covered in this material:
 ```
-Available Tracks:
- ansible
+<%= command_output('cic track list') %>
 ```
 
 To remove the need for dependencies on an external IaaS (Infrastructure as a Service) solution in order to participate in this course, this course has been designed to use Docker containers to simulate real computers.
@@ -37,11 +36,10 @@ For this material you will need the following:
 5. setup the courseware: `./bin/setup`
 
 ### Starting a learning track
-To see the Learning tracks that CIC contains run: `cic track list`
+To see the Learning tracks that CIC contains run: `<%= command('cic track list') %>`
 This will output the following
 ```
-Available Tracks:
- ansible
+<%= last_command_output %>
 ```
 
 Start a track by running the `cic track start` command

@@ -19,7 +19,9 @@ module Exercise
 
     def test_command(command, fail_on_error: true)
       say "running: #{command}" unless quiet?
+
       result = @result = run(command)
+
       if result.error? && fail_on_error
         say error("failed to run: #{command}\n\n#{result}")
       elsif quiet?

@@ -92,7 +92,7 @@ This outputs the following. (We've omitted the stack traces):
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_606, inifile: pytest.ini
+rootdir: /vols/pytest_18365, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -194,7 +194,7 @@ We can see from the output that the tests verifying apache2 is installed, up and
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_5135, inifile: pytest.ini
+rootdir: /vols/pytest_22745, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -205,7 +205,7 @@ tests/webserver_test.py::test_website_deployed FAILED                    [100%]
 
 ```
 
-The remaining tests is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when it apache is installed.
+The remaining test is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when it apache is installed.
 
 ### Modules
 Out of the box Ansible comes with a number of modules
@@ -248,7 +248,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_4133, inifile: pytest.ini
+rootdir: /vols/pytest_7668, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -257,7 +257,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 1.04 seconds ===========================
+=========================== 4 passed in 1.05 seconds ===========================
 ```
 
 Good luck!
