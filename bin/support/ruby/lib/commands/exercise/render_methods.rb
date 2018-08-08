@@ -18,9 +18,7 @@ module Exercise
     def render_exercise(exercise_name, template)
       say "Generating file for: #{exercise_name}"
 
-      result = anonymise(render(template))
-
-      File.write(exercise_filename(template), result)
+      File.write(exercise_filename(template), render(template))
 
       say ok "Finished: #{exercise_name}"
       true
@@ -41,7 +39,7 @@ module Exercise
     end
 
     def render(template)
-      ERB.new(File.read(template)).result(binding)
+      anonymise(ERB.new(File.read(template)).result(binding))
     ensure
       after_all_commands.each { |command| test_command(command) }
       say '' if quiet?
