@@ -14,14 +14,15 @@ copy_to_cic_volume "$(pwd)/." "${volume_path}"
 # shellcheck disable=SC2016
 rbenv_init='eval "$(rbenv init -)"'
 export_command='. /cic/bin/.env'
-command="${rbenv_init} && ${export_command} && $(cic_exports) /cic/bin/support/ruby/bin/exercise $*"
+exports="SCAFFOLD_STRUCTURE=/cic/.cic/exercise_scaffold.yml SCAFFOLD_PATH=/cic/.cic/exercise_scaffold"
+command="${rbenv_init} && ${export_command} && $(cic_exports) ${exports} /cic/bin/support/ruby/bin/exercise $*"
 
-echo "tracks path: $(tracks_path)"
-docker run -it \
+docker run \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$(tracks_path)":/cic/tracks \
+    -v "${CURRENT_PATH}/../.cic":/cic/.cic \
     -w "${volume_path}" \
     "$(cic_image)" \
     /bin/bash -c "${command}"

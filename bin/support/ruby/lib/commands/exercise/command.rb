@@ -16,6 +16,7 @@ module Exercise
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
     option :pretty_exercise_path, type: :string
+
     def generate(path = Dir.pwd)
       say <<~MESSAGE
         #############################
@@ -26,11 +27,32 @@ module Exercise
       raise Thor::Error unless render_exercises(dir: path, pretty_exercise_path: options[:pretty_exercise_path])
     end
 
+    desc 'create <NAME>', 'create a new exercise'
+    def create(name)
+      say "Creating new exercise: #{name}"
+      FileUtils.mkdir_p(name)
+
+      exercise_structure['directories'].each do |directory|
+        FileUtils.mkdir_p("#{name}/#{directory}")
+      end
+
+      FileUtils.cp_r("#{scaffold_path}/.", name)
+      say ok 'Complete'
+    end
+
     no_commands do
       include RenderMethods
 
       def quiet?
         options[:quiet] == true
+      end
+
+      def exercise_structure
+        @exercise_structure ||= YAML.safe_load(File.read(ENV['SCAFFOLD_STRUCTURE']))
+      end
+
+      def scaffold_path
+        @scaffold_path ||= ENV['SCAFFOLD_PATH']
       end
     end
   end
