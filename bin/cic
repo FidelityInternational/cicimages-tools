@@ -33,7 +33,14 @@ else
     fi
 fi
 
+exercise_name="$(basename "$(pwd)")"
+
+volume_path="$(volume_path ansible)/${exercise_name}"
+copy_to_cic_volume "$(pwd)/." "${volume_path}"
+
 docker run ${options} \
+    --volumes-from "$(cic_volumes_container)" \
+    -w "${volume_path}" \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$(tracks_path)":/cic/tracks \
