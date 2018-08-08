@@ -30,13 +30,13 @@ module Exercise
 
     describe 'generate' do
       it 'generates exercises for the current directory' do
-        expect(subject).to receive(:render_exercises).with(Dir.pwd).and_return(true)
+        expect(subject).to receive(:render_exercises).with(dir: Dir.pwd, pretty_exercise_path: nil).and_return(true)
         subject.generate
       end
 
       context 'rendering fails' do
         it 'raises and error' do
-          expect(subject).to receive(:render_exercises).with(Dir.pwd).and_return(false)
+          expect(subject).to receive(:render_exercises).with(dir: Dir.pwd, pretty_exercise_path: nil).and_return(false)
           expect { subject.generate }.to raise_error(Thor::Error)
         end
       end

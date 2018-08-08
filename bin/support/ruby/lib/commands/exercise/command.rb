@@ -15,6 +15,7 @@ module Exercise
 
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
+    option :pretty_exercise_path, type: :string
     def generate(path = Dir.pwd)
       say <<~MESSAGE
         #############################
@@ -22,7 +23,7 @@ module Exercise
         #############################
       MESSAGE
 
-      raise Thor::Error unless render_exercises(path)
+      raise Thor::Error unless render_exercises(dir: path, pretty_exercise_path: options[:pretty_exercise_path])
     end
 
     no_commands do

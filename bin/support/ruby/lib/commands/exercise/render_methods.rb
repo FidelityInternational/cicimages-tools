@@ -3,7 +3,12 @@ module Exercise
     include Commandline::Output
     include Instructions
 
-    def render_exercises(dir, original_dir = Dir.pwd)
+    attr_reader :exercise_path
+
+    # rubocop:disable Metrics/MethodLength
+    def render_exercises(dir:, original_dir: Dir.pwd, pretty_exercise_path: nil)
+      @exercise_path = pretty_exercise_path
+
       status = true
       templates(dir).each do |template|
         begin
@@ -16,6 +21,7 @@ module Exercise
 
       status
     end
+    # rubocop:enable Metrics/MethodLength
 
     def render_exercise(exercise_directory, template)
       exercise_name = File.basename(exercise_directory)
