@@ -23,6 +23,11 @@ module Commands
       docker_exec(command)
     end
 
+    desc 'down', 'Bring down environment supporting current exercise'
+    def down
+      run "#{courseware_environment} docker-compose down"
+    end
+
     desc 'start IMAGE_TAG', 'log in to a container and see what happened'
     option :map_port, desc: 'map hostport to container port'
     def start(image_tag)
@@ -49,21 +54,45 @@ module Commands
       end
     end
 
+    desc 'up', 'Bring up environment to support the current exercise'
+    def up
+      result = run "#{courseware_environment} docker-compose up -d --remove-orphans"
+      say result.stdout
+      if result.error?
+        say result.stderr
+        say error "Failed to cic up the environment see above output for details"
+      else
+        say ok "Environment cic'd up :)"
+      end
+    end
+
     no_commands do
       include Commandline::Output
       include Docker
 
       private
 
+      def courseware_environment
+        "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"
+      end
+
+      def courseware_image
+        ENV['CIC_COURSEWARE_IMAGE']
+      end
+
+      def courseware_version
+        ENV['CIC_COURSEWARE_VERSION']
+      end
+
+      def normalise(string)
+        string.gsub(%r{[:/]}, '-')
+      end
+
       def start_help_msg(container_name)
         <<-MESSAGE
           Connect with: cic connect #{container_name}
           Stop with   : cic stop #{container_name}
         MESSAGE
-      end
-
-      def normalise(string)
-        string.gsub(%r{[:/]}, '-')
       end
     end
   end

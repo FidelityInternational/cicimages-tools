@@ -37,6 +37,58 @@ module Commands
       end
     end
 
+    context 'up and down' do
+      let(:courseware_version){'version'}
+      let(:courseware_image){'image'}
+      let(:expected_environment){"CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"}
+
+      before do
+        ENV['CIC_COURSEWARE_VERSION'] = courseware_version
+        ENV['CIC_COURSEWARE_IMAGE'] = courseware_image
+      end
+
+      describe '#down' do
+        it 'runs docker compose with courseware env variables' do
+          expect(subject).to receive(:run).with("#{expected_environment} docker-compose down")
+          subject.down
+        end
+      end
+
+      describe '#up' do
+
+        let(:expected_command){"#{expected_environment} docker-compose up -d --remove-orphans"}
+
+        context 'command succeeds' do
+          it 'runs docker compose with courseware env variables' do
+            result = Commandline::Return.new(stdout: '', stderr: '', exit_code: 0)
+            expect(subject).to receive(:run).with(expected_command).and_return(result)
+            subject.up
+          end
+
+          it 'outputs stdout' do
+            output, stderr = 'output', 'error'
+            result = Commandline::Return.new(stdout: output, stderr: stderr, exit_code: 0)
+            expect(subject).to receive(:run).with(expected_command).and_return(result)
+            subject.up
+            expect(stdout.string).to include(output)
+            expect(stdout.string).to_not include(stderr)
+          end
+        end
+
+        context 'command fails' do
+          it 'runs docker compose with courseware env variables' do
+            error = 'error'
+            result = Commandline::Return.new(stdout: 'stdout', stderr: error, exit_code: 1)
+            expected_command = "#{expected_environment} docker-compose up -d --remove-orphans"
+            expect(subject).to receive(:run).with(expected_command).and_return(result)
+            subject.up
+            expect(stdout.string).to include(error)
+          end
+        end
+      end
+    end
+
+
     describe '#start' do
       it 'starts container in the background' do
         subject.start(image)
