@@ -27,7 +27,7 @@ module Commands
     def down
       execute "#{courseware_environment} docker-compose down",
               pass_message: "Environment cic'd down :)",
-              fail_message: "Failed to cic down the environment see above output for details"
+              fail_message: 'Failed to cic down the environment see above output for details'
     end
 
     desc 'start IMAGE_TAG', 'log in to a container and see what happened'
@@ -60,7 +60,7 @@ module Commands
     def up
       execute "#{courseware_environment} docker-compose up -d --remove-orphans",
               pass_message: "Environment cic'd up :)",
-              fail_message: "Failed to cic up the environment see above output for details"
+              fail_message: 'Failed to cic up the environment see above output for details'
     end
 
     no_commands do
@@ -68,17 +68,6 @@ module Commands
       include Docker
 
       private
-
-      def execute(command, fail_message:, pass_message:)
-        result = run command
-        say result.stdout
-        if result.error?
-          say result.stderr
-          say error fail_message
-        else
-          say ok pass_message
-        end
-      end
 
       def courseware_environment
         "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"

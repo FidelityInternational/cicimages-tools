@@ -1,5 +1,5 @@
 shared_examples :command_wrapper do |command, wrapper_method|
-  let(:expected_command){"#{expected_environment} #{command}"}
+  let(:expected_command) { "#{expected_environment} #{command}" }
 
   context 'command succeeds' do
     it 'runs docker compose with courseware env variables' do
@@ -9,7 +9,8 @@ shared_examples :command_wrapper do |command, wrapper_method|
     end
 
     it 'outputs stdout' do
-      output, stderr = 'output', 'error'
+      output = 'output'
+      stderr = 'error'
       result = Commandline::Return.new(stdout: output, stderr: stderr, exit_code: 0)
       expect(subject).to receive(:run).with(expected_command).and_return(result)
       subject.public_send(wrapper_method)
