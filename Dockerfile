@@ -18,6 +18,7 @@ RUN echo 'eval "$(rbenv init -)"' >> /root/.bashrc
 RUN bash -c "rbenv install 2.4.3 && rbenv global 2.4.3"
 
 RUN curl -sSL https://get.docker.com/ | sh
+RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
 
 ADD ./bin /cic/bin
 ADD .courseware* /cic/

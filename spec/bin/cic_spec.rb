@@ -37,6 +37,32 @@ module Commands
       end
     end
 
+    context 'up and down' do
+      let(:courseware_version) { 'version' }
+      let(:courseware_image) { 'image' }
+
+      before do
+        ENV['CIC_COURSEWARE_VERSION'] = courseware_version
+        ENV['CIC_COURSEWARE_IMAGE'] = courseware_image
+      end
+
+      describe '#down' do
+        it_behaves_like :command_wrapper, 'docker-compose down', :down do
+          let(:expected_environment) do
+            "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"
+          end
+        end
+      end
+
+      describe '#up' do
+        it_behaves_like :command_wrapper, 'docker-compose up -d --remove-orphans', :up do
+          let(:expected_environment) do
+            "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"
+          end
+        end
+      end
+    end
+
     describe '#start' do
       it 'starts container in the background' do
         subject.start(image)

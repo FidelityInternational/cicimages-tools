@@ -8,7 +8,8 @@ source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
 # shellcheck disable=SC2016
 rbenv_init='eval "$(rbenv init -)"'
-cic_command="${rbenv_init} && /cic/bin/support/ruby/bin/cic"
+cic_environment="CIC_COURSEWARE_VERSION=$(cic_image_version) CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
+cic_command="${rbenv_init} && ${cic_environment} /cic/bin/support/ruby/bin/cic"
 
 options=""
 subcommand=$1
@@ -32,7 +33,14 @@ else
     fi
 fi
 
+exercise_name="$(basename "$(pwd)")"
+
+volume_path="$(volume_path ansible)/${exercise_name}"
+copy_to_cic_volume "$(pwd)/." "${volume_path}"
+
 docker run ${options} \
+    --volumes-from "$(cic_volumes_container)" \
+    -w "${volume_path}" \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$(tracks_path)":/cic/tracks \

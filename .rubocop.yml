@@ -20,6 +20,7 @@ Style/FrozenStringLiteralComment:
 
 Metrics/BlockLength:
   Exclude:
+    - 'spec/support/shared_examples/*.rb'
     - '**/*_spec.rb'
 
 Metrics/ModuleLength:

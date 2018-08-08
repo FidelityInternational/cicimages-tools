@@ -7,6 +7,7 @@ if ENV['COVERAGE']
 end
 
 require 'shared_contexts'
+require 'shared_examples/command_wrapper_examples'
 
 require 'commands'
 
