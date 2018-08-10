@@ -1,5 +1,6 @@
 require 'erb'
 require 'thor'
+require 'rake'
 
 require_relative 'instructions'
 require_relative 'render_methods'
@@ -29,7 +30,7 @@ module Exercise
 
     desc 'create <NAME>', 'create a new exercise'
     def create(name)
-      say "Creating new exercise: #{name}"
+      say "Creating exercise: #{name}"
       FileUtils.mkdir_p(name)
 
       exercise_structure['directories'].each do |directory|
@@ -37,6 +38,10 @@ module Exercise
       end
 
       FileUtils.cp_r("#{scaffold_path}/.", name)
+
+      all_files_in(name).each do |path|
+        say "Created: #{path}"
+      end
       say ok 'Complete'
     end
 
@@ -54,6 +59,12 @@ module Exercise
       def scaffold_path
         @scaffold_path ||= ENV['SCAFFOLD_PATH']
       end
+    end
+
+    private
+
+    def all_files_in(name)
+      Dir.glob("#{name}/**/*", File::FNM_DOTMATCH).find_all { |file| !%w[. ..].include?(File.basename(file)) }
     end
   end
 end

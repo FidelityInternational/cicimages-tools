@@ -68,6 +68,19 @@ module Exercise
         subject.create exercise_name
         expect(File.read(path)).to eq(File.read("#{exercise_name}/#{template}"))
       end
+
+      it 'lists the files and directories created' do
+        template = 'dir1/dir2/file.txt'
+        write_to_file("#{scaffold_path}/#{template}", 'content')
+        subject.create exercise_name
+        expect(stdout.string).to include("Created: #{exercise_name}/#{template}")
+        expect(stdout.string).to include("Created: #{exercise_name}/#{config['directories'].first}")
+      end
+
+      it 'doesnt report that it has created . and ..' do
+        subject.create exercise_name
+        expect(stdout.string).to_not include("Created: #{exercise_name}/.")
+      end
     end
   end
 end
