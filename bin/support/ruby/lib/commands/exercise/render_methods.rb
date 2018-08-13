@@ -1,3 +1,4 @@
+require 'digest'
 module Exercise
   module RenderMethods
     include Commandline::Output
@@ -18,7 +19,9 @@ module Exercise
     def render_exercise(exercise_name, template)
       say "Generating file for: #{exercise_name}"
 
-      File.write(exercise_filename(template), render(template))
+      result = anonymise(render(template))
+      result << "\nRevision: #{digest(template)}"
+      File.write(exercise_filename(template), result)
 
       say ok "Finished: #{exercise_name}"
       true
@@ -32,6 +35,10 @@ module Exercise
 
     def anonymise(string)
       string.gsub(/cic_container-[\w\d-]+/, 'cic_container-xxxxxxxxxxxxxxxx')
+    end
+
+    def digest(template)
+      Digest::SHA2.file(template).hexdigest
     end
 
     def exercise_filename(template)
