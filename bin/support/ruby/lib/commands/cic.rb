@@ -70,7 +70,7 @@ module Commands
       private
 
       def courseware_environment
-        "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"
+        "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image} CIC_PWD=#{ENV['CIC_PWD']}"
       end
 
       def courseware_image
