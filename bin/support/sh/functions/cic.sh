@@ -28,6 +28,7 @@ function cic_exports() {
     cic_exports="${cic_exports} SCAFFOLD_STRUCTURE=$(cic_config_dir)/exercise_scaffold.yml"
     cic_exports="${cic_exports} CIC_COURSEWARE_VERSION=$(cic_image_version)"
     cic_exports="${cic_exports} CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
+    cic_exports="${cic_exports} CIC_PWD=$(pwd)"
     echo "${cic_exports} SCAFFOLD_PATH=$(cic_config_dir)/exercise_scaffold"
 }
 
