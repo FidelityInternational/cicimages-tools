@@ -3,9 +3,7 @@
 require 'bundler'
 Bundler.require :development, :default
 
-import "#{__dir__}/tasks/lint.rake"
-import "#{__dir__}/tasks/exercises.rake"
-import "#{__dir__}/tasks/courseware.rake"
+Dir["#{__dir__}/tasks/*.rake"].each { |tasks| import tasks }
 
 RSpec::Core::RakeTask.new(:spec) do
   ENV['COVERAGE'] = 'true'
@@ -16,6 +14,6 @@ task :clean do
   FileUtils.rm_rf("#{__dir__}/coverage")
 end
 
-default_tasks = %i[clean spec generate_course_content rubocop shellcheck coverage_check]
+default_tasks = %i[clean spec course_content:checksum rubocop shellcheck coverage_check]
 desc default_tasks.join(',')
 task default: default_tasks

@@ -2,7 +2,7 @@
 ## Introduction
 This course is intended to teach good practices around Infrastructure-as-Code development. This course contains a set of materials which are designed to teach you how to write tests for and automate the release of the things you build.
 
-To undertake this course you will need a computer over which you have full control (i.e not your employer's desktop build) - It will need to be on a network with unrestricted access to the Internet (not behind locked-down corporate firewalls) as you will need to download and install a few components before you can begin. The computer will need to be reasonably powerful (at least 2 CPU cores and 8GB RAM) as this course relies on virtualisation and containerisation to simulate infrastructure components.
+To undertake this course you will need a computer which you have full control over (i.e not your employer's desktop build) - It will need to be on a network with unrestricted access to the Internet (not behind locked-down corporate firewalls) as you will need to download and install a few components before you can begin.
 
 Topics covered in this material:
 ```
@@ -57,3 +57,5 @@ The board will allow you to track and share progress. When you complete an exerc
 The exercises can be found inside the exercises folder. For each exercise there is a README.md which explains what is required. If you don't want to sit a whole learning track but want to brush up on something in particular, exercises can be found inside the exercises folder. For each exercise there is a README.md which explains what is required.
 
 
+
+Revision: 38c89323dc2a3be2c9ec0ae4199d39cb3fd713ccdb2c58dc62f5130cefb87c15

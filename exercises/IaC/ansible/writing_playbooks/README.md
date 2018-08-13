@@ -92,7 +92,7 @@ This outputs the following. (We've omitted the stack traces):
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_18302, inifile: pytest.ini
+rootdir: /vols/pytest_14641, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -194,7 +194,7 @@ We can see from the output that the tests verifying apache2 is installed, up and
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_4590, inifile: pytest.ini
+rootdir: /vols/pytest_11212, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -248,7 +248,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_26285, inifile: pytest.ini
+rootdir: /vols/pytest_24041, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 4 items
 
@@ -257,7 +257,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.97 seconds ===========================
+=========================== 4 passed in 1.01 seconds ===========================
 ```
 
 Good luck!
@@ -276,3 +276,5 @@ You have just learned how to:
 - use the [synchronize module](https://docs.ansible.com/ansible/devel/modules/synchronize_module.html#synchronize-module) to copy the contents of a folder from one place to another.
 - write code to satisfy a condition within a set of tests.
 - put more funny cats onto the Internet
+
+Revision: 8c8fc4d435b1534f8ea1b90c24dcbb87600fa48a59e91f8a7827dbcb36d5f338

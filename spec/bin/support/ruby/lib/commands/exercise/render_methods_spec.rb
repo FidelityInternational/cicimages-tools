@@ -2,14 +2,7 @@ module Exercise
   describe RenderMethods do
     include_context :command
     include_context :module_spec
-
-    def create_template(rendered_filepath: "#{rand(99_999)}.md", content: 'template')
-      template_fixture = Struct.new(:path, :expected_rendered_filepath)
-      FileUtils.mkdir_p('.templates')
-      template_path = ".templates/#{rendered_filepath}.erb"
-      File.write(template_path, content)
-      template_fixture.new(template_path, rendered_filepath)
-    end
+    include_context :templates
 
     before(:each) do
       subject.define_singleton_method :quiet? do
@@ -30,6 +23,16 @@ module Exercise
         include Commandline::Output
 
         let(:exercise_name) { File.basename(File.expand_path("#{Dir.pwd}/.templates/../")) }
+
+        it 'adds the revision to the end of the file' do
+          template = create_template
+          subject.render_exercise(Dir.pwd, template.path)
+
+          rendered_content = File.read(template.expected_rendered_filepath)
+          expected_digest = Digest::SHA2.file(template.path).hexdigest
+
+          expect(rendered_content.lines.last).to eq("Revision: #{expected_digest}")
+        end
 
         context 'quiet' do
           context 'rendering succeeds' do
