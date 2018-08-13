@@ -15,4 +15,9 @@ group :development do
   gem 'rspec', require: 'rspec/core/rake_task'
   gem 'rubocop'
   gem 'simplecov', require: false
+  gem 'capybara', '2.15.2'
+  gem 'i18n'
+  gem 'chromedriver-helper'
+  gem 'watir', "~> 6.1"
+  gem 'page_magic'
 end

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 TRACKS_PATH="${TRACKS_PATH:-${CURRENT_PATH}/../tracks}"
 EXERCISES_PATH="${EXERCISES_PATH:-${CURRENT_PATH}/../exercises}"
+CIC_PWD="${CIC_PWD:-$(pwd)}"
 
 function tracks_path(){
     echo "${TRACKS_PATH}"
@@ -8,6 +9,10 @@ function tracks_path(){
 
 function exercises_path(){
     echo "${EXERCISES_PATH}"
+}
+
+function cic_pwd(){
+    echo "${CIC_PWD}"
 }
 
 function cic_dir(){
@@ -28,7 +33,7 @@ function cic_exports() {
     cic_exports="${cic_exports} SCAFFOLD_STRUCTURE=$(cic_config_dir)/exercise_scaffold.yml"
     cic_exports="${cic_exports} CIC_COURSEWARE_VERSION=$(cic_image_version)"
     cic_exports="${cic_exports} CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
-    cic_exports="${cic_exports} CIC_PWD=$(pwd)"
+    cic_exports="${cic_exports} CIC_PWD=$(cic_pwd)"
     echo "${cic_exports} SCAFFOLD_PATH=$(cic_config_dir)/exercise_scaffold"
 }
 
