@@ -10,7 +10,7 @@ describe Docker do
   describe '#docker' do
     context 'command fails' do
       it 'raises an error' do
-        expect { subject.docker('bad') }.to raise_error(described_class::Error)
+        expect { subject.docker('container bad') }.to raise_error(described_class::Error)
       end
     end
   end

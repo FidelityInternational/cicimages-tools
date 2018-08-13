@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=bin/support/sh/functions/cic_docker.sh
-source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 # shellcheck source=bin/support/sh/functions/cic.sh
 source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
-# shellcheck disable=SC2016
-rbenv_init='eval "$(rbenv init -)"'
-cic_environment="CIC_COURSEWARE_VERSION=$(cic_image_version) CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
-cic_command="${rbenv_init} && ${cic_environment} /cic/bin/support/ruby/bin/cic"
+cic_command="$(bootstrap_cic_environment) /cic/bin/support/ruby/bin/cic"
 
 options=""
 subcommand=$1

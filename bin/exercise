@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=bin/support/sh/functions/cic_docker.sh
-source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 # shellcheck source=bin/support/sh/functions/cic.sh
 source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
@@ -11,17 +9,14 @@ volume_path="$(volume_path ansible)/${exercise_name}"
 
 copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
-# shellcheck disable=SC2016
-rbenv_init='eval "$(rbenv init -)"'
-export_command='. /cic/bin/.env'
-command="${rbenv_init} && ${export_command} && $(cic_exports) /cic/bin/support/ruby/bin/exercise $*"
+command="$(bootstrap_cic_environment) $(cic_bin)/support/ruby/bin/exercise $*"
 
-echo "tracks path: $(tracks_path)"
-docker run -it \
+docker run \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$(tracks_path)":/cic/tracks \
+    -v "${CURRENT_PATH}/../.cic":$(cic_config_dir) \
     -w "${volume_path}" \
     "$(cic_image)" \
     /bin/bash -c "${command}"
