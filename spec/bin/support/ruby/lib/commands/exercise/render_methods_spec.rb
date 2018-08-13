@@ -35,7 +35,7 @@ module Exercise
           context 'rendering succeeds' do
             it 'prints a quiet report' do
               expected_output = "Generating file for: #{exercise_name}\n\n#{ok("Finished: #{exercise_name}")}"
-              subject.render_exercise(Dir.pwd, create_template.path)
+              subject.render_exercise(exercise_name, create_template.path)
               expect(subject.output.string.chomp).to eq(expected_output)
             end
           end
@@ -43,14 +43,17 @@ module Exercise
           context 'rendering fails' do
             it 'prints a quiet report' do
               allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return('error')
-              allow(subject).to receive(:render).and_raise(CommandError)
+              command_error = CommandError.new
+              allow(subject).to receive(:render).and_raise(command_error)
 
               template = create_template(content: '<% command("bad_command")%>')
 
-              expect { subject.render_exercise(Dir.pwd, template.path) }.to raise_error(CommandError)
+              subject.render_exercise(exercise_name, template.path)
 
               expected_error = error("Failed to generate file from: #{template.path}")
-              expected_output = "Generating file for: #{exercise_name}\n#{expected_error}"
+              backtrace = "#{command_error.message}\n#{command_error.backtrace}"
+              expected_output = "Generating file for: #{exercise_name}\n#{expected_error}\n#{backtrace}"
+
               expect(subject.output.string.chomp).to eq(expected_output)
             end
           end
@@ -64,7 +67,7 @@ module Exercise
           context 'rendering succeeds' do
             it 'prints a quiet report' do
               expected_output = "Generating file for: #{exercise_name}\n#{ok("Finished: #{exercise_name}")}"
-              subject.render_exercise(Dir.pwd, create_template.path)
+              subject.render_exercise(exercise_name, create_template.path)
               expect(subject.output.string.chomp).to eq(expected_output)
             end
           end
