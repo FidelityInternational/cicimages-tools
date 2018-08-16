@@ -53,12 +53,26 @@ module Commands
             "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image} CIC_PWD="
           end
         end
+
+        context '.cic directory missing' do
+          it 'raises an error' do
+            FileUtils.rm_rf('.cic')
+            expect{subject.down}.to raise_error(described_class::CICDirectoryMissing)
+          end
+        end
       end
 
       describe '#up' do
         it_behaves_like :command_wrapper, 'docker-compose up -d --remove-orphans', :up do
           let(:expected_environment) do
             "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image} CIC_PWD="
+          end
+        end
+
+        context '.cic directory missing' do
+          it 'raises an error' do
+            FileUtils.rm_rf('.cic')
+            expect{subject.up}.to raise_error(described_class::CICDirectoryMissing)
           end
         end
       end

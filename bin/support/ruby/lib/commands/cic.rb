@@ -12,6 +12,9 @@ module Commands
     class ContainerAlreadyRunningError < StandardError
     end
 
+    class CICDirectoryMissing < StandardError
+    end
+
     desc 'track', 'thing'
     subcommand 'track', Track::Command
 
@@ -27,7 +30,7 @@ module Commands
     desc 'down', 'Bring down environment supporting current exercise'
 
     def down
-      Dir.chdir('.cic') do
+      in_cic_directory do
         execute "#{courseware_environment} docker-compose down",
                 pass_message: "Environment cic'd down :)",
                 fail_message: 'Failed to cic down the environment see above output for details'
@@ -64,7 +67,7 @@ module Commands
     desc 'up', 'Bring up environment to support the current exercise'
 
     def up
-      Dir.chdir('.cic') do
+      in_cic_directory do
         commands = ["#{courseware_environment} docker-compose up -d --remove-orphans"]
         after_script = "after"
         commands << "./#{after_script}" if File.exist?(after_script)
@@ -91,6 +94,14 @@ module Commands
 
       def courseware_version
         ENV['CIC_COURSEWARE_VERSION']
+      end
+
+      def in_cic_directory(&block)
+        cic_directory = '.cic'
+        raise CICDirectoryMissing unless File.exist?(cic_directory)
+        Dir.chdir(cic_directory) do
+          block.call
+        end
       end
 
       def normalise(string)
