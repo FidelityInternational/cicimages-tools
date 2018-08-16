@@ -17,6 +17,7 @@ module Commands
 
     desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
     option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
+
     def connect(container_name)
       command = "-it #{container_name} "
       command << (options[:command] || 'bash -l')
@@ -24,14 +25,18 @@ module Commands
     end
 
     desc 'down', 'Bring down environment supporting current exercise'
+
     def down
-      execute "#{courseware_environment} docker-compose down",
-              pass_message: "Environment cic'd down :)",
-              fail_message: 'Failed to cic down the environment see above output for details'
+      Dir.chdir('.cic') do
+        execute "#{courseware_environment} docker-compose down",
+                pass_message: "Environment cic'd down :)",
+                fail_message: 'Failed to cic down the environment see above output for details'
+      end
     end
 
     desc 'start IMAGE_TAG', 'log in to a container and see what happened'
     option :map_port, desc: 'map hostport to container port'
+
     def start(image_tag)
       container_name = normalise(image_tag)
 
@@ -57,13 +62,17 @@ module Commands
     end
 
     desc 'up', 'Bring up environment to support the current exercise'
+
     def up
-      commands = ["#{courseware_environment} docker-compose up -d --remove-orphans"]
-      after_script = "after"
-      commands << "./#{after_script}" if File.exist?(after_script)
-      execute(*commands,
-              pass_message: "Environment cic'd up :)",
-              fail_message: 'Failed to cic up the environment see above output for details')
+      Dir.chdir('.cic') do
+        commands = ["#{courseware_environment} docker-compose up -d --remove-orphans"]
+        after_script = "after"
+        commands << "./#{after_script}" if File.exist?(after_script)
+        execute(*commands,
+                pass_message: "Environment cic'd up :)",
+                fail_message: 'Failed to cic up the environment see above output for details')
+      end
+
     end
 
     no_commands do

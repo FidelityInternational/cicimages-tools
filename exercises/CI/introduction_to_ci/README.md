@@ -23,10 +23,14 @@ Continuous integration are essentially glorified schedulers. They sit looking at
 In this exercise you will be working using a CI system called Concourse. We've done the hard bit and have provided you with your very own Concourse installation and VCS. To start it, run: cic up
 If all is well you should see the following
 ```
-  [OK] Environment cic'd up :)
+  afters
+sleeping
+sleeping
+sleeping
+Connected!
+[OK] Environment cic'd up :)
 
 ```
-
 
 
 
@@ -149,4 +153,4 @@ to complete this exercise do the following:
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-Revision: a3a67f5d215aa54e31ffa5560ab0d6105e5fe8e27772600a50481129bdab8d26
+Revision: ab5ecbbc4d58a842b0f61549c6dbd8ca1818fc3d671a08f1891d2f59a91f2561
