@@ -58,9 +58,12 @@ module Commands
 
     desc 'up', 'Bring up environment to support the current exercise'
     def up
-      execute "#{courseware_environment} docker-compose up -d --remove-orphans",
+      commands = ["#{courseware_environment} docker-compose up -d --remove-orphans"]
+      after_script = "after"
+      commands << "./#{after_script}" if File.exist?(after_script)
+      execute(*commands,
               pass_message: "Environment cic'd up :)",
-              fail_message: 'Failed to cic up the environment see above output for details'
+              fail_message: 'Failed to cic up the environment see above output for details')
     end
 
     no_commands do

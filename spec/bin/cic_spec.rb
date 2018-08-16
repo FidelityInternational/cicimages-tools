@@ -44,12 +44,13 @@ module Commands
       before do
         ENV['CIC_COURSEWARE_VERSION'] = courseware_version
         ENV['CIC_COURSEWARE_IMAGE'] = courseware_image
+        FileUtils.mkdir('.cic')
       end
 
       describe '#down' do
         it_behaves_like :command_wrapper, 'docker-compose down', :down do
           let(:expected_environment) do
-            "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"
+            "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image} CIC_PWD="
           end
         end
       end
@@ -57,7 +58,7 @@ module Commands
       describe '#up' do
         it_behaves_like :command_wrapper, 'docker-compose up -d --remove-orphans', :up do
           let(:expected_environment) do
-            "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image}"
+            "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image} CIC_PWD="
           end
         end
       end

@@ -54,7 +54,6 @@ module Exercise
       session = PageMagic.session(browser: :headless_chrome, url: url)
       session.visit(Page, url: url)
       session.browser.save_screenshot(filename)
-      sleep 3
       filename
     end
 

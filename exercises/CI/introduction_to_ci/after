@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# TODO - support after hook
+echo "afters"
+while ! nc -z concourse 8080;
+do
+    echo sleeping;
+    sleep 10;
+done;
+echo Connected!;
+#ssh-agent bash -c 'ssh-add ../git-server/keys/id_rsa; git clone ssh://git@localhost:3333/git-server/repos/myrepo.git'
+#git config --local --add core.sshCommand 'ssh -i ../../git-server/keys/id_rsa'
+## break file so that they can commit and see the mistake?
