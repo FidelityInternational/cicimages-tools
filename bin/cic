@@ -44,3 +44,5 @@ docker run ${options} \
     -v "${HOME}/.netrc":/root/.netrc \
     "$(cic_image)" \
     /bin/bash -c "${command}"
+
+docker cp "$(cic_volumes_container):${volume_path}/." .
