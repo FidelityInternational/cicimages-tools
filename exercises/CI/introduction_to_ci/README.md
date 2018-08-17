@@ -23,12 +23,7 @@ Continuous integration are essentially glorified schedulers. They sit looking at
 In this exercise you will be working using a CI system called Concourse. We've done the hard bit and have provided you with your very own Concourse installation and VCS. To start it, run: cic up
 If all is well you should see the following
 ```
-  afters
-sleeping
-sleeping
-sleeping
-Connected!
-[OK] Environment cic'd up :)
+  [OK] Environment cic'd up :)
 
 ```
 
