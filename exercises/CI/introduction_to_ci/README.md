@@ -140,10 +140,10 @@ to complete this exercise do the following:
 
 1. Push the project pipeline to concourse - The pipeline file can be found in `./resources/application-pipeline.yml`
 **Note:** Make sure that it is enabled and runs successfully.
-2. Commit and push your team mate's changes to GIT
+2. The proposed change sits uncommitted in `./resources/checkout`. Commit and push your team mate's changes to GIT
 3. See what the result is :)
 
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-Revision: 2b0120a282858039e8842efaa70d404d405ed54b141270490c1160c4842327e0
+Revision: e60fb4a5499adcb161f3062ffbf9aa15985cf6cfcc678bc6e8a99180e2e111ca
