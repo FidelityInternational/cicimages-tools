@@ -11,17 +11,13 @@ module Commandline
 
   # TODO: - think about how to bring the run and execute methods together or give more differentiating names
   def execute(*commands, fail_message:, pass_message:)
-    result = nil
     commands.each do |command|
       result = run command
       say result.stdout
-      if result.error?
-        say result.stderr
-        say error fail_message
-        return result
-      end
+      next unless result.error?
+      say result.stderr
+      say error fail_message
     end
     say ok pass_message
-    result
   end
 end

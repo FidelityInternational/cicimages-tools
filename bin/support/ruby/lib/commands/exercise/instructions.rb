@@ -5,18 +5,11 @@ require 'yaml'
 
 require 'page_magic'
 
-Webkit = PageMagic::Driver.new(:webkit) do |app, options, browser_alias_chosen|
+HeadlessChrome = PageMagic::Driver.new(:headless_chrome) do |app, _options, _browser_alias_chosen|
   # Write the code necessary to initialise the driver you have chosen
-  require 'capybara/webkit'
-  Capybara::Webkit::Driver.new(app, options)
-end
-
-
-HeadlessChrome = PageMagic::Driver.new(:headless_chrome) do |app, options, browser_alias_chosen|
-  # Write the code necessary to initialise the driver you have chosen
-  require "selenium/webdriver"
+  require 'selenium/webdriver'
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w(headless no-sandbox disable-gpu) }
+    chromeOptions: { args: %w[headless no-sandbox disable-gpu] }
   )
 
   Capybara::Selenium::Driver.new app,
@@ -24,8 +17,6 @@ HeadlessChrome = PageMagic::Driver.new(:headless_chrome) do |app, options, brows
                                  desired_capabilities: capabilities
 end
 
-
-PageMagic.drivers.register Webkit
 PageMagic.drivers.register HeadlessChrome
 
 module Exercise
@@ -33,7 +24,7 @@ module Exercise
     include Commandline
     include Commandline::Output
 
-    class TimeoutException < Exception
+    class TimeoutException < RuntimeError
     end
 
     class Page
@@ -41,16 +32,16 @@ module Exercise
     end
 
     def wait_until(opts = {})
-      opts = {timeout_after: 5, retry_every: 0.1}.merge(opts)
+      opts = { timeout_after: 5, retry_every: 0.1 }.merge(opts)
       start_time = Time.now
       until Time.now > start_time + opts[:timeout_after]
         return true if yield == true
         sleep opts[:retry_every]
       end
-      fail TimeoutException, 'Action took to long'
+      raise TimeoutException, 'Action took to long'
     end
 
-    def capture url, filename
+    def capture(url, filename)
       session = PageMagic.session(browser: :headless_chrome, url: url)
       session.visit(Page, url: url)
       session.browser.save_screenshot(filename)

@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 namespace :courseware do
   require 'pty'
 

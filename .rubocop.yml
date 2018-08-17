@@ -22,6 +22,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/support/shared_examples/*.rb'
     - '**/*_spec.rb'
+    - 'tasks/*.rake'
 
 Metrics/ModuleLength:
   Exclude:
