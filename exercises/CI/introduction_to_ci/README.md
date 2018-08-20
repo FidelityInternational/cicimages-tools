@@ -143,14 +143,37 @@ to complete this exercise do the following:
 
 1. Push the project pipeline to concourse - The pipeline file can be found in `./resources/application-pipeline.yml`
 **Note:** Make sure that it is enabled and runs successfully.
-2. The proposed change sits uncommitted in `./resources/checkout`. Commit and push your team mate's changes to GIT
-3. See what the result is :)
+
+
+
+2. The proposed change sits uncommitted in `./resources/checkout`.
+```
+  On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   src/application.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+The checkout is pointed at the GIT server that was brought up for you when you ran the `cic up` command. Running `git remote get-url origin` within the checkout directory shows that the GIT server is indeed on your local machine.
+```
+ssh://git@localhost:3333/git-server/repos/application-repo.git
+```
+Commit and push your team mate's changes to GIT and see what the Concourse makes of it :)
+**Hint** If you don't know how to use git. Investigate (in that order):
+- git add
+- git commit
+- git push
 
 
 
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-**Note:** Now that you've finished the exercise, remember to run cic down to shutdown your test infrastructure.  
+**Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.  
 
-Revision: 67fd9341bb88f19dbc5be0bf34b8bacbe46928fda0b77e930e307cbe5a4fde39
+Revision: e2532c2903cea2c22db75324b1130d7c1ede256d4a2c684c390b8a3d42a85a71

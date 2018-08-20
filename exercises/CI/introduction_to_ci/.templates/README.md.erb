@@ -91,12 +91,26 @@ to complete this exercise do the following:
 
 1. Push the project pipeline to concourse - The pipeline file can be found in `<%= path('./resources/application-pipeline.yml') %>`
 **Note:** Make sure that it is enabled and runs successfully.
-2. The proposed change sits uncommitted in `<%= path('./resources/checkout') %>`. Commit and push your team mate's changes to GIT
-3. See what the result is :)
+
+<% show_remote_command = 'git remote get-url origin' %>
+<% checkout_dir = './resources/checkout' %>
+2. The proposed change sits uncommitted in `<%= path(checkout_dir) %>`.
+```
+  <%=command_output("cd #{checkout_dir} && git status")%>
+```
+The checkout is pointed at the GIT server that was brought up for you when you ran the `cic up` command. Running `<%=show_remote_command %>` within the checkout directory shows that the GIT server is indeed on your local machine.
+```
+<%= command_output("cd #{checkout_dir} && #{show_remote_command}") %>
+```
+Commit and push your team mate's changes to GIT and see what the Concourse makes of it :)
+**Hint** If you don't know how to use git. Investigate (in that order):
+- git add
+- git commit
+- git push
 
 <%
   git_command =<<-COMMAND
-  cd ./resources/checkout && \
+  cd #{checkout_dir} && \
   git config --global user.email "you@example.com" && \
   git config --global push.default matching && \
   git config --local --add core.sshCommand "ssh -i ../git-server/keys/id_rsa" && \
@@ -124,9 +138,11 @@ to complete this exercise do the following:
       false
     end
   end
+
+  command("rm -R #{checkout_dir}")
 %>
 
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-**Note:** Now that you've finished the exercise, remember to run <%= cic_down_command %> to shutdown your test infrastructure.
+**Note:** Now that you've finished the exercise, remember to run `<%= cic_down_command %>` to shutdown your test infrastructure.
