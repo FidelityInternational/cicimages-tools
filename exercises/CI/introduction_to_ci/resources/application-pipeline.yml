@@ -48,8 +48,7 @@ jobs:
         image_resource:
           type: docker-image
           source:
-            repository: lvlup/ci_course
-            tag: 0.5.2
+            repository: qnib/pytest
         inputs:
           - name: repo
         run:

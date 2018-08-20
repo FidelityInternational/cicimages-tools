@@ -1,6 +1,10 @@
 FROM solita/ubuntu-systemd
 
-RUN apt-get -y -q update && apt-get -y -q install curl build-essential bash wget unzip python python-dev ca-certificates vim openssh-server libssl-dev libreadline-dev zlib1g-dev git netcat chromium-browser && apt-get clean
+
+
+RUN apt-get -y -q update && apt-get -y install software-properties-common python-software-properties
+RUN apt-add-repository ppa:git-core/ppa
+RUN apt-get -y -q install curl build-essential bash wget unzip python python-dev ca-certificates vim openssh-server libssl-dev libreadline-dev zlib1g-dev git netcat chromium-browser && apt-get -y upgrade git && apt-get clean
 
 RUN systemctl enable ssh.service
 RUN ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa && cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
@@ -27,3 +31,5 @@ ADD Gemfile* /cic/
 WORKDIR '/cic'
 
 RUN ["/bin/bash", "-c", "eval \"$(rbenv init -)\" && gem install bundler && bundle install"]
+
+RUN apt-get -y upgrade git

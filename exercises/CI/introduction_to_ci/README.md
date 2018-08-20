@@ -2,6 +2,9 @@
 
 
 
+
+
+
 ## Introduction
 Development teams working on a common codebase are **continuously** making changes to that common code. In order for a team member to know that their changes are compatible, **continuous** checking of the code base should be happening too. I.e. every time some one makes a change, the code base should be tested to ensure it is continuing to work as intended. The idea is that the more frequently changes are integrated, the smaller those changes are likely to be and therefore the lower the risk is that they will break something. This is where the practice of Continuous Integration (CI) comes in.
 
@@ -22,15 +25,13 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 - `source ./bin/env`
 - `cd `
 
-In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: cic up
+In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: cic up 
+
 If all is well you should see the following:
 ```
   [OK] Environment cic'd up :)
 
 ```
-
-
-
 
 Click the login button at the top right of the [concourse home page](http://127.0.0.1:8080) and login with username `test` and password `test`. You'll note that there arn't currently any 'pipelines' configured. A pipeline is the name that Concourse gives to one or more tasks/jobs that have been configured to be run in a prescribed order when a particular event happens. E.g. a change is detected in GIT. Pipelines can be can be as simple as a one step process or they can be used to model very complex processes. In a later exercise we'll go in to pipelines and there features in more depth.
 
@@ -38,9 +39,7 @@ We have supplied a very simple pipeline. Let's put it in to concourse.
 
 Some CI's have extensive UIs through which they can be configured, Concourse is primarly configured via it's commandline interface (CLI) which makes webservice calls to configure the Concourse server. The CLIs for each O/S are available in `./resources` directory. Use the fly binary that is correct for your O/S to complete this exercise.
 
-
-
-First we must login, run `./resources/linux/fly -t local login --concourse-url http://localhost:8080 -u test -p test`
+First we must login, run `./resources/linux/fly -t local login --concourse-url 127.0.0.1:8080 -u test -p test`
 you should see the following output:
 ```
 logging in to team 'main'
@@ -115,7 +114,7 @@ jobs:
   +       - name: repo
   
 pipeline created!
-you can view your pipeline here: http://localhost:8080/teams/main/pipelines/ci-intro-pipeline
+you can view your pipeline here: 127.0.0.1:8080/teams/main/pipelines/ci-intro-pipeline
 
 the pipeline is currently paused. to unpause, either:
   - run the unpause-pipeline command
@@ -132,7 +131,7 @@ You'll notice the following:
 - there is now a pipe line called: `ci-intro-pipeline`
 - the pipeline is paused
 
-When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `./resources/linux/fly -t local unpause-pipeline -p ci-intro-pipeline`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](http://localhost:8080/teams/main/pipelines/ci-intro-pipeline) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
+When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `./resources/linux/fly -t local unpause-pipeline -p ci-intro-pipeline`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](127.0.0.1:8080/teams/main/pipelines/ci-intro-pipeline) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
 
 ![Passing Pipeline](./passing_pipeline_screenshot.png)
 ### Now it's your turn
@@ -145,7 +144,10 @@ to complete this exercise do the following:
 2. The proposed change sits uncommitted in `./resources/checkout`. Commit and push your team mate's changes to GIT
 3. See what the result is :)
 
+
+
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-Revision: 38f64712fd41b5939238f4cf4c2376bfe83d68242f3de496b014085481690a27
+**Note:** Now that you've finished the exercise, remember to run cic down to shutdown your test infrastructure.
+Revision: 2dca140f33510a6ecc6091354d2812edd94af55b7d5dd8c63ccb7b765ae767e2
