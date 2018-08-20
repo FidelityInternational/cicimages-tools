@@ -39,7 +39,7 @@ module Exercise
           rendered_content = File.read(template.expected_rendered_filepath)
           expected_digest = Digest::SHA2.file(template.path).hexdigest
 
-          expect(rendered_content.lines.last).to eq("Revision: #{expected_digest}")
+          expect(rendered_content).to end_with("  \n\nRevision: #{expected_digest}")
         end
 
         context 'quiet' do

@@ -20,7 +20,7 @@ module Exercise
       say "Generating file for: #{exercise_name}"
 
       result = anonymise(render(template))
-      result << "\nRevision: #{digest(template)}"
+      result << "  \n\nRevision: #{digest(template)}"
       File.write(exercise_filename(template), result)
 
       say ok "Finished: #{exercise_name}"

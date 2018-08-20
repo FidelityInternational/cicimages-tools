@@ -5,8 +5,8 @@
 <% substitute(concourse_address => '127.0.0.1:8080')%>
 <%
   fly_cli = './resources/linux/fly'
-  pipeline = 'ci-intro-pipeline'
-  pipeline_url = "#{concourse_address}/teams/main/pipelines/#{pipeline}"
+  intro_pipeline = 'ci-intro-pipeline'
+  pipeline_url = "#{concourse_address}/teams/main/pipelines/#{intro_pipeline}"
 %>
 
 ## Introduction
@@ -48,14 +48,14 @@ you should see the following output:
 <%= last_command_output %>
 ```
 
-Now let's push a pipeline to concourse by running: `<%= command("#{fly_cli}  -t local set-pipeline -p #{pipeline} -c ./resources/pipeline.yml -n") %>`
+Now let's push a pipeline to concourse by running: `<%= command("#{fly_cli}  -t local set-pipeline -p #{intro_pipeline} -c ./resources/pipeline.yml -n") %>`
 you should see the following output:
 ```
 <%= last_command_output %>
 ```
 
 <%
-  command("#{fly_cli} -t local expose-pipeline -p #{pipeline}")
+  command("#{fly_cli} -t local expose-pipeline -p #{intro_pipeline}")
 %>
 
 Visit the [concourse home page](http://127.0.0.1:8080) again and you'll see the pipeline that the was just pushed.
@@ -63,20 +63,20 @@ Visit the [concourse home page](http://127.0.0.1:8080) again and you'll see the 
 
 
 You'll notice the following:
-- there is now a pipe line called: `<%=pipeline%>`
+- there is now a pipe line called: `<%=intro_pipeline%>`
 - the pipeline is paused
 
-When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `<%= command("#{fly_cli} -t local unpause-pipeline -p #{pipeline}")%>`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](<%= pipeline_url%>) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
+When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `<%= command("#{fly_cli} -t local unpause-pipeline -p #{intro_pipeline}")%>`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](<%= pipeline_url%>) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
 <%
 
-  wait_until(timeout_after: 50, retry_every: 2) do
+  wait_until(timeout_after: 90, retry_every: 2) do
     begin
       output = command_output("#{fly_cli} -t local  builds --json")
       !JSON(output).find do |result|
-        result['pipeline_name'] == pipeline && result['status'] == 'succeeded'
+        result['pipeline_name'] == intro_pipeline && result['status'] == 'succeeded'
       end.nil?
     rescue StandardError
-      fasle
+      false
     end
   end
 
@@ -106,19 +106,20 @@ to complete this exercise do the following:
 
   command(git_command)
 
+  command("#{fly_cli}  -t local destroy-pipeline -p #{intro_pipeline} -n")
   application_pipeline = 'application-pipeline'
   command("#{fly_cli}  -t local set-pipeline -p #{application_pipeline} -c ./resources/application-pipeline.yml -n")
   command("#{fly_cli} -t local expose-pipeline -p #{application_pipeline}")
   command("#{fly_cli} -t local unpause-pipeline -p #{application_pipeline}")
 
-  wait_until(timeout_after: 180, retry_every: 2) do
+  wait_until(timeout_after: 240, retry_every: 2) do
     begin
       output = command_output("#{fly_cli} -t local  builds --json")
       !JSON(output).find do |result|
         result['pipeline_name'] == application_pipeline && result['status'] == 'failed'
       end.nil?
     rescue StandardError
-      fasle
+      false
     end
   end
 %>

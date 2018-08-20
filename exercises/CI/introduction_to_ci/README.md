@@ -149,5 +149,6 @@ to complete this exercise do the following:
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-**Note:** Now that you've finished the exercise, remember to run cic down to shutdown your test infrastructure.
-Revision: 2dca140f33510a6ecc6091354d2812edd94af55b7d5dd8c63ccb7b765ae767e2
+**Note:** Now that you've finished the exercise, remember to run cic down to shutdown your test infrastructure.  
+
+Revision: 06e32d8c865ad4a08ee340104312330146a913e69ba644856a80a2b865746eab
