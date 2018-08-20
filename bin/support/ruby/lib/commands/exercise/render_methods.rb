@@ -31,9 +31,16 @@ module Exercise
       false
     end
 
+    def substitute hash
+      @substitutes = hash
+    end
+
     private
 
     def anonymise(string)
+      substitutes.each do |key, value|
+        string = string.gsub(key, value)
+      end
       string.gsub(/cic_container-[\w\d-]+/, 'cic_container-xxxxxxxxxxxxxxxx')
     end
 
@@ -50,6 +57,10 @@ module Exercise
     ensure
       after_all_commands.each { |command| test_command(command) }
       say '' if quiet?
+    end
+
+    def substitutes
+      @substitutes ||= {}
     end
 
     def templates(dir)

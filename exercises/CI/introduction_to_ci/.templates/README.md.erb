@@ -1,5 +1,7 @@
 # Introduction to Continuous Integration (CI)
 
+<% substitute('concourse:8080' => 'localhost:8080')%>
+
 ## Introduction
 Development teams working on a common codebase are **continuously** making changes to that common code. In order for a team member to know that their changes are compatible, **continuous** checking of the code base should be happening too. I.e. every time some one makes a change, the code base should be tested to ensure it is continuing to work as intended. The idea is that the more frequently changes are integrated, the smaller those changes are likely to be and therefore the lower the risk is that they will break something. This is where the practice of Continuous Integration (CI) comes in.
 

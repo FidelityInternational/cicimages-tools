@@ -1,5 +1,7 @@
 # Introduction to Continuous Integration (CI)
 
+
+
 ## Introduction
 Development teams working on a common codebase are **continuously** making changes to that common code. In order for a team member to know that their changes are compatible, **continuous** checking of the code base should be happening too. I.e. every time some one makes a change, the code base should be tested to ensure it is continuing to work as intended. The idea is that the more frequently changes are integrated, the smaller those changes are likely to be and therefore the lower the risk is that they will break something. This is where the practice of Continuous Integration (CI) comes in.
 
@@ -38,7 +40,7 @@ Some CI's have extensive UIs through which they can be configured, Concourse is 
 
 
 
-First we must login, run `./resources/linux/fly -t local login --concourse-url http://concourse:8080 -u test -p test`
+First we must login, run `./resources/linux/fly -t local login --concourse-url http://localhost:8080 -u test -p test`
 you should see the following output:
 ```
 logging in to team 'main'
@@ -113,7 +115,7 @@ jobs:
   +       - name: repo
   
 pipeline created!
-you can view your pipeline here: http://concourse:8080/teams/main/pipelines/ci-intro-pipeline
+you can view your pipeline here: http://localhost:8080/teams/main/pipelines/ci-intro-pipeline
 
 the pipeline is currently paused. to unpause, either:
   - run the unpause-pipeline command
@@ -130,7 +132,7 @@ You'll notice the following:
 - there is now a pipe line called: `ci-intro-pipeline`
 - the pipeline is paused
 
-When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `./resources/linux/fly -t local unpause-pipeline -p ci-intro-pipeline`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](http://concourse:8080/teams/main/pipelines/ci-intro-pipeline) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
+When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `./resources/linux/fly -t local unpause-pipeline -p ci-intro-pipeline`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](http://localhost:8080/teams/main/pipelines/ci-intro-pipeline) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
 
 ![Passing Pipeline](./passing_pipeline_screenshot.png)
 ### Now it's your turn
@@ -146,4 +148,4 @@ to complete this exercise do the following:
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-Revision: e60fb4a5499adcb161f3062ffbf9aa15985cf6cfcc678bc6e8a99180e2e111ca
+Revision: 38f64712fd41b5939238f4cf4c2376bfe83d68242f3de496b014085481690a27
