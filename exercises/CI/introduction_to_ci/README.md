@@ -23,9 +23,9 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd `
+- `cd introduction_to_ci`
 
-In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: cic up 
+In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: `cic up` 
 
 If all is well you should see the following:
 ```
@@ -39,7 +39,7 @@ We have supplied a very simple pipeline. Let's put it in to concourse.
 
 Some CI's have extensive UIs through which they can be configured, Concourse is primarly configured via it's commandline interface (CLI) which makes webservice calls to configure the Concourse server. The CLIs for each O/S are available in `./resources` directory. Use the fly binary that is correct for your O/S to complete this exercise.
 
-First we must login, run `./resources/linux/fly -t local login --concourse-url 127.0.0.1:8080 -u test -p test`
+First we must login, run `./resources/linux/fly -t local login --concourse-url http://127.0.0.1:8080 -u test -p test`
 you should see the following output:
 ```
 logging in to team 'main'
@@ -114,7 +114,7 @@ jobs:
   +       - name: repo
   
 pipeline created!
-you can view your pipeline here: 127.0.0.1:8080/teams/main/pipelines/ci-intro-pipeline
+you can view your pipeline here: http://127.0.0.1:8080/teams/main/pipelines/ci-intro-pipeline
 
 the pipeline is currently paused. to unpause, either:
   - run the unpause-pipeline command
@@ -131,7 +131,7 @@ You'll notice the following:
 - there is now a pipe line called: `ci-intro-pipeline`
 - the pipeline is paused
 
-When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `./resources/linux/fly -t local unpause-pipeline -p ci-intro-pipeline`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](127.0.0.1:8080/teams/main/pipelines/ci-intro-pipeline) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
+When pipelines are first pushed, they are not enabled. In order to run the pipeline we need to unpause it. Do this by either clicking the play symbol or by running: `./resources/linux/fly -t local unpause-pipeline -p ci-intro-pipeline`. Unpausing the pipeline should cause Concourse to trigger a build for our new pipeline. Go back to the [detailed view of the pipeline](http://127.0.0.1:8080/teams/main/pipelines/ci-intro-pipeline) after 20 seconds or so, you'll notice that that pipeline goes green. This means that the code has been pulled successfully from GIT and that the singe job, that is in the pipeline, has executed successfully.
 
 ![Passing Pipeline](./passing_pipeline_screenshot.png)
 ### Now it's your turn
@@ -151,4 +151,4 @@ Continuous Integration plays a vital role in ensuring that the software we right
 
 **Note:** Now that you've finished the exercise, remember to run cic down to shutdown your test infrastructure.  
 
-Revision: 06e32d8c865ad4a08ee340104312330146a913e69ba644856a80a2b865746eab
+Revision: 382ac52d8d579a1c812e22213816cecee979f20ad03676c72bcbec97457b48b6

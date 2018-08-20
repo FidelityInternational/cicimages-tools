@@ -2,7 +2,7 @@
 
 <% concourse_address = 'http://concourse:8080' %>
 
-<% substitute(concourse_address => '127.0.0.1:8080')%>
+<% substitute(concourse_address => 'http://127.0.0.1:8080')%>
 <%
   fly_cli = './resources/linux/fly'
   intro_pipeline = 'ci-intro-pipeline'
@@ -29,7 +29,7 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 - `source ./bin/env`
 - `cd <%=exercise_path %>`
 
-In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: <%= command('cic up') %> <% cic_down_command = after_all('cic down') %>
+In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: `<%= command('cic up') %>` <% cic_down_command = after_all('cic down') %>
 
 If all is well you should see the following:
 ```
