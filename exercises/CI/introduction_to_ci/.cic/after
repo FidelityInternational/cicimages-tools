@@ -10,6 +10,8 @@ script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 resources_dir="${script_dir}/../resources"
 cd "${resources_dir}"
 
+chmod 400 git-server/keys/id_rsa
+
 ssh-agent bash -c 'ssh-add git-server/keys/id_rsa; git clone ssh://git@git-server/git-server/repos/application-repo.git checkout'
 
 cd "checkout"
