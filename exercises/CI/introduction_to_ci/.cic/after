@@ -2,9 +2,13 @@
 
 set -e
 
-while ! nc -z concourse 8080;
+TIME_WAITED=0
+sleep_time=10
+until (nc -z concourse 8080) || [[ "${TIME_WAITED}" -eq "100" ]]
 do
-    sleep 10;
+    echo "waiting for Concourse to come up"
+    sleep "${sleep_time}"
+    $((TIME_WAITED+="${sleep_time}"))
 done;
 
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
