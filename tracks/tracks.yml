@@ -3,3 +3,7 @@ tracks:
     exercises:
       - Running Ansible: 'exercises/IaC/ansible/running_ansible/README.md'
       - Writing Playbooks: 'exercises/IaC/ansible/writing_playbooks/README.md'
+
+  - name: continuous_integration
+    exercises:
+    - Introduction to Continuous Integration: 'exercises/CI/introduction_to_ci/README.md'
