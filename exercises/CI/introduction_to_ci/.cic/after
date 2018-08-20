@@ -6,17 +6,26 @@ while ! nc -z concourse 8080;
 do
     sleep 10;
 done;
+
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 resources_dir="${script_dir}/../resources"
 cd "${resources_dir}"
 
 chmod 400 git-server/keys/id_rsa
 
-ssh-agent bash -c 'ssh-add git-server/keys/id_rsa; git clone ssh://git@git-server/git-server/repos/application-repo.git checkout'
+if [ ! -d "checkout" ]; then
+  ssh-agent bash -c 'ssh-add git-server/keys/id_rsa; git clone ssh://git@git-server/git-server/repos/application-repo.git checkout'
 
-cd "checkout"
-git config --local --add core.sshCommand 'ssh -i ../git-server/keys/id_rsa'
-git remote set-url origin ssh://git@localhost:3333/git-server/repos/application-repo.git
+  cd "checkout"
 
-cp "${script_dir}/application.py" src/
+  ssh_command="ssh -i ../git-server/keys/id_rsa"
+
+  git config --local --add core.sshCommand 'ssh -i ../git-server/keys/id_rsa'
+  git remote set-url origin ssh://git@localhost:3333/git-server/repos/application-repo.git
+
+  cp "${script_dir}/application.py" src/
+fi
+
+
+
 
