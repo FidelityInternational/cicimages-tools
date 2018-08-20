@@ -64,6 +64,5 @@ module Exercise
         Dir.glob("#{name}/**/*", File::FNM_DOTMATCH).find_all { |file| !%w[. ..].include?(File.basename(file)) }
       end
     end
-
   end
 end

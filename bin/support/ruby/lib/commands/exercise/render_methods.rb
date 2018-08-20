@@ -31,7 +31,7 @@ module Exercise
       false
     end
 
-    def substitute hash
+    def substitute(hash)
       @substitutes = hash
     end
 

@@ -29,7 +29,7 @@ module Exercise
           subject.render_exercise(Dir.pwd, template.path)
 
           rendered_content = File.read(template.expected_rendered_filepath)
-          expect(rendered_content).to include("bar")
+          expect(rendered_content).to include('bar')
         end
 
         it 'adds the revision to the end of the file' do
