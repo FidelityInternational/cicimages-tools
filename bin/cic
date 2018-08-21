@@ -26,12 +26,13 @@ else
     if [ "${container_command}" != "" ]; then
         command="${command} '${container_command}'"
     fi
+
+
+    exercise_name="$(basename "$(pwd)")"
+
+    volume_path="$(volume_path ansible)/${exercise_name}"
+    copy_to_cic_volume "$(pwd)/." "${volume_path}"
 fi
-
-exercise_name="$(basename "$(pwd)")"
-
-volume_path="$(volume_path ansible)/${exercise_name}"
-copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
 docker run ${options} \
     --volumes-from "$(cic_volumes_container)" \
@@ -45,4 +46,10 @@ docker run ${options} \
     "$(cic_image)" \
     /bin/bash -c "${command}"
 
-docker cp "$(cic_volumes_container):${volume_path}/." .
+result=$?
+
+if [ "${subcommand}" != "track" ]; then
+    docker cp "$(cic_volumes_container):${volume_path}/." .
+fi
+
+exit $?
