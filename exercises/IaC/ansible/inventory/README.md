@@ -2,7 +2,8 @@
 
 ## Introduction
 Ansible requires a list of hosts to execute playbooks and ad-hoc commands against.  Ansible refers
-to this target host list as an inventory.  
+to this target host list as an inventory.  This exercise will outline some basic inventory concepts -
+inventory formats, grouping, setting and using variables.
 
 ## Exercise Learning Objectives
 
@@ -170,9 +171,9 @@ set by using the `ansible` command and the debug module:
 Which should show output as follows:
 
 ```
-server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
-server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
 server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
+server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
+server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
 ```
 
 The output shows the result of running the `debug` module on each of the three hosts in the inventory file.
@@ -207,7 +208,7 @@ inventory file and run the playbook successfully:
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_32056, inifile: pytest.ini
+rootdir: /vols/pytest_6440, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 3 items
 
@@ -215,7 +216,7 @@ tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
 tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
 tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
-=========================== 3 passed in 1.62 seconds ===========================
+=========================== 3 passed in 1.55 seconds ===========================
 ```
 
 ## Summary
