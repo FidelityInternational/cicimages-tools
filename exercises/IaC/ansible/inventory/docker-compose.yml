@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 networks:
   default:
     external:
@@ -6,11 +6,14 @@ networks:
 
 services:
   server1:
-    image: ${COURSEWARE_IMAGE}:${COURSEWARE_VERSION}
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
 
   server2:
-    image: ${COURSEWARE_IMAGE}:${COURSEWARE_VERSION}
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
 
   server3:
-    image: ${COURSEWARE_IMAGE}:${COURSEWARE_VERSION}
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
 

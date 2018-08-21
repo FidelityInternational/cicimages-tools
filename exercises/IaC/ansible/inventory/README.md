@@ -1,57 +1,69 @@
 # Inventory
 
 ## Introduction
-`# Required - Give a written explanation of the purpose of the topic this exercise is based on`
+Ansible requires a list of hosts to execute playbooks and ad-hoc commands against.  Ansible refers
+to this target host list as an inventory.  
 
 ## Exercise Learning Objectives
- - introduce static inventories, hosts and groups
- - outline passing of variables from inventory data
 
-## Useful Terminology
-`# Optional - any key terms you intend to use in your exercise, if appropriate, could be listed here`
+  - Provide an overview of static inventories
+  - Introduce hostgroups and variables
+  - Create a static inventory with hostgroups and variables
 
-## Tutorial
+## Introduction to Static Inventories
 
-Ansible requires a list of hosts to execute playbooks and commands against, this is reffered to as
-the inventory.
+### Formats
 
-In it's most basic form an inventory file can be a simple list of hosts:
+Ansible supports a number of inventory file formats:
+
+  - INI style static files
+  - JSON/YAML static files
+  - Any executable that outputs valid JSON/YAML
+  - Directories; Ansible will read all inventory files in the specified directory
+  - Python plugins
+ 
+You can find mode information on supported inventory formats in the official 
+[Ansible documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html).
+
+At it's most basic, the INI style inventories can define a simple list of hosts:
 
 ```
-host1.example.org
-host2.example.org
-host3.example.org
+host1
+host2
+host3
 ```
 
-Hosts can also be grouped using INI style headers:
+### Default Inventory
+
+Ansible commands will look for the default inventory file in `/etc/ansible/hosts`.  The inventory can be overridden
+on the command line using the `-i INVENTORY` option or via the `ansible.cfg` config file.
+
+### Inventory Groups
+
+Hosts can also be grouped:
 
 ```
 [webservers]
-host1.example.org
+host1
+
 [dbservers]
-host2.example.org
-host3.example.org
+host2
+host3
+
 [dc1hosts]
-host2.example.org
+host2
+
 [dc2hosts]
-host1.example.org
-host3.example.org
+host1
+host3
 ```
 
 Host can be defined in more than one group.
 
-Ansible supports INI style static inventories as well as YAML and JSON (see
-[Ansible documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#hosts-and-groups)).
+Groups can be used to limit the scope of playbooks and ad-hoc commands, we can target groups using the
+`hosts:` parameter in our playbooks.  For example the playbook:
 
-By default Ansible commands will look for the default inventory file in `/etc/ansible/hosts`.  The inventory
-can be overridden on the command line using the `-i INVENTORY` option.
-
-### Using Groups
-
-Groups can be used to limit the scope of ansible playbooks and ad-hoc commands, we can target groups using the
-`hosts:` parameter in our playbooks, for example:
-
-```
+```YAML
 ---
 - hosts: dc1hosts
   tasks:
@@ -59,123 +71,159 @@ Groups can be used to limit the scope of ansible playbooks and ad-hoc commands, 
       command: /bin/somecommand
 ```
 
-The scope of the entire play is limited to only hosts in the `dc1hosts` group.
+Tasks in the play will only run on hosts in the `dc1hosts` group.
 
-### Using Variables
+Groups can also be specified on the command line with the `-l LIMIT` option:
 
+```
+ansible -m ping all -l dc2hosts
+```
 
+In this case, the `all` built-in group is initially specified but subsequently limits to just hosts in the
+`dc2hosts` group.
 
-Variables can be defined in the inventory file and made available to the Ansible run.  Create a basic inventory
-file, `ansible/myinventory`, with the contents:
+### Inventory Variables
+
+Variables can be defined in the inventory file and made available to the Ansible run, variables can be set,
+per host, within the inventory file:
 
 ```
 [webservers]
 server1   dns_server=192.168.0.1
+
 [dbservers]
 server2   dns_server=192.168.100.1
 server3   dns_server=192.168.100.1
+```
+
+They can also be defined by group with a special section in the inventory file:
+
+```
+[webservers]
+server1
+
+[dbservers]
+server2
+server3
+
+[webservers:vars]
+dns_server=1.1.1.1
+
+[dbservers:vars]
+dns_server=2.2.2.2
+```
+
+## Exercise
+
+**Note:** Before starting the exercises, please do the following:
+
+- `cd YOUR_CLONE_OF_THIS REPO`
+- `. /bin/setup`
+- `cd ./exercises/IaC/ansible/inventory`
+- `cic up`
+
+These commands will configure an environment and will bring up three docker containers for use in the exercises
+that follow.
+
+### Creating A Basic Inventory
+
+[webservers]
+server1
+
+[dbservers]
+server2
+server3 dns_server=3.3.3.3
+
+[webservers:vars]
+dns_server=1.1.1.1
+
+[dbservers:vars]
+dns_server=2.2.2.2
+
+
+Create an inventory file `ansible/inventory` within the exercise directory, it define a static inventory
+as follows:
+
+```
+[webservers]
+server1
+
+[dbservers]
+server2
+server3 dns_server=3.3.3.3
+
+[webservers:vars]
+dns_server=1.1.1.1
+
+[dbservers:vars]
+dns_server=2.2.2.2
 
 ```
 
-The `dns_server` variable would be available to the Ansible run, you can check that the variable is being
+The `dns_server` variable will be available during an Ansible run, you can check that the variable is being
 set by using the `ansible` command and the debug module:
 
 ```
-`ansible -i ansible/myinventory -m debug -a var=dns_server all`
+`ansible -i ansible/inventory -m debug -a var=dns_server all -o`
 ```
 
 Which should show output as follows:
 
 ```
-server2 | SUCCESS => {
-    "dns_server": "192.168.100.1"
-}
-server3 | SUCCESS => {
-    "dns_server": "192.168.100.1"
-}
-server1 | SUCCESS => {
-    "dns_server": "192.168.0.1"
-}
+server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
+server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
+server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
 ```
-
-
 
 The output shows the result of running the `debug` module on each of the three hosts in the inventory file.
 In each case, the `dns_server` variable was set to the value defined in the static inventory.
 
-Variables can also be set for all hosts in a group, edit the `ansible/myinventory`
-file again and add the `[dbservers:vars]` section and add the `dns_server` variable for the group rather than
-for `server2` and `server3` directly:
-
-```
-[webservers]
-server1   dns_server=192.168.0.1
-[dbservers]
-server2
-server3
-[dbservers:vars]
-dns_server=192.168.100.1
-
-```
-
-When the command is run again:
-
-```
-`ansible -i ansible/myinventory -m debug -a var=dns_server all`
-```
-
-We should get the same output.
-
-```
-server1 | SUCCESS => {
-    "dns_server": "192.168.0.1"
-}
-server2 | SUCCESS => {
-    "dns_server": "192.168.100.1"
-}
-server3 | SUCCESS => {
-    "dns_server": "192.168.100.1"
-}
-```
-
-## Exercise
-
-**Note:** Before going any further do the following:
-- `cd YOUR_CLONE_OF_THIS REPO`
-- `source ./bin/.env`
-- `./exercises/IaC/ansible/inventory`
-
 ### Scenario
 
 A colleague has handed over a playbook for you to run on some newly commissioned servers.  Two of the
-servers are physically located in the UK and one in Asia. To minimise NTP time synchronisation issues
-the servers should be configured using the regional ntp.org pool servers.
-
-The production ntp.conf template file has been provided, but it requires a `region` parameter to be
-set during the `ansible-playbook` execution so that the correct configuration is applied.
+servers are physically located in the UK and one in Asia.  It has been decided that the /etc/issue file
+should be configured to show the server's region and some other details when a user logs in.
 
 Create a new static inventory that:
 
   - Defines the three servers (`server1`, `server2`, `server3`)
-  - Groups the servers into two groups `ukservers` and `asiaservers`
+  - Groups the servers into two groups `ukservers` and `asiaservers` (server1 is in the UK, server2 and 
+    server3 are in Asia)
   - Ensures that a `region` variable is set for every `ansible-playbook` run
+  - Should allow other servers to be easily added to each group without having to set the region variable
 
 As part of this work, your colleague has also supplied you with a small acceptance test for you to
 ensure that all servers are correctly configured after the playbook run.
 
-Execute the tests by running `pytest`
+
+
+You can execute the playbook by running `ansible-playbook -i ansible/inventory ansible/configure-issue.yml`
+
+Execute the tests by running `pytest`, you should get the following output once you have created a valid
+inventory file and run the playbook successfully:
+
+
 ```
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_25951, inifile: pytest.ini
+rootdir: /vols/pytest_32056, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 3 items
 
-tests/ntp_config_test.py::test_inventory_server1_config[local] FAILED    [ 33%]
-tests/ntp_config_test.py::test_inventory_server2_config[local] FAILED    [ 66%]
-tests/ntp_config_test.py::test_inventory_server3_config[local] FAILED    [100%]
+tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
+tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
+tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
+
+=========================== 3 passed in 1.62 seconds ===========================
 ```
 
-### Verification test
-`# Ideal but optional - Supply an acceptance test that participants can execute to validate that they have completed the exercise`
+## Summary
+Ansible requires a list of target hosts to run against, these are inventories.  In this tutorial and 
+exercises, you should have seen that:
+
+  - Ansible supports multiple inventory formats
+  - Inventories can contain groups and variables (as well as lists of hosts)
+  - Hosts can be part of multiple groups
+  - Variables can be assigned to hosts or to groups
+  - You can use limit strings (or the hosts: parameter) to restrict which groups Ansible targets
