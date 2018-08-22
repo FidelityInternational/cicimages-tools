@@ -171,8 +171,8 @@ set by using the `ansible` command and the debug module:
 Which should show output as follows:
 
 ```
-server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
 server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
+server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
 server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
 ```
 
@@ -208,7 +208,7 @@ inventory file and run the playbook successfully:
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_6440, inifile: pytest.ini
+rootdir: /vols/pytest_14711, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 3 items
 
@@ -216,12 +216,11 @@ tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
 tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
 tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
-=========================== 3 passed in 1.55 seconds ===========================
+=========================== 3 passed in 1.51 seconds ===========================
 ```
 
 ## Summary
-Ansible requires a list of target hosts to run against, these are inventories.  In this tutorial and 
-exercises, you should have seen that:
+In this tutorial and exercises, you should have seen that:
 
   - Ansible supports multiple inventory formats
   - Inventories can contain groups and variables (as well as lists of hosts)
