@@ -26,43 +26,43 @@ Ansible supports a number of inventory file formats:
 You can find mode information on supported inventory formats in the official 
 [Ansible documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html).
 
-At it's most basic, the INI style inventories can define a simple list of hosts:
-
-```
-host1
-host2
-host3
-```
-
-### Default Inventory
+### Basic Inventory
 
 Ansible commands will look for the default inventory file in `/etc/ansible/hosts`.  The inventory can be overridden
 on the command line using the `-i INVENTORY` option or via the `ansible.cfg` config file.
 
+The default inventory file can be a simple list of hostnames:
+
+```
+server1
+server2
+server3
+```
+
 ### Inventory Groups
 
-Hosts can also be grouped:
+As well as a simple list of hosts, inventories allow hosts to be grouped:
 
 ```
 [webservers]
-host1
+server1
 
 [dbservers]
-host2
-host3
+server2
+server3
 
 [dc1hosts]
-host2
+server2
 
 [dc2hosts]
-host1
-host3
+server1
+server3
 ```
 
 Host can be defined in more than one group.
 
 Groups can be used to limit the scope of playbooks and ad-hoc commands, we can target groups using the
-`hosts:` parameter in our playbooks.  For example the playbook:
+`hosts:` parameter in our playbooks.  For example, take the following playbook as an example:
 
 ```YAML
 ---
@@ -74,13 +74,13 @@ Groups can be used to limit the scope of playbooks and ad-hoc commands, we can t
 
 Tasks in the play will only run on hosts in the `dc1hosts` group.
 
-Groups can also be specified on the command line with the `-l LIMIT` option:
+Restrictions can also be placed via the `-l LIMIT` option on the command line:
 
 ```
 ansible -m ping all -l dc2hosts
 ```
 
-In this case, the `all` built-in group is initially specified but subsequently limits to just hosts in the
+In this case, the `all` built-in group is initially specified but is subsequently limited to hosts only in the
 `dc2hosts` group.
 
 ### Inventory Variables
@@ -90,11 +90,11 @@ per host, within the inventory file:
 
 ```
 [webservers]
-server1   dns_server=192.168.0.1
+server1   dns_server=1.1.1.1
 
 [dbservers]
-server2   dns_server=192.168.100.1
-server3   dns_server=192.168.100.1
+server2   dns_server=2.2.2.2
+server3   dns_server=3.3.3.3
 ```
 
 They can also be defined by group with a special section in the inventory file:
@@ -114,12 +114,15 @@ dns_server=1.1.1.1
 dns_server=2.2.2.2
 ```
 
+This allows hosts to be added to the `webservers` or `dbservers` groups without having to specify the 
+`dns_server` variable directly.
+
 ## Exercise
 
 **Note:** Before starting the exercises, please do the following:
 
 - `cd YOUR_CLONE_OF_THIS REPO`
-- `. /bin/setup`
+- `. bin/setup`
 - `cd ./exercises/IaC/ansible/inventory`
 - `cic up`
 
@@ -171,9 +174,9 @@ ansible -i ansible/inventory -m debug -a var=dns_server all -o
 Which should show output as follows:
 
 ```
-server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
-server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
 server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
+server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
+server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
 ```
 
 The output shows the result of running the `debug` module on each of the three hosts in the inventory file.
@@ -208,7 +211,7 @@ inventory file and run the playbook successfully:
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_728, inifile: pytest.ini
+rootdir: /vols/pytest_16351, inifile: pytest.ini
 plugins: testinfra-1.14.0
 collecting ... collected 3 items
 
@@ -216,7 +219,7 @@ tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
 tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
 tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
-=========================== 3 passed in 1.59 seconds ===========================
+=========================== 3 passed in 1.55 seconds ===========================
 ```
 
 ## Summary
