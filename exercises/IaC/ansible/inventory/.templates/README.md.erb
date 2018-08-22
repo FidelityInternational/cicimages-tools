@@ -155,7 +155,7 @@ The `dns_server` variable will be available during an Ansible run, you can check
 set by using the `ansible` command and the debug module:
 
 ```
-`<%= command("ansible -i #{inventory_file} -m debug -a var=dns_server all -o") %>`
+<%= command("ansible -i #{inventory_file} -m debug -a var=dns_server all -o") %>
 ```
 
 Which should show output as follows:
