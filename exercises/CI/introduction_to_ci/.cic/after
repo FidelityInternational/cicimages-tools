@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -e
+
+TIME_WAITED=0
+sleep_time=10
+until (nc -z concourse 8080) || [[ "${TIME_WAITED}" -eq "100" ]]
+do
+    echo "waiting for Concourse to come up"
+    sleep "${sleep_time}"
+    $((TIME_WAITED+="${sleep_time}"))
+done;
+
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+resources_dir="${script_dir}/../resources"
+cd "${resources_dir}"
+
+chmod 400 git-server/keys/id_rsa
+
+if [ ! -d "checkout" ]; then
+  ssh-agent bash -c 'ssh-add git-server/keys/id_rsa; git clone ssh://git@git-server/git-server/repos/application-repo.git checkout'
+
+  cd "checkout"
+
+  ssh_command="ssh -i ../git-server/keys/id_rsa"
+
+  git config --local --add core.sshCommand 'ssh -i ../git-server/keys/id_rsa'
+  git remote set-url origin ssh://git@localhost:3333/git-server/repos/application-repo.git
+
+  cp "${script_dir}/application.py" src/
+fi
+
+
+
+

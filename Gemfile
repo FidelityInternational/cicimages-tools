@@ -10,9 +10,14 @@ gem 'thor'
 
 group :development do
   gem 'bump'
+  gem 'capybara', '2.15.2'
+  gem 'chromedriver-helper'
+  gem 'i18n'
   gem 'mirage', '4.0.0.alpha10'
+  gem 'page_magic'
   gem 'rake'
   gem 'rspec', require: 'rspec/core/rake_task'
   gem 'rubocop'
   gem 'simplecov', require: false
+  gem 'watir', '~> 6.1'
 end

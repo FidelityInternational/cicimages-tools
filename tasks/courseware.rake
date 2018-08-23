@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 namespace :courseware do
   require 'pty'
 
@@ -45,4 +44,3 @@ namespace :courseware do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

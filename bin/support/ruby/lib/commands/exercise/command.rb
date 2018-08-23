@@ -25,12 +25,14 @@ module Exercise
         #############################
       MESSAGE
 
+      # TODO - consider searching backwards for the gemfile or .git directory or something that will be at the root?
+
       raise Thor::Error unless render_exercises(dir: path, pretty_exercise_path: options[:pretty_exercise_path])
     end
 
     desc 'create <NAME>', 'create a new exercise'
     def create(name)
-      say "Creating exercise: #{name}"
+      say "Creating new exercise: #{name}"
       FileUtils.mkdir_p(name)
 
       exercise_structure['directories'].each do |directory|
@@ -59,12 +61,10 @@ module Exercise
       def scaffold_path
         @scaffold_path ||= ENV['SCAFFOLD_PATH']
       end
-    end
 
-    private
-
-    def all_files_in(name)
-      Dir.glob("#{name}/**/*", File::FNM_DOTMATCH).find_all { |file| !%w[. ..].include?(File.basename(file)) }
+      def all_files_in(name)
+        Dir.glob("#{name}/**/*", File::FNM_DOTMATCH).find_all { |file| !%w[. ..].include?(File.basename(file)) }
+      end
     end
   end
 end

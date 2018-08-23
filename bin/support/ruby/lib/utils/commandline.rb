@@ -10,14 +10,16 @@ module Commandline
   end
 
   # TODO: - think about how to bring the run and execute methods together or give more differentiating names
-  def execute(command, fail_message:, pass_message:)
-    result = run command
-    say result.stdout
-    if result.error?
+  def execute(*commands, fail_message:, pass_message:)
+    fail = false
+    commands.each do |command|
+      result = run command
+      say result.stdout
+      next unless result.error?
+      fail = true
       say result.stderr
       say error fail_message
-    else
-      say ok pass_message
     end
+    say ok pass_message unless fail
   end
 end

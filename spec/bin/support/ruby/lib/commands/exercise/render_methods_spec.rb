@@ -24,6 +24,14 @@ module Exercise
 
         let(:exercise_name) { File.basename(File.expand_path("#{Dir.pwd}/.templates/../")) }
 
+        it 'makes subsitutions' do
+          template = create_template(content: '<% substitute("foo" => "bar")%>foo')
+          subject.render_exercise(Dir.pwd, template.path)
+
+          rendered_content = File.read(template.expected_rendered_filepath)
+          expect(rendered_content).to include('bar')
+        end
+
         it 'adds the revision to the end of the file' do
           template = create_template
           subject.render_exercise(Dir.pwd, template.path)
@@ -31,7 +39,7 @@ module Exercise
           rendered_content = File.read(template.expected_rendered_filepath)
           expected_digest = Digest::SHA2.file(template.path).hexdigest
 
-          expect(rendered_content.lines.last).to eq("Revision: #{expected_digest}")
+          expect(rendered_content).to end_with("  \n\nRevision: #{expected_digest}")
         end
 
         context 'quiet' do

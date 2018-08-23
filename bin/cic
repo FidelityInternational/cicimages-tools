@@ -26,15 +26,17 @@ else
     if [ "${container_command}" != "" ]; then
         command="${command} '${container_command}'"
     fi
+
+
+    exercise_name="$(basename "$(pwd)")"
+
+    volume_path="$(volume_path ansible)/${exercise_name}"
+    copy_to_cic_volume "$(pwd)/." "${volume_path}"
 fi
-
-exercise_name="$(basename "$(pwd)")"
-
-volume_path="$(volume_path ansible)/${exercise_name}"
-copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
 docker run ${options} \
     --volumes-from "$(cic_volumes_container)" \
+    --network "$(cic_network)" \
     -w "${volume_path}" \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -v /var/run/docker.sock:/var/run/docker.sock \
@@ -43,3 +45,11 @@ docker run ${options} \
     -v "${HOME}/.netrc":/root/.netrc \
     "$(cic_image)" \
     /bin/bash -c "${command}"
+
+result=$?
+
+if [ "${subcommand}" != "track" ]; then
+    docker cp "$(cic_volumes_container):${volume_path}/." .
+fi
+
+exit $?
