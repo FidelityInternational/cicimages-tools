@@ -126,6 +126,7 @@ This allows hosts to be added to the `webservers` or `dbservers` groups without 
 - `cd ./exercises/IaC/ansible/inventory`
 - `cic up`
 
+
 These commands will configure an environment and will bring up three docker containers for use in the exercises
 that follow.
 
@@ -209,17 +210,17 @@ inventory file and run the playbook successfully:
 
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.6.3, py-1.5.4, pluggy-0.6.0 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_16351, inifile: pytest.ini
-plugins: testinfra-1.14.0
+rootdir: /vols/pytest_18623, inifile: pytest.ini
+plugins: testinfra-1.14.1
 collecting ... collected 3 items
 
 tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
 tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
 tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
-=========================== 3 passed in 1.55 seconds ===========================
+=========================== 3 passed in 1.47 seconds ===========================
 ```
 
 ## Summary
@@ -230,3 +231,6 @@ In this tutorial and exercises, you should have seen that:
   - Hosts can be part of multiple groups
   - Variables can be assigned to hosts or to groups
   - You can use limit strings (or the hosts: parameter) to restrict which groups Ansible targets
+  
+
+Revision: 28bb6661204312ef41619865cb55018578adb264fe6e3adbae5d5676bc96339f

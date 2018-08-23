@@ -7,13 +7,16 @@ networks:
 services:
   server1:
     image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    privileged: true
     command: /sbin/init
 
   server2:
     image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    privileged: true
     command: /sbin/init
 
   server3:
     image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    privileged: true
     command: /sbin/init
 
