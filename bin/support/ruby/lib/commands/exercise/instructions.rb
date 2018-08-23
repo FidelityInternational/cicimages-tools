@@ -98,6 +98,10 @@ module Exercise
       Output.new(@result.stdout)
     end
 
+    def run_in_temp_directory
+
+    end
+
     def write_to_file(path, content)
       directory = File.dirname(path)
       FileUtils.mkdir_p(directory)

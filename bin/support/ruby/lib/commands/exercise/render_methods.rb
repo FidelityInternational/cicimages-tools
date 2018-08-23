@@ -53,7 +53,28 @@ module Exercise
     end
 
     def render(template)
-      anonymise(ERB.new(File.read(template)).result(binding))
+      template = File.expand_path(template)
+      template_content = File.read(template)
+
+      output = nil
+      this = self
+      erb_template = ERB.new(template_content)
+      template_content.scan(/<%#(.*)%>/) do
+        comment = $+
+
+        if comment.strip == 'instruction:run_in_temp_directory'
+          require 'tmpdir'
+          Dir.mktmpdir do |path|
+            original_dir = path
+            Dir.chdir(path)
+            output = erb_template.result(this.send(:binding))
+            Dir.chdir(original_dir)
+          end
+        end
+      end
+
+      output ||= erb_template.result(this.send(:binding))
+      anonymise(output)
     ensure
       after_all_commands.each { |command| test_command(command) }
       say '' if quiet?

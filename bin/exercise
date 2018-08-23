@@ -17,7 +17,6 @@ docker run \
     --volumes-from "$(cic_volumes_container)" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$(tracks_path)":/cic/tracks \
-    -v "${CURRENT_PATH}/../.cic":"$(cic_config_dir)" \
     -w "${volume_path}" \
     "$(cic_image)" \
     /bin/bash -c "${command}"

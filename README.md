@@ -8,6 +8,7 @@ Topics covered in this material:
 ```
 Available Tracks:
  ansible
+continuous_integration
 ```
 
 To remove the need for dependencies on an external IaaS (Infrastructure as a Service) solution in order to participate in this course, this course has been designed to use Docker containers to simulate real computers.
@@ -42,6 +43,7 @@ This will output the following
 ```
 Available Tracks:
  ansible
+continuous_integration
 ```
 
 Start a track by running the `cic track start` command
@@ -57,5 +59,6 @@ The board will allow you to track and share progress. When you complete an exerc
 The exercises can be found inside the exercises folder. For each exercise there is a README.md which explains what is required. If you don't want to sit a whole learning track but want to brush up on something in particular, exercises can be found inside the exercises folder. For each exercise there is a README.md which explains what is required.
 
 
+  
 
 Revision: 38c89323dc2a3be2c9ec0ae4199d39cb3fd713ccdb2c58dc62f5130cefb87c15
