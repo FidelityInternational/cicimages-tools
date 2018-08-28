@@ -4,12 +4,15 @@
 - [Raising Issues](#raising-an-issue)
 - [Submitting an exercise](#submitting-an-exercise)
   - [Getting started](#getting-started)
-  - [CIC content framework](#.templates)
-    - [Documenting commands](#documenting-a-command)
+  - [The CIC content framework](#the-cic-content-framework)
+    - [Documenting commands](#documenting-commands)
+    - [Helpers](#helpers)
     - [Documenting command output](#documenting-command-output)
     - [Generating documentation](#generating-documentation)
   - [Resources](#resources)
   - [Defining support infrastructure](#defining-support-infrastructure)
+    - [CIC_PWD](#cic_pwd)
+    - [After Hook](#after-hook)
 
 ## Raising an issue
 There are several types of issue that you can raise depending on what it is you are looking for.
@@ -21,10 +24,10 @@ We've provided issue templates to help you make requests so look out for the iss
 
 ## Submitting an exercise
 Exercises can consist of the following components:
-- **Exercise readme**
-- **Resources** - Additional bits and pieces needed to support the exercise
-- **Tests** - Exercises should be accompanied by a test(s) that participants can run to prove to themselves that they have completed the task correctly
-- **Test Infrastructure** - Many topics require an environment for participants to conduct the exercise within. This represent a barrier to participants especially if the environment is a complex one. CIC is built upon the philosophy that a participant should not be required to provide any infrastructure in order to carry out an exercise. CIC uses docker and docker-compose to achieve this.
+- **Exercise readme** (mandatory).
+- **Resources** - Additional bits and pieces needed to support the exercise.
+- **Tests** - Exercises should be accompanied by a test(s) that participants can run to prove to themselves that they have completed the task correctly.
+- **Test Infrastructure** - Many topics require an environment for participants to conduct the exercise within. The complexity of setting up these environments can represent a barrier to participants. CIC is built upon the philosophy that a participant should not be required to provide any infrastructure in order to carry out an exercise and uses docker-compose to achieve this.
 
 
 
@@ -45,16 +48,14 @@ Created: exercise_name/.cic/after
 ```
 
 
-### .templates
-Technical exercises can be complicated to write. They are full of commands, and example output, which if slightly incorrect can cause massive confusion to the reader. Reading exercises through to ensure the accuracy of these things is time consuming and error prone.
+### The CIC content framework
+Technical exercises can be complicated to write. They are full of commands, and example output, which if slightly incorrect causes confusion to the reader. Reading exercises through to ensure the accuracy of these things is time consuming and error prone.
 
 To overcome this problem, the CIC content framework allows you to write and execute templates that can be used to generate your files. During the processing of templates, commands can be verified and their output can be inserted in to the documentation that is generated for the participant.
 
-By default, you are given the file `exercise_name/.templates/README.md.erb`, from which the mandatory exercise README.md will be generated.
-
 Files files in the `exercise_name/.templates` directory should end with the extension `.erb`. This identifies them as ERB files and that they should be picked up for processing. ERB is a markup format, the following is what you need to know in order to use CIC's content framework.
 
-#### documenting a command
+#### Documenting commands
 
 To tell your reader to execute the a command, for example `mkdir new_directory`, specify the command within the template using the following syntax:
 ```ERB
@@ -64,12 +65,12 @@ In the above, the following is happening:
 1. The helper method `command` is being invoked to run `mkdir new_directory`. `command` does two things:
   a. It runs the command for real to see if it executes successfully. If the command does not work, generation will fail. This allows you to find out early when the commands you are telling participants to run don't actually work.
   b. It returns the command you gave it so that it can be inserted in to the generated file.
-2. The  <%= %> tags mean that you want the output of the `command` helper invocation to be written in to the generated file.
+2. The ` <%= %>` tags mean that you want the output of the `command` helper invocation to be written in to the generated file.
 
 #### Helpers
-The CIC content framework provides a number of helper functions that can be used to perform useful operations. To find out more about these read the [helpers docs](doc/index.html). These helpers can be used at any point within a template as long as they are used within the `<% %>` or `<%= %>` style syntax described in this readme.
+The CIC content framework provides a number of helper functions that can be used to perform useful operations. To find out more about these read the [helpers docs](https://http://htmlpreview.github.io/?https://github.com/lvl-up/ci-cd-training/blob/master/doc/index.html). These helpers can be used at any point within a template as long as they are used within the `<% %>` or `<%= %>` style syntax described in this readme.
 
-#### documenting command output
+#### Documenting command output
 There are 3 ways to display the output of a command
 1. Use the `command_output` helper to return the output of the command directly.
 2. Use the `last_command_output` to get hold of the output from the last command you ran using the `command` or `command_output` helpers
@@ -95,8 +96,8 @@ Generating file for: README.md.erb
 
 Files produced by the templates will be put in to the root of the exercise directory relative to their locations within the templates directory.
 
-### resources
-You will often want to supply resources to support your exercise. Put these files within the resources directory.
+### Resources
+You will often want to supply resources to support your exercise. Put these files within the `./resources` directory.
 
 ### Defining support infrastructure
 
@@ -115,4 +116,4 @@ There will be times where you want to wait for something to happen before the `c
 
   
 
-Revision: 40f80b9db5d04479875c8e598ab9f3918c702746a129bf257e38621dacb5f5cd
+Revision: 7c3db915f2f95effd1f41e44cfdaf0cba6932aef1e5a12cdfd01d57aa4b39d68
