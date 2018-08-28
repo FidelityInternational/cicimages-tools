@@ -20,4 +20,6 @@ group :development do
   gem 'rubocop'
   gem 'simplecov', require: false
   gem 'watir', '~> 6.1'
+  gem 'yard'
+  gem 'redcarpet'
 end
