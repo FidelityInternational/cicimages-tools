@@ -39,6 +39,7 @@ Created: exercise_name/.templates/README.md.erb
 Created: exercise_name/resources
 Created: exercise_name/.cic
 Created: exercise_name/.cic/docker-compose.yml
+Created: exercise_name/.cic/after
 [OK] Complete
 
 ```
@@ -98,10 +99,20 @@ Files produced by the templates will be put in to the root of the exercise direc
 You will often want to supply resources to support your exercise. Put these files within the resources directory.
 
 ### Defining support infrastructure
-Some exercises will require some kind of test infrastructure to for participants to run their exercise code against. The `cic up` wraps docker-compose to stand up the infrastructure you prescribe in ...
+
+Some exercises will require some kind of test infrastructure to for participants to run their exercise code against. The `cic up` wraps docker-compose to stand up the infrastructure you prescribe in `.cic/docker-compose.yml`. To read more about what can be done with docker-compose read the [documentation](https://docs.docker.com/compose/).
+
+#### CIC_PWD
+To reference files within the exercise directory, specify paths relative to the `CIC_PWD` environment variable. E.g. `${CIC_PWD}/resources/a_file`
+
+#### After hook
+
+There will be times where you want to wait for something to happen before the `cic up` command exits. For example you might want to wait for a server to be up and ready to receive requests. In this case add an executable file called `.cic/after`. Permissable languages within this file are: Bash, Ruby and Python.
+
+
 
 
 
   
 
-Revision: 44e31ad6c595867170a8627aa82b3e9bd061ba31320b97f382a0e7392342226a
+Revision: e9ee1e2dded8c9c26dbb6650a364b57a739ae44c6f889f853dcc4e11b27ef01a

@@ -92,7 +92,17 @@ Files produced by the templates will be put in to the root of the exercise direc
 You will often want to supply resources to support your exercise. Put these files within the resources directory.
 
 ### Defining support infrastructure
-Some exercises will require some kind of test infrastructure to for participants to run their exercise code against. The `cic up` wraps docker-compose to stand up the infrastructure you prescribe in ...
+<% cic_up_command='cic up' %>
+Some exercises will require some kind of test infrastructure to for participants to run their exercise code against. The `<%= cic_up_command %>` wraps docker-compose to stand up the infrastructure you prescribe in `<%= path('.cic/docker-compose.yml')%>`. To read more about what can be done with docker-compose read the [documentation](https://docs.docker.com/compose/).
+
+#### CIC_PWD
+To reference files within the exercise directory, specify paths relative to the `CIC_PWD` environment variable. E.g. `${CIC_PWD}/resources/a_file`
+
+#### After hook
+<% after_hook_file='.cic/after' %>
+There will be times where you want to wait for something to happen before the `<%= cic_up_command %>` command exits. For example you might want to wait for a server to be up and ready to receive requests. In this case add an executable file called `<%= path(after_hook_file) %>`. Permissable languages within this file are: <%= command_output('which bash > /dev/null && echo Bash') %>, <%= command_output('which ruby > /dev/null && echo Ruby') %> and <%= command_output('which python > /dev/null && echo Python') %>.
+
+
 
 
 
