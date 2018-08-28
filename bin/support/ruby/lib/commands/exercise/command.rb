@@ -25,7 +25,7 @@ module Exercise
         #############################
       MESSAGE
 
-      # TODO - consider searching backwards for the gemfile or .git directory or something that will be at the root?
+      # TODO: - consider searching backwards for the gemfile or .git directory or something that will be at the root?
 
       raise Thor::Error unless render_exercises(dir: path, pretty_exercise_path: options[:pretty_exercise_path])
     end

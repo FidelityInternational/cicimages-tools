@@ -4,7 +4,7 @@ HeadlessChrome = PageMagic::Driver.new(:headless_chrome) do |app, _options, _bro
   # Write the code necessary to initialise the driver you have chosen
   require 'selenium/webdriver'
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[headless no-sandbox disable-gpu] }
+    chromeOptions: { args: %w[headless no-sandbox disable-gpu] }
   )
 
   Capybara::Selenium::Driver.new app,

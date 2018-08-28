@@ -5,7 +5,6 @@ require 'yaml'
 require_relative 'headless_browser_driver'
 
 module Exercise
-
   # module Instructions - Helper methods to be used within templates
   module Instructions
     include Commandline
@@ -23,7 +22,7 @@ module Exercise
     # @param [String] command the command to be run.
     # @return [String] the command input parameter is returned so that it can be displayed within a template
     def after_rendering_run(command)
-      after_all_commands << command
+      after_rendering_commands << command
       command
     end
 
@@ -36,7 +35,7 @@ module Exercise
     # @param [String] filename the filename to save the screenshot to.
     # @return [String] The filename of the saved screenshot
     def capture(url, filename)
-      page_class = Class.new{include PageMagic}
+      page_class = Class.new { include PageMagic }
       session = PageMagic.session(browser: :headless_chrome, url: url)
       session.visit(page_class, url: url)
       session.browser.save_screenshot(filename)
@@ -54,7 +53,6 @@ module Exercise
       Dir.chdir(path)
       "cd #{path}"
     end
-
 
     # Execute a command
     # @example
@@ -112,7 +110,7 @@ module Exercise
     # @param timeout_after [Fixnum] the number of seconds to wait before timing out.
     # @param retry_every [Float] the number of seconds to wait before re-evaluating the given block again
     # @raise [TimeoutError] if given block does not return true within the allowed time.
-    def wait_until(timeout_after: 5, retry_every: 0.1 )
+    def wait_until(timeout_after: 5, retry_every: 0.1)
       start_time = Time.now
       until Time.now > start_time + timeout_after
         return true if yield == true
@@ -137,9 +135,10 @@ module Exercise
       path
     end
 
-    private
-    def after_all_commands
-      @after_all_commands ||= []
+    protected
+
+    def after_rendering_commands
+      @after_rendering_commands ||= []
     end
 
     def test_command(command, fail_on_error: true)
