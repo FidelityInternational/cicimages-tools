@@ -23,7 +23,7 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd `
+- `cd exercises/CI/introduction_to_ci`
 
 In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: `cic up` 
 
@@ -176,4 +176,4 @@ Continuous Integration plays a vital role in ensuring that the software we right
 
 **Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.  
 
-Revision: e2532c2903cea2c22db75324b1130d7c1ede256d4a2c684c390b8a3d42a85a71
+Revision: 415c173e2e2d0b43cddf557a20b7c7e7419af5c5b0700d35f940e20a095de8e4
