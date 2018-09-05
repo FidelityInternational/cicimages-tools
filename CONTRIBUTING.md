@@ -33,6 +33,10 @@ Exercises can consist of the following components:
 
 
 ### Getting started
+**Note:** Before going any further do the following:
+- `cd YOUR_CLONE_OF_THIS REPO`
+- `source ./bin/.env`
+
 On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `exercise create exercise_name`. This command will create a skeleton exercise directory with the all the files that you are likely to need.
 ```
 Creating new exercise: exercise_name
@@ -62,9 +66,10 @@ To tell your reader to execute the a command, for example `mkdir new_directory`,
   Please run the following command:  <%= command( 'mkdir new_directory') %>
 ```
 In the above, the following is happening:
-1. The helper method `command` is being invoked to run `mkdir new_directory`. `command` does two things:
-  a. It runs the command for real to see if it executes successfully. If the command does not work, generation will fail. This allows you to find out early when the commands you are telling participants to run don't actually work.
+1. The helper method `command` is being invoked to run `mkdir new_directory`. `command` does two things:\
+  a. It runs the command for real to see if it executes successfully. If the command does not work, generation will fail. This allows you to find out early when the commands you are telling participants to run don't actually work.  
   b. It returns the command you gave it so that it can be inserted in to the generated file.
+
 2. The ` <%= %>` tags mean that you want the output of the `command` helper invocation to be written in to the generated file.
 
 #### Helpers
@@ -116,4 +121,4 @@ There will be times where you want to wait for something to happen before the `c
 
   
 
-Revision: 7c3db915f2f95effd1f41e44cfdaf0cba6932aef1e5a12cdfd01d57aa4b39d68
+Revision: 1f8205349de7cb4005313ccbbc596a295004eafb77188f27e8f0cfe9e939b0f0
