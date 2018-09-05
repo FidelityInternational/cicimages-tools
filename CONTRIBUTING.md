@@ -73,7 +73,7 @@ In the above, the following is happening:
 2. The ` <%= %>` tags mean that you want the output of the `command` helper invocation to be written in to the generated file.
 
 #### Helpers
-The CIC content framework provides a number of helper functions that can be used to perform useful operations. To find out more about these read the [helpers docs](https://http://htmlpreview.github.io/?https://github.com/lvl-up/ci-cd-training/blob/master/doc/index.html). These helpers can be used at any point within a template as long as they are used within the `<% %>` or `<%= %>` style syntax described in this readme.
+The CIC content framework provides a number of helper functions that can be used to perform useful operations. To find out more about these read the [helpers docs](https://htmlpreview.github.io/?https://github.com/lvl-up/ci-cd-training/blob/master/doc/index.html). These helpers can be used at any point within a template as long as they are used within the `<% %>` or `<%= %>` style syntax described in this readme.
 
 #### Documenting command output
 There are 3 ways to display the output of a command
@@ -121,4 +121,4 @@ There will be times where you want to wait for something to happen before the `c
 
   
 
-Revision: 1f8205349de7cb4005313ccbbc596a295004eafb77188f27e8f0cfe9e939b0f0
+Revision: 18a8f9c91b3737b9b48969557bf0ca4ca18c64554da45e338392556dad1d59b3
