@@ -1,4 +1,5 @@
 require 'digest'
+require 'tmpdir'
 module Exercise
   module RenderMethods
     include Commandline::Output
@@ -53,9 +54,15 @@ module Exercise
     end
 
     def render(template)
-      anonymise(ERB.new(File.read(template)).result(binding))
+      template_content = File.read(File.expand_path(template))
+
+      erb_template = ERB.new(template_content)
+      if /<%#\s*instruction:run_in_temp_directory\s*%>/.match?(template_content)
+        return anonymise(render_in_temp_dir(erb_template))
+      end
+      anonymise(erb_template.result(binding))
     ensure
-      after_all_commands.each { |command| test_command(command) }
+      after_rendering_commands.each { |command| test_command(command) }
       say '' if quiet?
     end
 
@@ -69,6 +76,17 @@ module Exercise
         templates[File.basename(template)] = template
       end
       templates
+    end
+
+    def render_in_temp_dir(erb_template)
+      output = nil
+      Dir.mktmpdir do |path|
+        original_dir = Dir.pwd
+        Dir.chdir(path)
+        output = erb_template.result(binding)
+        Dir.chdir(original_dir)
+      end
+      output
     end
   end
 end

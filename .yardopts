@@ -1,0 +1,5 @@
+--no-private
+bin/support/ruby/lib/commands/exercise/instructions.rb
+--markup-provider=redcarpet
+--markup=markdown
+--readme README.md

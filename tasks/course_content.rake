@@ -38,6 +38,7 @@ namespace :course_content do
 
     Dir["#{root_dir}/**/.templates"].each do |templates_dir|
       exercise_dir = File.expand_path("#{templates_dir}/..")
+      puts "Rendering templates for: #{exercise_dir}"
       pretty_exercise_path = exercise_dir.gsub(root_dir, '').gsub(%r{^/}, '')
       exercise_command = "exercise generate #{flag} --pretty-exercise-path=#{pretty_exercise_path}"
       command = "bash -c 'source #{root_dir}/bin/.env && cd #{exercise_dir} && #{exercise_command}'"

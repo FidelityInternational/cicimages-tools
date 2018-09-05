@@ -9,15 +9,15 @@ module Exercise
       end
     end
 
-    describe '#after_all' do
+    describe '#after_rendering_run' do
       it 'registers the given command to be run later' do
         command = :command
-        subject.after_all(command)
-        expect(subject.after_all_commands).to eq([:command])
+        subject.after_rendering_run(command)
+        expect(subject.send(:after_rendering_commands)).to eq([:command])
       end
 
       it 'returns the given command' do
-        expect(subject.after_all(:command)).to eq(:command)
+        expect(subject.after_rendering_run(:command)).to eq(:command)
       end
     end
 
@@ -101,7 +101,7 @@ module Exercise
 
           context 'command passes' do
             it 'prints out a quiet report' do
-              subject.test_command(cmd)
+              subject.send(:test_command, cmd)
               expect(subject.output.string).to eq('.'.green)
             end
           end
@@ -112,7 +112,7 @@ module Exercise
             it 'says there has been an error' do
               allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return('error')
               expected_error = error("failed to run: #{cmd}\n\nerror")
-              subject.test_command(cmd)
+              subject.send(:test_command, cmd)
               expect(subject.output.string.chomp).to eq(expected_error)
             end
           end
@@ -127,7 +127,7 @@ module Exercise
             it 'reports the command that has run' do
               expected_message = "running: #{cmd}\n#{ok("Successfully ran: #{cmd}")}"
 
-              subject.test_command(cmd)
+              subject.send(:test_command, cmd)
               expect(subject.output.string.chomp).to eq(expected_message)
             end
           end
@@ -138,7 +138,7 @@ module Exercise
               allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return('error')
               expected_message = "running: #{cmd}\n#{error("failed to run: bad command\n\n error")}"
 
-              subject.test_command(cmd)
+              subject.send(:test_command, cmd)
               expect(subject.output.string.chomp).to eq(expected_message)
             end
           end

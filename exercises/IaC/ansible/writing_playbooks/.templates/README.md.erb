@@ -136,7 +136,7 @@ Using the actual ID that came out on your console, cic start the container that 
 
 <% cic_output = last_command_output.to_cic_output %>
 <% container_id = cic_output.container_id %>
-<% after_all(cic_output.cic_stop_command) %>
+<% after_rendering_run(cic_output.cic_stop_command) %>
 
 This should output the following:
 ```
@@ -201,7 +201,7 @@ Add a task, using the synchronise module, to deploy the code supplied in the `<%
  command(last_command_output.to_cic_output.cic_start_command)
 
  cic_output = last_command_output.to_cic_output
- after_all(cic_output.cic_stop_command)
+ after_rendering_run(cic_output.cic_stop_command)
 %>
 
 You'll know that you've got it right when the acceptance tests pass :)
