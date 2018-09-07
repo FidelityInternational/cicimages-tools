@@ -7,29 +7,22 @@ module Exercise
 
     attr_reader :exercise_path
 
-    def render_exercises(dir:, original_dir: Dir.pwd, pretty_exercise_path: nil)
-      @exercise_path = pretty_exercise_path
-      status = true
-      templates(dir).each do |exercise_name, template|
-        status = false unless render_exercise(exercise_name, template)
-        Dir.chdir(original_dir)
-      end
-      status
-    end
-
-    def render_exercise(exercise_name, template)
-      say "Generating file for: #{exercise_name}"
+    def render_exercise(template)
+      say "Rendering: #{template}"
+      current_dir = Dir.pwd
 
       result = anonymise(render(template))
       result << "  \n\nRevision: #{digest(template)}"
       File.write(exercise_filename(template), result)
 
-      say ok "Finished: #{exercise_name}"
+      say ok "Finished: #{template}"
       true
     rescue StandardError => e
       say error "Failed to generate file from: #{template}"
       say "#{e.message}\n#{e.backtrace}"
       false
+    ensure
+      Dir.chdir(current_dir)
     end
 
     def substitute(hash)

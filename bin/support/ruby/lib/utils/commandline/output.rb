@@ -5,7 +5,7 @@ module Commandline
     end
 
     def say(msg)
-      output.puts msg
+      output.puts msg unless ENV['SILENT']
     end
 
     def ok(text)

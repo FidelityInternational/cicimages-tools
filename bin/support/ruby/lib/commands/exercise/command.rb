@@ -16,18 +16,14 @@ module Exercise
 
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
-    option :pretty_exercise_path, type: :string
-
-    def generate(path = Dir.pwd)
+    def generate(template)
       say <<~MESSAGE
-        #############################
-        # Generating exercise files #
-        #############################
+        ####################################
+        # Generating template: #{template} #
+        ####################################
       MESSAGE
 
-      # TODO: - consider searching backwards for the gemfile or .git directory or something that will be at the root?
-
-      raise Thor::Error unless render_exercises(dir: path, pretty_exercise_path: options[:pretty_exercise_path])
+      raise Thor::Error unless render_exercise(template)
     end
 
     desc 'create <NAME>', 'create a new exercise'

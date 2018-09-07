@@ -1,7 +1,7 @@
 namespace :courseware do
   require 'pty'
 
-  def run(command)
+  def run_and_stream(command)
     stdout, _stdin, _pid = PTY.spawn command
     while (string = stdout.gets)
       print string
@@ -14,7 +14,7 @@ namespace :courseware do
       image = File.read('.courseware-image')
       version = File.read('.courseware-version')
 
-      run "docker build . -t #{image}:#{version}"
+      run_and_stream "docker build . -t #{image}:#{version}"
     end
   end
 
