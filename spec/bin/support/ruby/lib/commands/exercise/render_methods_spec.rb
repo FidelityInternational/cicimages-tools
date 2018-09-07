@@ -10,8 +10,27 @@ module Exercise
       end
     end
 
-    describe '#exercise_path' do
-      pending 'returns the directory that the render_methods starts in'
+    describe '#env' do
+      before do
+        ENV['foo'] = 'bar'
+      end
+      context 'variable exists' do
+        it 'returns the value' do
+          expect(subject.env('foo')).to eq('bar')
+        end
+      end
+
+      context 'non string supplied' do
+        it 'returns the variable' do
+          expect(subject.env(:foo)).to eq('bar')
+        end
+      end
+
+      context 'variable name does not exist' do
+        it 'raises an error' do
+          expect{subject.env(:baz)}.to raise_error(described_class::EnvironmentVariableMissingError)
+        end
+      end
     end
 
     describe '#render_exercise' do

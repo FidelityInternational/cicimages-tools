@@ -71,7 +71,7 @@ We are using just a few of the attributes that Ansible provides for customising 
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd exercises/IaC/ansible/writing_playbooks`
+- `cd /Users/leon/Projects/ci-cd-training/exercises/IaC/ansible/writing_playbooks/.templates/..`
 
 ### Scenario
 Your team of devoted and talented web developers have spent several weeks beavering away on possibly the most advanced, inspiring and responsive website ever created. They have now passed the website code over to your for deployment. The website code that your developers have provided you with can be found in the `./resources` folder.
@@ -92,7 +92,7 @@ This outputs the following. (We've omitted the stack traces):
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_4975, inifile: pytest.ini
+rootdir: /vols/pytest_7417, inifile: pytest.ini
 plugins: testinfra-1.14.1
 collecting ... collected 4 items
 
@@ -194,7 +194,7 @@ We can see from the output that the tests verifying apache2 is installed, up and
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_2347, inifile: pytest.ini
+rootdir: /vols/pytest_16291, inifile: pytest.ini
 plugins: testinfra-1.14.1
 collecting ... collected 4 items
 
@@ -248,7 +248,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_6549, inifile: pytest.ini
+rootdir: /vols/pytest_20399, inifile: pytest.ini
 plugins: testinfra-1.14.1
 collecting ... collected 4 items
 
@@ -257,7 +257,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.95 seconds ===========================
+=========================== 4 passed in 1.00 seconds ===========================
 ```
 
 Good luck!
@@ -278,4 +278,4 @@ You have just learned how to:
 - put more funny cats onto the Internet
   
 
-Revision: 0b729c178a9aa34b3e0a64597218861a97cc0345d9f7ac33d24332825a9b64c4
+Revision: 641c77f634e155a91cf367ea44a39dd6c824e8c2784c404bd08fd15b8ac8ca9e

@@ -89,13 +89,14 @@ E.g.
 ```
 #### Generating documentation
 
-To render the templates in the `.templates` directory, navigate to the root of your exercise directory and run `exercise generate`.
+To render a template in the `.templates` directory, navigate to the root of your exercise directory pass the template path to the `exercise generate` command. For example running `exercise generate .templates/README.md.erb` will render the example README that was created by `exercise create`.
+
 ```
-#############################
-# Generating exercise files #
-#############################
-Generating file for: README.md.erb
-[OK] Finished: README.md.erb
+#################################################
+# Generating template: .templates/README.md.erb #
+#################################################
+Rendering: .templates/README.md.erb
+[OK] Finished: .templates/README.md.erb
 
 ```
 
@@ -121,4 +122,4 @@ There will be times where you want to wait for something to happen before the `c
 
   
 
-Revision: 18a8f9c91b3737b9b48969557bf0ca4ca18c64554da45e338392556dad1d59b3
+Revision: 35f2cbe42f7dc08603702d6dcff09405c5220c7b38124c48ccadc5fe71abfa49

@@ -46,15 +46,18 @@ namespace :course_content do
 
   desc 'generate course content from .templates/*.erb templates'
   task :generate, [:mode, :path] do |_task, args|
-    flag = args[:mode] == 'verbose' ? '' : '--quiet'
+
     path = args[:path] || File.expand_path("#{__dir__}/..")
 
     failures = exercise_directories(path).collect do |templates_dir|
-      say "Rendering templates in: #{templates_dir}"
       parent_directory = "#{templates_dir}/.."
+      flags = args[:mode] == 'verbose' ? '' : '--quiet'
+      flags << " --environment_variables=exercise_path=#{relative_path("#{templates_dir}/..", root_dir)}"
+
+      say "Rendering templates in: #{templates_dir}"
       templates(parent_directory).find_all do |template|
         source = "source #{root_dir}/bin/.env"
-        run("#{source} && exercise generate #{template} #{flag}", dir: parent_directory, silent: false).error?
+        run("#{source} && exercise generate #{template} #{flags}", dir: parent_directory, silent: false).error?
       end
     end.flatten
     raise CourseContentRenderingError, failures unless failures.empty?
@@ -68,9 +71,13 @@ namespace :course_content do
     "#{__dir__}/../"
   end
 
+  def relative_path(full_path, root)
+    ".#{File.expand_path(full_path).gsub(File.expand_path(root), '')}"
+  end
+
   def templates(dir)
     Dir["#{dir}/.templates/*.md.erb"].collect do |template|
-      template.gsub("#{File.expand_path(dir)}/", './')
+      relative_path(template, dir)
     end
   end
 end

@@ -2,10 +2,18 @@ require 'digest'
 require 'tmpdir'
 module Exercise
   module RenderMethods
+    class EnvironmentVariableMissingError < StandardError
+      def initialize(variable_name)
+        super "Environment variable not set for: #{variable_name}"
+      end
+    end
+
     include Commandline::Output
     include Instructions
 
-    attr_reader :exercise_path
+    def env(variable_name)
+      ENV[variable_name.to_s] || raise(EnvironmentVariableMissingError.new(variable_name))
+    end
 
     def render_exercise(template)
       say "Rendering: #{template}"
@@ -13,7 +21,7 @@ module Exercise
 
       result = anonymise(render(template))
       result << "  \n\nRevision: #{digest(template)}"
-      File.write(exercise_filename(template), result)
+      File.write(rendered_file_name(template), result)
 
       say ok "Finished: #{template}"
       true
@@ -42,7 +50,7 @@ module Exercise
       Digest::SHA2.file(template).hexdigest
     end
 
-    def exercise_filename(template)
+    def rendered_file_name(template)
       "#{Dir.pwd}/#{File.basename(template, '.erb')}"
     end
 
