@@ -17,6 +17,7 @@ module Exercise
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
     option :environment_variables, type: :string, required: false
+    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
     def generate(template)
       environment_variables = options[:environment_variables].to_s.scan(/([\w+.]+)\s*=\s*([\w+.\/-]+)?/).to_h
       environment_variables.each do |key, value|
@@ -27,7 +28,7 @@ module Exercise
       top_and_tail = ''.rjust(template_message.length, '#')
       say "#{top_and_tail}\n#{template_message}\n#{top_and_tail}"
 
-      raise Thor::Error unless render_exercise(template)
+      raise Thor::Error unless render_exercise(template, digest_component: options[:digest_component])
     end
 
     desc 'create <NAME>', 'create a new exercise'

@@ -70,8 +70,14 @@ module Commands
       def up
         in_cic_directory do
           commands = ["#{courseware_environment} docker-compose up -d --remove-orphans"]
+
+          before_script = 'before'
+          commands << "./#{before_script}" if File.exist?(before_script)
+
+
           after_script = 'after'
           commands << "./#{after_script}" if File.exist?(after_script)
+
           execute(*commands,
                   pass_message: "Environment cic'd up :)",
                   fail_message: 'Failed to cic up the environment see above output for details')

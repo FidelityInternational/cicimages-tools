@@ -1,5 +1,6 @@
 require 'digest'
 require 'tmpdir'
+require_relative 'instructions'
 module Exercise
   module RenderMethods
     class EnvironmentVariableMissingError < StandardError
@@ -15,13 +16,21 @@ module Exercise
       ENV[variable_name.to_s] || raise(EnvironmentVariableMissingError.new(variable_name))
     end
 
-    def render_exercise(template)
+    def render_exercise(template, digest_component: '')
       say "Rendering: #{template}"
+      template = full_path(template)
       current_dir = Dir.pwd
 
       result = anonymise(render(template))
-      result << "  \n\nRevision: #{digest(template)}"
-      File.write(rendered_file_name(template), result)
+      rendered_file_name = rendered_file_name(template)
+
+
+      parent_dir = full_path("#{templates_directory(template)}/..")
+      result << "  \n\nRevision: #{digest(path: parent_dir,
+                                          digest_component: digest_component.to_s,
+                                          excludes: excluded_files(template))}"
+
+      File.write(rendered_file_name, result)
 
       say ok "Finished: #{template}"
       true
@@ -37,7 +46,59 @@ module Exercise
       @substitutes = hash
     end
 
+    def templates_directory(template)
+      full_path(File.dirname(template))
+    end
+
+    def digest(path:, digest_component:, excludes: [])
+      excludes = paths(*excludes)
+
+      files = files(path).sort.reject do |f|
+        excludes.include?(f) || ignored?(path, f)
+      end
+
+      content = files.map {|f| File.read(f)}.join
+      Digest::MD5.hexdigest(content << digest_component).to_s
+    end
+
+    def excluded_files(template)
+      all_files_templates = files(templates_directory(template))
+      rendered_files = all_files_templates.collect {|t| rendered_file_name(t)}.find_all {|f| File.exist?(f)}
+      all_files_templates.reject{|file| file == template}.concat(rendered_files)
+    end
+
+    def ignored? path, file
+      ignored_files(path).find{|ignore| file.include?(ignore)}
+    end
+
+    def paths *paths
+      paths.find_all {|excluded_file| File.exist?(excluded_file)}.collect{|path|full_path(path)}
+    end
+
+    def full_path path
+      File.expand_path(path)
+    end
+
+    def render_file_path template
+      template.gsub(%r{.templates/.*?erb}, File.basename(template)).gsub('.erb', '')
+    end
+
     private
+
+    def ignored_files(path)
+      files = git_ignore_content(path).lines.collect {|line| sanitise(line)}
+      files << '.git'
+    end
+
+    def git_ignore_content(path)
+      git_ignore_file = "#{path}/.gitignore"
+      File.exist?(git_ignore_file) ? File.read(git_ignore_file) : ''
+    end
+
+    def files(path)
+      files = paths(*Dir.glob("#{path}/**/*", ::File::FNM_DOTMATCH))
+      files.find_all{|f| !File.directory?(f)}
+    end
 
     def anonymise(string)
       substitutes.each do |key, value|
@@ -46,12 +107,13 @@ module Exercise
       string.gsub(/cic_container-[\w\d-]+/, 'cic_container-xxxxxxxxxxxxxxxx')
     end
 
-    def digest(template)
-      Digest::SHA2.file(template).hexdigest
+    def sanitise string
+      string.chomp.strip
     end
 
+
     def rendered_file_name(template)
-      "#{Dir.pwd}/#{File.basename(template, '.erb')}"
+      "#{File.expand_path("#{File.dirname(template)}/..")}/#{File.basename(template, '.erb')}"
     end
 
     def render(template)
@@ -63,20 +125,12 @@ module Exercise
       end
       anonymise(erb_template.result(binding))
     ensure
-      after_rendering_commands.each { |command| test_command(command) }
+      after_rendering_commands.each {|command| test_command(command)}
       say '' if quiet?
     end
 
     def substitutes
       @substitutes ||= {}
-    end
-
-    def templates(dir)
-      templates = {}
-      Dir["#{dir}/.templates/*.md.erb"].each do |template|
-        templates[File.basename(template)] = template
-      end
-      templates
     end
 
     def render_in_temp_dir(erb_template)

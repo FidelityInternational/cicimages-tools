@@ -8,6 +8,10 @@ describe 'course_content.rake' do
     end
     let(:task) { 'course_content:generate' }
 
+    def files matcher
+      Dir[matcher].collect{|f| File.expand_path(f)}
+    end
+
     context 'error in template' do
       it 'still renders the others' do
         expected_file1 = create_template
@@ -21,7 +25,7 @@ describe 'course_content.rake' do
           expect(exception.message).to eq(CourseContentRenderingError.new(expected_file_list).message)
         end
 
-        expect(Dir['*.md']).to match_array([expected_file1.expected_rendered_filepath,
+        expect(files('*.md')).to match_array([expected_file1.expected_rendered_filepath,
                                             expected_file2.expected_rendered_filepath])
       end
     end
@@ -32,6 +36,17 @@ describe 'course_content.rake' do
       it 'renders the template' do
         subject.execute(path: Dir.pwd)
         expect(File).to exist(template.expected_rendered_filepath)
+      end
+    end
+
+    context 'rendered file based on latest template' do
+      it 'does not re-render the template' do
+        create_template
+        expect(subject).to_not receive(:run).and_call_original
+        subject.execute(path: Dir.pwd)
+
+        expect(subject).to_not receive(:run)
+        subject.execute(path: Dir.pwd)
       end
     end
   end
@@ -55,8 +70,8 @@ describe 'course_content.rake' do
 
     context 'generated files are up to date' do
       it 'does not raise an error' do
-        write_to_file(template.expected_rendered_filepath, Digest::SHA2.file(template.path).hexdigest)
 
+        Rake::Task['course_content:generate'].execute(path: Dir.pwd)
         expect { subject.execute(path: Dir.pwd) }.to_not raise_error
       end
     end

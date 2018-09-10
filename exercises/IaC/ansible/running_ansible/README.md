@@ -21,7 +21,7 @@ Ansible has lots of features that you will learn about in future exercises. The 
 - Before going any further do the following:
   - `cd YOUR_CLONE_OF_THIS REPO`
   - `source ./bin/env`
-  - `cd /Users/leon/Projects/ci-cd-training/exercises/IaC/ansible/running_ansible/.templates/..`
+  - `cd ./exercises/IaC/ansible/running_ansible`
 
 - So that you don't have to worry about supplying your own infrastructure for ansible to work upon, we have configured the courseware to run ansible against docker containers that we stand up for you. You don't need to know how this works simply that when we mention containers we simply mean where you ansible as run. In the exercise, we'll show you how to connect to these containers to inspect them.
 
@@ -152,7 +152,7 @@ This should output the following:
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_19279, inifile: pytest.ini
+rootdir: /vols/pytest_17554, inifile: pytest.ini
 plugins: testinfra-1.14.1
 collecting ... collected 3 items
 
@@ -174,4 +174,4 @@ Now that the acceptance tests are passing we can be very confident that the syst
 Ansible is a great tool for configuring infrastructure. Baked in to its philosophy is that all configuration is code and so can and should be version controlled. In the other exercises in this module you will learn how to write and test your own playbooks as well as learn about Ansible's other powerful features.
   
 
-Revision: 9f1266f03eb301ba4a03600063eac8c37082ee0a6e01ad16a9043393ca0622a1
+Revision: 67cc0cbbfb5ed597df4348f108387388

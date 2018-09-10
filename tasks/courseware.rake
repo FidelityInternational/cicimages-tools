@@ -1,3 +1,4 @@
+require_relative 'support/courseware'
 namespace :courseware do
   require 'pty'
 
@@ -10,21 +11,13 @@ namespace :courseware do
 
   desc 'build course image'
   task :build do
-    Dir.chdir("#{__dir__}/../") do
-      image = File.read('.courseware-image')
-      version = File.read('.courseware-version')
-
-      run_and_stream "docker build . -t #{image}:#{version}"
-    end
+    run_and_stream "docker build . -t #{Courseware.tag}"
   end
 
   desc 'publish course image'
   task :publish do
-    image = File.read('.courseware-image')
-    version = File.read('.courseware-version')
-
     puts 'publishing image (docker output is hidden: takes a while)'
-    `docker push #{image}:#{version}`
+    `docker push #{Courseware.tag}`
   end
 
   require 'bump'

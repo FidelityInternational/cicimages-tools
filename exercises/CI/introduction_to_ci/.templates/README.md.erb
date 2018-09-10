@@ -1,5 +1,8 @@
 # Introduction to Continuous Integration (CI)
 
+<% checkout_dir = './resources/checkout' %>
+<% command("rm -rf #{checkout_dir}") %>
+
 <% concourse_address = 'http://concourse:8080' %>
 
 <% substitute(concourse_address => 'http://127.0.0.1:8080')%>
@@ -93,7 +96,6 @@ to complete this exercise do the following:
 **Note:** Make sure that it is enabled and runs successfully.
 
 <% show_remote_command = 'git remote get-url origin' %>
-<% checkout_dir = './resources/checkout' %>
 2. The proposed change sits uncommitted in `<%= path(checkout_dir) %>`.
 ```
   <%=command_output("cd #{checkout_dir} && git status")%>

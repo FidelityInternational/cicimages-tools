@@ -36,13 +36,13 @@ module Exercise
       let!(:template) {create_template}
 
       it 'generates content from the given template' do
-        expect(subject).to receive(:render_exercise).with(template.path).and_return(true)
+        expect(subject).to receive(:render_exercise).with(template.path, digest_component: anything).and_return(true)
         subject.generate(template.path)
       end
 
       context 'rendering fails' do
         it 'raises and error' do
-          expect(subject).to receive(:render_exercise).with(template.path).and_return(false)
+          expect(subject).to receive(:render_exercise).with(template.path, digest_component: anything).and_return(false)
           expect {subject.generate(template.path)}.to raise_error(Thor::Error)
         end
       end
@@ -53,6 +53,14 @@ module Exercise
           subject.generate(template.path)
           expect(ENV['foo']).to eq('bar')
           expect(ENV['billy']).to eq('bob')
+        end
+      end
+
+      context '--digest-component' do
+        it 'passes it on when rendering the template' do
+          subject.options = {digest_component: :expected}
+          expect(subject).to receive(:render_exercise).with(template.path, digest_component: :expected).and_return(true)
+          subject.generate(template.path)
         end
       end
     end

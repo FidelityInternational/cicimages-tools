@@ -5,6 +5,9 @@
 
 
 
+
+
+
 ## Introduction
 Development teams working on a common codebase are **continuously** making changes to that common code. In order for a team member to know that their changes are compatible, **continuous** checking of the code base should be happening too. I.e. every time some one makes a change, the code base should be tested to ensure it is continuing to work as intended. The idea is that the more frequently changes are integrated, the smaller those changes are likely to be and therefore the lower the risk is that they will break something. This is where the practice of Continuous Integration (CI) comes in.
 
@@ -145,7 +148,6 @@ to complete this exercise do the following:
 **Note:** Make sure that it is enabled and runs successfully.
 
 
-
 2. The proposed change sits uncommitted in `./resources/checkout`.
 ```
   On branch master
@@ -176,4 +178,4 @@ Continuous Integration plays a vital role in ensuring that the software we right
 
 **Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.  
 
-Revision: b4da215a1df417689335f1d1f9f89cd68a13ded2dc9a1f1ccc10897f133a3bf1
+Revision: 85a0119ef802a4f0994080b10c5c1d54

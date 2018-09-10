@@ -10,6 +10,35 @@ module Exercise
       end
     end
 
+    describe '#digest' do
+
+      let(:path){Dir.pwd}
+      let(:excludes){[write_to_file("#{path}/a_file", 'content')]}
+      let(:digest_component){'digest_component'}
+      it 'produces a unique digest for the given path' do
+        digest = subject.digest(path: path, digest_component: digest_component, excludes: excludes)
+
+        write_to_file("#{path}/a_second_file", 'content')
+        expect(digest).to_not equal(subject.digest(path: path, digest_component: digest_component, excludes: excludes))
+      end
+
+      it 'uses the digest_component as part of the final digest' do
+        digest = subject.digest(path: path, digest_component: digest_component, excludes: excludes)
+
+        expect(digest).to eq(subject.digest(path: path, digest_component: digest_component, excludes: excludes))
+        expect(digest).to_not equal(subject.digest(path: path, digest_component: 'another', excludes: excludes))
+      end
+
+      it 'excludes files in the templates directory and rendered counterparts' do
+        template = create_template
+        write_to_file(template.expected_rendered_filepath, 'content')
+
+        digest = subject.digest(path: path, digest_component: digest_component, excludes: [template.path, template.expected_rendered_filepath])
+
+        expect(digest).to_not equal(subject.digest(path: path, digest_component: digest_component, excludes: []))
+      end
+    end
+
     describe '#env' do
       before do
         ENV['foo'] = 'bar'
@@ -47,15 +76,51 @@ module Exercise
           expect(rendered_content).to include('bar')
         end
 
-        it 'adds the revision to the end of the file' do
-          template = create_template
-          subject.render_exercise(template.path)
+        context 'digest' do
+          it 'adds the revision to the end of the file' do
+            template = create_template
+            subject.render_exercise(template.path)
 
-          rendered_content = File.read(template.expected_rendered_filepath)
-          expected_digest = Digest::SHA2.file(template.path).hexdigest
+            rendered_content = File.read(template.expected_rendered_filepath)
+            expected_digest = subject.digest(path: File.expand_path("#{template.path}/../"),digest_component: '', excludes: [template.expected_rendered_filepath])
 
-          expect(rendered_content).to end_with("  \n\nRevision: #{expected_digest}")
+            expect(rendered_content).to end_with("  \n\nRevision: #{expected_digest}")
+          end
+
+          it 'excludes all templates and rendered files from the digest' do
+            template = create_template
+            excluded_files = []
+            expect(subject).to receive(:excluded_files).with(template.path).and_return(excluded_files)
+            expect(subject).to receive(:digest).with(path: File.dirname(template.templates_directory), digest_component: anything, excludes: excluded_files).and_call_original
+            subject.render_exercise(template.path)
+          end
         end
+
+        describe '#excluded_files' do
+          context 'rendered file does not exist' do
+            it 'does not return the rendered destination of the subject template' do
+              template_1 = create_template
+              template_2 = create_template
+              subject.render_exercise(template_1.path)
+
+              expect(subject.excluded_files(template_2.path)).to_not include(template_2.expected_rendered_filepath)
+            end
+          end
+
+          it 'returns all templates and corresponding files, except for the subject template' do
+            template_1 = create_template
+            template_2 = create_template
+            subject.render_exercise(template_1.path)
+            subject.render_exercise(template_2.path)
+            excluded_files = [template_1.path,
+                              template_1.expected_rendered_filepath,
+                              template_2.expected_rendered_filepath]
+
+            expect(subject.excluded_files(template_2.path)).to eq(excluded_files)
+          end
+        end
+
+
 
         context 'quiet' do
           context 'rendering succeeds' do
