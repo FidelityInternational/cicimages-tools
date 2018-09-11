@@ -116,7 +116,7 @@ module Exercise
                               template_1.expected_rendered_filepath,
                               template_2.expected_rendered_filepath]
 
-            expect(subject.excluded_files(template_2.path)).to eq(excluded_files)
+            expect(subject.excluded_files(template_2.path)).to match_array(excluded_files)
           end
         end
 
