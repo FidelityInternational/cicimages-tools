@@ -8,7 +8,7 @@ shared_context :templates do
     template_fixture.new(full_path(template_path), full_path(rendered_filepath), full_path(templates_directory))
   end
 
-  def full_path path
+  def full_path(path)
     File.expand_path(path)
   end
 end

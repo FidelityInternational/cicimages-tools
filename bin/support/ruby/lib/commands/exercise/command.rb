@@ -14,12 +14,23 @@ module Exercise
       true
     end
 
+    desc 'checksum', 'generate checksum'
+    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
+    def checksum(template)
+      parent_directory = full_path("#{templates_directory(template)}/..")
+
+      say digest(path: parent_directory,
+                 digest_component: options[:digest_component],
+                 excludes: excluded_files(full_path(template)))
+    end
+
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
     option :environment_variables, type: :string, required: false
     option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
+
     def generate(template)
-      environment_variables = options[:environment_variables].to_s.scan(/([\w+.]+)\s*=\s*([\w+.\/-]+)?/).to_h
+      environment_variables = options[:environment_variables].to_s.scan(%r{([\w+.]+)\s*=\s*([\w+./-]+)?}).to_h
       environment_variables.each do |key, value|
         ENV[key] = value
       end
@@ -32,6 +43,7 @@ module Exercise
     end
 
     desc 'create <NAME>', 'create a new exercise'
+
     def create(name)
       say "Creating new exercise: #{name}"
       FileUtils.mkdir_p(name)

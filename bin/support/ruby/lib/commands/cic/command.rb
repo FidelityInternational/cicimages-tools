@@ -74,7 +74,6 @@ module Commands
           before_script = 'before'
           commands << "./#{before_script}" if File.exist?(before_script)
 
-
           after_script = 'after'
           commands << "./#{after_script}" if File.exist?(after_script)
 

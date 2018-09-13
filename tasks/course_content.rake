@@ -1,5 +1,5 @@
-include Commandline
-include Commandline::Output
+$LOAD_PATH.unshift("#{__dir__}/../bin/support/ruby/lib")
+require 'utils/commandline'
 
 require 'commands/exercise/render_methods'
 
@@ -9,7 +9,7 @@ class CourseContentOutOfDateError < StandardError
   def initialize(files)
     error = <<~ERROR
       The following files are out of date and need to be Re-rendered:
-      - #{files.collect{|file|File.expand_path(file)}.join("\n- ")}"
+      - #{files.collect { |file| File.expand_path(file) }.join("\n- ")}"
     ERROR
 
     super error
@@ -20,7 +20,7 @@ class CourseContentRenderingError < StandardError
   def initialize(files)
     error = <<~ERROR
       Unable to render:
-      - #{files.collect {|file| File.expand_path(file)}.join("\n- ")}"
+      - #{files.collect { |file| File.expand_path(file) }.join("\n- ")}"
     ERROR
 
     super error
@@ -28,24 +28,29 @@ class CourseContentRenderingError < StandardError
 end
 
 def renderer
-  Object.new.tap {|o| o.extend(Exercise::RenderMethods)}
+  Object.new.tap { |o| o.extend(Exercise::RenderMethods) }
 end
 
 namespace :course_content do
+  include Commandline
+  include Commandline::Output
+
   desc 'Check that all course_content is based on the latest version of the templates'
   task :checksum, :path do |_t, args|
     path = args[:path] || File.expand_path("#{__dir__}/..")
 
     out_of_date_files = exercise_directories(path).collect do |templates_dir|
+      print '.'.green
       templates("#{templates_dir}/../")
-    end.flatten.collect{|template|renderer.render_file_path(template)}
+    end.flatten
+
+    out_of_date_files = out_of_date_files.collect { |template| renderer.render_file_path(template) }
 
     raise CourseContentOutOfDateError, out_of_date_files unless out_of_date_files.empty?
   end
 
   desc 'generate course content from .templates/*.erb templates'
   task :generate, [:mode, :path] do |_task, args|
-
     path = args[:path] || File.expand_path("#{__dir__}/..")
 
     failures = exercise_directories(path).collect do |templates_dir|
@@ -57,7 +62,9 @@ namespace :course_content do
       say "Rendering templates in: #{templates_dir}"
       templates(parent_directory).find_all do |template|
         source = "source #{root_dir}/bin/.env"
-        run("#{source} && exercise generate #{template} #{flags}", dir: parent_directory, silent: false).error?
+        run("#{source} && exercise generate #{relative_path(template, parent_directory)} #{flags}",
+            dir: parent_directory,
+            silent: false).error?
       end
     end.flatten
     raise CourseContentRenderingError, failures unless failures.empty?
@@ -77,18 +84,21 @@ namespace :course_content do
 
   def updated?(template)
     rendered_file = renderer.render_file_path(template)
-
-    excluded_files = renderer.excluded_files(template)
-    parent_directory = File.expand_path("#{renderer.templates_directory(template)}/..")
-    digest = renderer.digest(path: parent_directory, digest_component: Courseware.tag, excludes: excluded_files)
-
     return true unless File.exist?(rendered_file)
-    !File.read(rendered_file).include?(digest)
+
+    source = "source #{root_dir}/bin/.env"
+    parent_directory = File.expand_path("#{File.dirname(template)}/..").to_s
+    template = relative_path(template, parent_directory)
+    command = "#{source} && exercise checksum #{template} --digest-component #{Courseware.tag}"
+
+    !File.read(rendered_file).include?(run(command, dir: parent_directory).stdout)
   end
 
   def templates(dir)
+    dir = File.expand_path(dir)
     Dir["#{dir}/.templates/*.md.erb"].collect do |template|
-      updated?(File.expand_path(template)) ? relative_path(template, dir) : nil
+      template = File.expand_path(template)
+      updated?(template) ? template : nil
     end.compact
   end
 end

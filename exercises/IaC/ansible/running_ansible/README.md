@@ -150,17 +150,17 @@ To run this script, execute the following command: `pytest --ansible-host cic_co
 This should output the following:
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_17554, inifile: pytest.ini
-plugins: testinfra-1.14.1
+rootdir: /vols/pytest_19513, inifile: pytest.ini
+plugins: testinfra-1.15.0
 collecting ... collected 3 items
 
 tests/apache_ansible_test.py::test_apache_installed PASSED               [ 33%]
 tests/apache_ansible_test.py::test_apache_is_enabled_as_service PASSED   [ 66%]
 tests/apache_ansible_test.py::test_apache_installed_is_running PASSED    [100%]
 
-=========================== 3 passed in 0.96 seconds ===========================
+=========================== 3 passed in 1.05 seconds ===========================
 ```
 
 In just a second or so the test has validated that:
@@ -172,6 +172,7 @@ Now that the acceptance tests are passing we can be very confident that the syst
 
 ## Summary
 Ansible is a great tool for configuring infrastructure. Baked in to its philosophy is that all configuration is code and so can and should be version controlled. In the other exercises in this module you will learn how to write and test your own playbooks as well as learn about Ansible's other powerful features.
+
   
 
 Revision: 67cc0cbbfb5ed597df4348f108387388

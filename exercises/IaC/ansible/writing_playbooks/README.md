@@ -56,6 +56,7 @@ The following is an example Playbook that could be used to install a webserver.
         name: apache2
         enabled: yes
         state: started
+        
 
 
 ```
@@ -90,10 +91,10 @@ Execute the tests by running: `pytest --hostname unavailable_host`
 This outputs the following. (We've omitted the stack traces):
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_4227, inifile: pytest.ini
-plugins: testinfra-1.14.1
+rootdir: /vols/pytest_24800, inifile: pytest.ini
+plugins: testinfra-1.15.0
 collecting ... collected 4 items
 
 tests/webserver_test.py::test_apache_installed FAILED                    [ 25%]
@@ -110,8 +111,9 @@ The output shows us that two tests attempted to verify:
 
 All of these fail because they are unable to connect to the server we specified as we are yet to build it. (see the lines that in the output prefixed with 'E').
 
+
 ### Writing a playbook
-Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `ansible/webserver.yml`
+Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `/vols/ansible_1753/writing_playbooks/ansible/webserver.yml` 
 
 ```YAML
 ---
@@ -131,13 +133,14 @@ Let's create our first playbook using the the YAML we looked at earlier. Write t
         name: apache2
         enabled: yes
         state: started
+        
 
 ```
 
 **Note:** Playbooks can be named anything. By convention we will store them in a folder called 'ansible'.
 
 
-Now execute playbook with the following command: `ansible-playbook ansible/webserver.yml`
+Now execute playbook with the following command: `ansible-playbook /vols/ansible_1753/writing_playbooks/ansible/webserver.yml`
 
 ```
 PLAY [Setup a webserver.] ******************************************************
@@ -192,10 +195,10 @@ To do this run: `pytest --hostname cic_container-xxxxxxxxxxxxxxxx`
 We can see from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_14673, inifile: pytest.ini
-plugins: testinfra-1.14.1
+rootdir: /vols/pytest_28685, inifile: pytest.ini
+plugins: testinfra-1.15.0
 collecting ... collected 4 items
 
 tests/webserver_test.py::test_apache_installed PASSED                    [ 25%]
@@ -246,10 +249,10 @@ You'll know that you've got it right when the acceptance tests pass :)
 
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
+platform linux2 -- Python 2.7.12, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_11492, inifile: pytest.ini
-plugins: testinfra-1.14.1
+rootdir: /vols/pytest_7042, inifile: pytest.ini
+plugins: testinfra-1.15.0
 collecting ... collected 4 items
 
 tests/webserver_test.py::test_apache_installed PASSED                    [ 25%]
@@ -257,7 +260,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 1.06 seconds ===========================
+=========================== 4 passed in 1.03 seconds ===========================
 ```
 
 Good luck!
@@ -276,6 +279,7 @@ You have just learned how to:
 - use the [synchronize module](https://docs.ansible.com/ansible/devel/modules/synchronize_module.html#synchronize-module) to copy the contents of a folder from one place to another.
 - write code to satisfy a condition within a set of tests.
 - put more funny cats onto the Internet
+
   
 
-Revision: a3ab726bfc87053a346045d5589c0ec2
+Revision: 89b27b7a92a5c86fd0f9adbd9918d9e2

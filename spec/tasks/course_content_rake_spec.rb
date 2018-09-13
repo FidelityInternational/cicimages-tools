@@ -8,8 +8,8 @@ describe 'course_content.rake' do
     end
     let(:task) { 'course_content:generate' }
 
-    def files matcher
-      Dir[matcher].collect{|f| File.expand_path(f)}
+    def files(matcher)
+      Dir[matcher].collect { |f| File.expand_path(f) }
     end
 
     context 'error in template' do
@@ -26,7 +26,7 @@ describe 'course_content.rake' do
         end
 
         expect(files('*.md')).to match_array([expected_file1.expected_rendered_filepath,
-                                            expected_file2.expected_rendered_filepath])
+                                              expected_file2.expected_rendered_filepath])
       end
     end
 
@@ -70,7 +70,6 @@ describe 'course_content.rake' do
 
     context 'generated files are up to date' do
       it 'does not raise an error' do
-
         Rake::Task['course_content:generate'].execute(path: Dir.pwd)
         expect { subject.execute(path: Dir.pwd) }.to_not raise_error
       end

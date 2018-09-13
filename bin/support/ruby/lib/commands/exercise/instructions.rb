@@ -14,6 +14,13 @@ module Exercise
     class TimeoutError < RuntimeError
     end
 
+    # class EnvironmentVariableMissingError - error raised when environment variable is missing
+    class EnvironmentVariableMissingError < StandardError
+      def initialize(variable_name)
+        super "Environment variable not set for: #{variable_name}"
+      end
+    end
+
     # Runs the given command after the current template has been rendered. This is useful for running commands to clean
     # clean up. E.g. stopping a server that was previously started.
     # @example
@@ -79,6 +86,17 @@ module Exercise
       last_command_output
     end
 
+    # get value of an Environment variable
+    # @example
+    #   In ERB template:
+    #   <%= env('VARIABLE_NAME') %>
+    # @param [String] variable_name the variable name
+    # @return [String] the value of the specified environment variable.
+    # # @raise [EnvironmentVariableMissingError] if environment variable is undefined
+    def env(variable_name)
+      ENV[variable_name.to_s] || (raise EnvironmentVariableMissingError, variable_name)
+    end
+
     # get the output of the last command that was run.
     # @example
     #   In ERB template:
@@ -97,6 +115,15 @@ module Exercise
     def path(path)
       raise "#{path} does not exist" unless File.exist?(path)
       path
+    end
+
+    # store strings that should be subsituted in the template on rendering
+    # @example
+    #   In ERB template:
+    #   <% substitute({'localhost' => '127.0.0.1'}) %>
+    # @param hash [Hash] values and their substitutes.
+    def substitute(hash)
+      @substitutes = hash
     end
 
     # Wait until the given block evaluates to true
@@ -155,6 +182,12 @@ module Exercise
       end
 
       result
+    end
+
+    private
+
+    def substitutes
+      @substitutes ||= {}
     end
   end
 end

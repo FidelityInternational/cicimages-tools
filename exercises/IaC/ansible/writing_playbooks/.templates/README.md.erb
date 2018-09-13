@@ -57,6 +57,7 @@ The following is an example Playbook that could be used to install a webserver.
         name: apache2
         enabled: yes
         state: started
+        
 YAML
 %>
 
@@ -101,8 +102,9 @@ The output shows us that two tests attempted to verify:
 
 All of these fail because they are unable to connect to the server we specified as we are yet to build it. (see the lines that in the output prefixed with 'E').
 
+<% webserver_yaml_path = File.expand_path('ansible/webserver.yml') %>
 ### Writing a playbook
-Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `<%= playbook_yml = write_to_file('ansible/webserver.yml', yaml) %>`
+Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `<%= playbook_yml = write_to_file(webserver_yaml_path, yaml) %>` <% after_rendering_run("rm #{webserver_yaml_path}") %>
 
 ```YAML
 <%= yaml %>

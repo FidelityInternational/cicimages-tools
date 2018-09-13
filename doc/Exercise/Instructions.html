@@ -104,7 +104,7 @@
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Instructions/TimeoutError.html" title="Exercise::Instructions::TimeoutError (class)">TimeoutError</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Instructions/EnvironmentVariableMissingError.html" title="Exercise::Instructions::EnvironmentVariableMissingError (class)">EnvironmentVariableMissingError</a></span>, <span class='object_link'><a href="Instructions/TimeoutError.html" title="Exercise::Instructions::TimeoutError (class)">TimeoutError</a></span>
     
   
 </p>
@@ -241,6 +241,29 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#env-instance_method" title="#env (instance method)">#<strong>env</strong>(variable_name)  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>get value of an Environment variable # @raise [EnvironmentVariableMissingError] if environment variable is undefined.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#last_command_output-instance_method" title="#last_command_output (instance method)">#<strong>last_command_output</strong>  &#x21d2; String </a>
     
 
@@ -279,6 +302,29 @@
 
   
     <span class="summary_desc"><div class='inline'><p>Validate a path.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#substitute-instance_method" title="#substitute (instance method)">#<strong>substitute</strong>(hash)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>store strings that should be subsituted in the template on rendering.</p>
 </div></span>
   
 </li>
@@ -412,16 +458,16 @@ clean up. E.g. stopping a server that was previously started.</p>
       <pre class="lines">
 
 
-25
-26
-27
-28</pre>
+31
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 31</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_after_rendering_run'>after_rendering_run</span><span class='lparen'>(</span><span class='id identifier rubyid_command'>command</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_after_all_commands'>after_all_commands</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_command'>command</span>
+  <span class='id identifier rubyid_after_rendering_commands'>after_rendering_commands</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_command'>command</span>
   <span class='id identifier rubyid_command'>command</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -515,19 +561,19 @@ Useful for adding images to your templates.</p>
       <pre class="lines">
 
 
-38
-39
-40
-41
-42
-43
-44</pre>
+44
+45
+46
+47
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 44</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_capture'>capture</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='comma'>,</span> <span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_page_class'>page_class</span> <span class='op'>=</span> <span class='const'>Class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lbrace'>{</span><span class='id identifier rubyid_include'>include</span> <span class='const'>PageMagic</span><span class='rbrace'>}</span>
+  <span class='id identifier rubyid_page_class'>page_class</span> <span class='op'>=</span> <span class='const'>Class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_include'>include</span> <span class='const'>PageMagic</span> <span class='rbrace'>}</span>
   <span class='id identifier rubyid_session'>session</span> <span class='op'>=</span> <span class='const'>PageMagic</span><span class='period'>.</span><span class='id identifier rubyid_session'>session</span><span class='lparen'>(</span><span class='label'>browser:</span> <span class='symbol'>:headless_chrome</span><span class='comma'>,</span> <span class='label'>url:</span> <span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_session'>session</span><span class='period'>.</span><span class='id identifier rubyid_visit'>visit</span><span class='lparen'>(</span><span class='id identifier rubyid_page_class'>page_class</span><span class='comma'>,</span> <span class='label'>url:</span> <span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_session'>session</span><span class='period'>.</span><span class='id identifier rubyid_browser'>browser</span><span class='period'>.</span><span class='id identifier rubyid_save_screenshot'>save_screenshot</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
@@ -609,13 +655,13 @@ Change directory so that subsequent commands are executed in the correct context
       <pre class="lines">
 
 
-53
-54
-55
-56</pre>
+59
+60
+61
+62</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_chdir'>chdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
@@ -728,14 +774,14 @@ Change directory so that subsequent commands are executed in the correct context
       <pre class="lines">
 
 
-67
-68
-69
-70
-71</pre>
+72
+73
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 67</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 72</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_command'>command</span><span class='lparen'>(</span><span class='id identifier rubyid_command'>command</span><span class='comma'>,</span> <span class='label'>fail_on_error:</span> <span class='kw'>true</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_test_command'>test_command</span><span class='lparen'>(</span><span class='id identifier rubyid_command'>command</span><span class='comma'>,</span> <span class='label'>fail_on_error:</span> <span class='id identifier rubyid_fail_on_error'>fail_on_error</span><span class='rparen'>)</span>
@@ -817,17 +863,104 @@ Change directory so that subsequent commands are executed in the correct context
       <pre class="lines">
 
 
-79
-80
-81
-82</pre>
+84
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_command_output'>command_output</span><span class='lparen'>(</span><span class='id identifier rubyid_command'>command</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_command'>command</span> <span class='id identifier rubyid_command'>command</span>
   <span class='id identifier rubyid_last_command_output'>last_command_output</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="env-instance_method">
+  
+    #<strong>env</strong>(variable_name)  &#x21d2; <tt>String</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>get value of an Environment variable</p>
+
+<h1>@raise [EnvironmentVariableMissingError] if environment variable is undefined</h1>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code>In ERB template:
+&lt;%= env(&#39;VARIABLE_NAME&#39;) %&gt;</code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>variable_name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the variable name</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the value of the specified environment variable.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+96
+97
+98</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 96</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_env'>env</span><span class='lparen'>(</span><span class='id identifier rubyid_variable_name'>variable_name</span><span class='rparen'>)</span>
+  <span class='const'>ENV</span><span class='lbracket'>[</span><span class='id identifier rubyid_variable_name'>variable_name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="Instructions/EnvironmentVariableMissingError.html" title="Exercise::Instructions::EnvironmentVariableMissingError (class)">EnvironmentVariableMissingError</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_variable_name'>variable_name</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -885,12 +1018,12 @@ Change directory so that subsequent commands are executed in the correct context
       <pre class="lines">
 
 
-89
-90
-91</pre>
+105
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 89</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 105</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_last_command_output'>last_command_output</span>
   <span class='const'>Output</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@result</span><span class='period'>.</span><span class='id identifier rubyid_stdout'>stdout</span><span class='rparen'>)</span>
@@ -968,17 +1101,85 @@ Change directory so that subsequent commands are executed in the correct context
       <pre class="lines">
 
 
-99
-100
-101
-102</pre>
+115
+116
+117
+118</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 115</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_path'>path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'> does not exist</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_path'>path</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="substitute-instance_method">
+  
+    #<strong>substitute</strong>(hash)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>store strings that should be subsituted in the template on rendering</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code>In ERB template:
+&lt;% substitute({&#39;localhost&#39; =&gt; &#39;127.0.0.1&#39;}) %&gt;</code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>hash</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>values and their substitutes.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+125
+126
+127</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 125</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_substitute'>substitute</span><span class='lparen'>(</span><span class='id identifier rubyid_hash'>hash</span><span class='rparen'>)</span>
+  <span class='ivar'>@substitutes</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1074,19 +1275,19 @@ Change directory so that subsequent commands are executed in the correct context
       <pre class="lines">
 
 
-115
-116
-117
-118
-119
-120
-121
-122</pre>
+140
+141
+142
+143
+144
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 115</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 140</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_wait_until'>wait_until</span><span class='lparen'>(</span><span class='label'>timeout_after:</span> <span class='int'>5</span><span class='comma'>,</span> <span class='label'>retry_every:</span> <span class='float'>0.1</span> <span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_wait_until'>wait_until</span><span class='lparen'>(</span><span class='label'>timeout_after:</span> <span class='int'>5</span><span class='comma'>,</span> <span class='label'>retry_every:</span> <span class='float'>0.1</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_start_time'>start_time</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
   <span class='kw'>until</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_start_time'>start_time</span> <span class='op'>+</span> <span class='id identifier rubyid_timeout_after'>timeout_after</span>
     <span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='kw'>yield</span> <span class='op'>==</span> <span class='kw'>true</span>
@@ -1186,15 +1387,15 @@ Change directory so that subsequent commands are executed in the correct context
       <pre class="lines">
 
 
-133
-134
-135
-136
-137
-138</pre>
+158
+159
+160
+161
+162
+163</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 133</span>
+      <pre class="code"><span class="info file"># File 'bin/support/ruby/lib/commands/exercise/instructions.rb', line 158</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_to_file'>write_to_file</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_content'>content</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_directory'>directory</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
@@ -1212,7 +1413,7 @@ Change directory so that subsequent commands are executed in the correct context
 </div>
 
       <div id="footer">
-  Generated on Tue Aug 28 14:16:04 2018 by
+  Generated on Fri Sep 14 11:45:05 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.16 (ruby-2.4.3).
 </div>
