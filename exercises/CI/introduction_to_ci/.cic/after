@@ -17,18 +17,19 @@ cd "${resources_dir}"
 
 chmod 400 git-server/keys/id_rsa
 
-if [ ! -d "checkout" ]; then
-  ssh-agent bash -c 'ssh-add git-server/keys/id_rsa; git clone ssh://git@git-server/git-server/repos/application-repo.git checkout'
+checkout_dir="checkout"
+rm -Rf "${checkout_dir}"
 
-  cd "checkout"
+ssh-agent bash -c 'ssh-add git-server/keys/id_rsa; git clone ssh://git@git-server/git-server/repos/application-repo.git checkout'
 
-  ssh_command="ssh -i ../git-server/keys/id_rsa"
+cd "checkout"
 
-  git config --local --add core.sshCommand 'ssh -i ../git-server/keys/id_rsa'
-  git remote set-url origin ssh://git@localhost:3333/git-server/repos/application-repo.git
+ssh_command="ssh -i ../git-server/keys/id_rsa"
 
-  cp "${script_dir}/application.py" src/
-fi
+git config --local --add core.sshCommand 'ssh -i ../git-server/keys/id_rsa'
+git remote set-url origin ssh://git@localhost:3333/git-server/repos/application-repo.git
+
+cp "${script_dir}/application.py" src/
 
 
 

@@ -1,7 +1,10 @@
-.idea
-*.iml
+.idea/
 **/.pytest_cache
 *.retry
-*.log
+mirage.log
 .vagrant/
 coverage/
+vendor/
+checkout/
+ci-cd-training.iml
+.yardoc/

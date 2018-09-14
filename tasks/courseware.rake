@@ -1,7 +1,8 @@
+require_relative 'support/courseware'
 namespace :courseware do
   require 'pty'
 
-  def run(command)
+  def run_and_stream(command)
     stdout, _stdin, _pid = PTY.spawn command
     while (string = stdout.gets)
       print string
@@ -10,21 +11,13 @@ namespace :courseware do
 
   desc 'build course image'
   task :build do
-    Dir.chdir("#{__dir__}/../") do
-      image = File.read('.courseware-image')
-      version = File.read('.courseware-version')
-
-      run "docker build . -t #{image}:#{version}"
-    end
+    run_and_stream "docker build . -t #{Courseware.tag}"
   end
 
   desc 'publish course image'
   task :publish do
-    image = File.read('.courseware-image')
-    version = File.read('.courseware-version')
-
     puts 'publishing image (docker output is hidden: takes a while)'
-    `docker push #{image}:#{version}`
+    `docker push #{Courseware.tag}`
   end
 
   require 'bump'

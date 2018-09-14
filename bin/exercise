@@ -21,4 +21,6 @@ docker run \
     "$(cic_image)" \
     /bin/bash -c "${command}"
 
+exit_code=$?
 docker cp "$(cic_volumes_container):${volume_path}/." .
+exit "${exit_code}"

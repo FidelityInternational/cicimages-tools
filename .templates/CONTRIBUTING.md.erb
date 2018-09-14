@@ -87,7 +87,8 @@ string.gsub('\\','')
 ```
 #### Generating documentation
 <% cd exercise_name %>
-To render the templates in the `<%= templates_directory_name %>` directory, navigate to the root of your exercise directory and run `<%= command('exercise generate') %>`.
+To render a template in the `<%= templates_directory_name %>` directory, navigate to the root of your exercise directory pass the template path to the `exercise generate` command. For example running `<%= command("exercise generate #{templates_directory_name}/README.md.erb") %>` will render the example README that was created by `exercise create`.
+
 ```
 <%= last_command_output %>
 ```

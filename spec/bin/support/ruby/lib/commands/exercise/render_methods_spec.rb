@@ -10,11 +10,56 @@ module Exercise
       end
     end
 
-    describe '#exercise_path' do
-      it 'returns the directory that the render_methods starts in' do
-        expected_path = 'expected'
-        subject.render_exercises(dir: Dir.pwd, pretty_exercise_path: expected_path)
-        expect(subject.exercise_path).to eq(expected_path)
+    describe '#digest' do
+      let(:path) { Dir.pwd }
+      let(:excludes) { [write_to_file("#{path}/a_file", 'content')] }
+      let(:digest_component) { 'digest_component' }
+      it 'produces a unique digest for the given path' do
+        digest = subject.digest(path: path, digest_component: digest_component, excludes: excludes)
+
+        write_to_file("#{path}/a_second_file", 'content')
+        expect(digest).to_not equal(subject.digest(path: path, digest_component: digest_component, excludes: excludes))
+      end
+
+      it 'uses the digest_component as part of the final digest' do
+        digest = subject.digest(path: path, digest_component: digest_component, excludes: excludes)
+
+        expect(digest).to eq(subject.digest(path: path, digest_component: digest_component, excludes: excludes))
+        expect(digest).to_not equal(subject.digest(path: path, digest_component: 'another', excludes: excludes))
+      end
+
+      it 'excludes files in the templates directory and rendered counterparts' do
+        template = create_template
+        write_to_file(template.expected_rendered_filepath, 'content')
+
+        digest = subject.digest(path: path,
+                                digest_component: digest_component,
+                                excludes: [template.path, template.expected_rendered_filepath])
+
+        expect(digest).to_not equal(subject.digest(path: path, digest_component: digest_component, excludes: []))
+      end
+    end
+
+    describe '#env' do
+      before do
+        ENV['foo'] = 'bar'
+      end
+      context 'variable exists' do
+        it 'returns the value' do
+          expect(subject.env('foo')).to eq('bar')
+        end
+      end
+
+      context 'non string supplied' do
+        it 'returns the variable' do
+          expect(subject.env(:foo)).to eq('bar')
+        end
+      end
+
+      context 'variable name does not exist' do
+        it 'raises an error' do
+          expect { subject.env(:baz) }.to raise_error(described_class::EnvironmentVariableMissingError)
+        end
       end
     end
 
@@ -26,27 +71,66 @@ module Exercise
 
         it 'makes subsitutions' do
           template = create_template(content: '<% substitute("foo" => "bar")%>foo')
-          subject.render_exercise(Dir.pwd, template.path)
+          subject.render_exercise(template.path)
 
           rendered_content = File.read(template.expected_rendered_filepath)
           expect(rendered_content).to include('bar')
         end
 
-        it 'adds the revision to the end of the file' do
-          template = create_template
-          subject.render_exercise(Dir.pwd, template.path)
+        context 'digest' do
+          it 'adds the revision to the end of the file' do
+            template = create_template
+            subject.render_exercise(template.path)
 
-          rendered_content = File.read(template.expected_rendered_filepath)
-          expected_digest = Digest::SHA2.file(template.path).hexdigest
+            rendered_content = File.read(template.expected_rendered_filepath)
+            expected_digest = subject.digest(path: File.expand_path("#{template.path}/../"),
+                                             digest_component: '',
+                                             excludes: [template.expected_rendered_filepath])
 
-          expect(rendered_content).to end_with("  \n\nRevision: #{expected_digest}")
+            expect(rendered_content).to end_with("  \n\nRevision: #{expected_digest}")
+          end
+
+          it 'excludes all templates and rendered files from the digest' do
+            template = create_template
+            excluded_files = []
+            expect(subject).to receive(:excluded_files).with(template.path).and_return(excluded_files)
+            expect(subject).to receive(:digest).with(path: File.dirname(template.templates_directory),
+                                                     digest_component: anything,
+                                                     excludes: excluded_files).and_call_original
+            subject.render_exercise(template.path)
+          end
+        end
+
+        describe '#excluded_files' do
+          context 'rendered file does not exist' do
+            it 'does not return the rendered destination of the subject template' do
+              template1 = create_template
+              template2 = create_template
+              subject.render_exercise(template1.path)
+
+              expect(subject.excluded_files(template2.path)).to_not include(template2.expected_rendered_filepath)
+            end
+          end
+
+          it 'returns all templates and corresponding files, except for the subject template' do
+            template1 = create_template
+            template2 = create_template
+            subject.render_exercise(template1.path)
+            subject.render_exercise(template2.path)
+            excluded_files = [template1.path,
+                              template1.expected_rendered_filepath,
+                              template2.expected_rendered_filepath]
+
+            expect(subject.excluded_files(template2.path)).to match_array(excluded_files)
+          end
         end
 
         context 'quiet' do
           context 'rendering succeeds' do
             it 'prints a quiet report' do
-              expected_output = "Generating file for: #{exercise_name}\n\n#{ok("Finished: #{exercise_name}")}"
-              subject.render_exercise(exercise_name, create_template.path)
+              template = create_template
+              expected_output = "Rendering: #{template.path}\n\n#{ok("Finished: #{template.path}")}"
+              subject.render_exercise(template.path)
               expect(subject.output.string.chomp).to eq(expected_output)
             end
           end
@@ -59,11 +143,11 @@ module Exercise
 
               template = create_template(content: '<% command("bad_command")%>')
 
-              subject.render_exercise(exercise_name, template.path)
+              subject.render_exercise(template.path)
 
               expected_error = error("Failed to generate file from: #{template.path}")
               backtrace = "#{command_error.message}\n#{command_error.backtrace}"
-              expected_output = "Generating file for: #{exercise_name}\n#{expected_error}\n#{backtrace}"
+              expected_output = "Rendering: #{template.path}\n#{expected_error}\n#{backtrace}"
 
               expect(subject.output.string.chomp).to eq(expected_output)
             end
@@ -77,8 +161,9 @@ module Exercise
 
           context 'rendering succeeds' do
             it 'prints a quiet report' do
-              expected_output = "Generating file for: #{exercise_name}\n#{ok("Finished: #{exercise_name}")}"
-              subject.render_exercise(exercise_name, create_template.path)
+              template = create_template
+              expected_output = "Rendering: #{template.path}\n#{ok("Finished: #{template.path}")}"
+              subject.render_exercise(template.path)
               expect(subject.output.string.chomp).to eq(expected_output)
             end
           end
@@ -95,42 +180,8 @@ CONTENT
 
           write_to_file('temp.file', 'content')
           template = create_template(content: content)
-          subject.render_exercise('whatever', template.path)
+          subject.render_exercise(template.path)
           expect(File.read(template.expected_rendered_filepath)).to include(expected_text % 0)
-        end
-      end
-    end
-
-    describe '#render_exercises' do
-      it 'renders all .erb templates found' do
-        template1 = create_template
-        template2 = create_template
-        subject.render_exercises(dir: Dir.pwd)
-        expect(Dir['*.md']).to match_array([template1.expected_rendered_filepath,
-                                            template2.expected_rendered_filepath])
-      end
-
-      context 'no error thrown' do
-        it 'returns true' do
-          create_template
-          expect(subject.render_exercises(dir: Dir.pwd)).to eq(true)
-        end
-      end
-
-      context 'error thrown in template' do
-        it 'returns false' do
-          expected_file = create_template(content: '<% raise %>')
-          expect(subject.render_exercises(dir: Dir.pwd)).to eq(false)
-          expect(File.exist?(expected_file.expected_rendered_filepath)).to eq(false)
-        end
-
-        it 'still renders the others' do
-          expected_file1 = create_template
-          create_template(content: '<% raise %>')
-          expected_file2 = create_template
-          expect(subject.render_exercises(dir: Dir.pwd))
-          expect(Dir['*.md']).to match_array([expected_file1.expected_rendered_filepath,
-                                              expected_file2.expected_rendered_filepath])
         end
       end
     end

@@ -5,6 +5,9 @@
 
 
 
+
+
+
 ## Introduction
 Development teams working on a common codebase are **continuously** making changes to that common code. In order for a team member to know that their changes are compatible, **continuous** checking of the code base should be happening too. I.e. every time some one makes a change, the code base should be tested to ensure it is continuing to work as intended. The idea is that the more frequently changes are integrated, the smaller those changes are likely to be and therefore the lower the risk is that they will break something. This is where the practice of Continuous Integration (CI) comes in.
 
@@ -23,7 +26,7 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd exercises/CI/introduction_to_ci`
+- `cd ./exercises/CI/introduction_to_ci`
 
 In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: `cic up` 
 
@@ -145,7 +148,6 @@ to complete this exercise do the following:
 **Note:** Make sure that it is enabled and runs successfully.
 
 
-
 2. The proposed change sits uncommitted in `./resources/checkout`.
 ```
   On branch master
@@ -176,4 +178,4 @@ Continuous Integration plays a vital role in ensuring that the software we right
 
 **Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.  
 
-Revision: 415c173e2e2d0b43cddf557a20b7c7e7419af5c5b0700d35f940e20a095de8e4
+Revision: 85a0119ef802a4f0994080b10c5c1d54

@@ -14,23 +14,36 @@ module Exercise
       true
     end
 
+    desc 'checksum', 'generate checksum'
+    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
+    def checksum(template)
+      parent_directory = full_path("#{templates_directory(template)}/..")
+
+      say digest(path: parent_directory,
+                 digest_component: options[:digest_component],
+                 excludes: excluded_files(full_path(template)))
+    end
+
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
-    option :pretty_exercise_path, type: :string
+    option :environment_variables, type: :string, required: false
+    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
 
-    def generate(path = Dir.pwd)
-      say <<~MESSAGE
-        #############################
-        # Generating exercise files #
-        #############################
-      MESSAGE
+    def generate(template)
+      environment_variables = options[:environment_variables].to_s.scan(%r{([\w+.]+)\s*=\s*([\w+./-]+)?}).to_h
+      environment_variables.each do |key, value|
+        ENV[key] = value
+      end
 
-      # TODO: - consider searching backwards for the gemfile or .git directory or something that will be at the root?
+      template_message = "# Generating template: #{template} #"
+      top_and_tail = ''.rjust(template_message.length, '#')
+      say "#{top_and_tail}\n#{template_message}\n#{top_and_tail}"
 
-      raise Thor::Error unless render_exercises(dir: path, pretty_exercise_path: options[:pretty_exercise_path])
+      raise Thor::Error unless render_exercise(template, digest_component: options[:digest_component])
     end
 
     desc 'create <NAME>', 'create a new exercise'
+
     def create(name)
       say "Creating new exercise: #{name}"
       FileUtils.mkdir_p(name)

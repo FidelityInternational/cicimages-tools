@@ -24,6 +24,10 @@ module Commandline
       OUTPUT
     end
 
+    def ==(other)
+      other.to_s == to_s
+    end
+
     private
 
     def normalise(string)

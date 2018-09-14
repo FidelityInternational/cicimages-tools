@@ -1,5 +1,8 @@
 # Introduction to Continuous Integration (CI)
 
+<% checkout_dir = './resources/checkout' %>
+<% command("rm -rf #{checkout_dir}") %>
+
 <% concourse_address = 'http://concourse:8080' %>
 
 <% substitute(concourse_address => 'http://127.0.0.1:8080')%>
@@ -27,7 +30,7 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd <%=exercise_path %>`
+- `cd <%=env('exercise_path') %>`
 
 In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: `<%= command('cic up') %>` <% cic_down_command = after_rendering_run('cic down') %>
 <% sleep 15 %>
@@ -93,7 +96,6 @@ to complete this exercise do the following:
 **Note:** Make sure that it is enabled and runs successfully.
 
 <% show_remote_command = 'git remote get-url origin' %>
-<% checkout_dir = './resources/checkout' %>
 2. The proposed change sits uncommitted in `<%= path(checkout_dir) %>`.
 ```
   <%=command_output("cd #{checkout_dir} && git status")%>
@@ -121,6 +123,7 @@ Commit and push your team mate's changes to GIT and see what the Concourse makes
   COMMAND
 
   command(git_command)
+  after_rendering_run("rm -R #{checkout_dir}")
 
   command("#{fly_cli}  -t local destroy-pipeline -p #{intro_pipeline} -n")
   application_pipeline = 'application-pipeline'
@@ -139,7 +142,7 @@ Commit and push your team mate's changes to GIT and see what the Concourse makes
     end
   end
 
-  command("rm -R #{checkout_dir}")
+
 %>
 
 ## Summary

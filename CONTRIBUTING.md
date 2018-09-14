@@ -40,13 +40,13 @@ Exercises can consist of the following components:
 On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `exercise create exercise_name`. This command will create a skeleton exercise directory with the all the files that you are likely to need.
 ```
 Creating new exercise: exercise_name
-Created: exercise_name/tests
 Created: exercise_name/.templates
 Created: exercise_name/.templates/README.md.erb
 Created: exercise_name/resources
 Created: exercise_name/.cic
 Created: exercise_name/.cic/docker-compose.yml
 Created: exercise_name/.cic/after
+Created: exercise_name/tests
 [OK] Complete
 
 ```
@@ -89,13 +89,14 @@ E.g.
 ```
 #### Generating documentation
 
-To render the templates in the `.templates` directory, navigate to the root of your exercise directory and run `exercise generate`.
+To render a template in the `.templates` directory, navigate to the root of your exercise directory pass the template path to the `exercise generate` command. For example running `exercise generate .templates/README.md.erb` will render the example README that was created by `exercise create`.
+
 ```
-#############################
-# Generating exercise files #
-#############################
-Generating file for: README.md.erb
-[OK] Finished: README.md.erb
+#################################################
+# Generating template: .templates/README.md.erb #
+#################################################
+Rendering: .templates/README.md.erb
+[OK] Finished: /vols/ansible_29605/exercise_name/.templates/README.md.erb
 
 ```
 
@@ -119,6 +120,7 @@ There will be times where you want to wait for something to happen before the `c
 
 
 
+
   
 
-Revision: 18a8f9c91b3737b9b48969557bf0ca4ca18c64554da45e338392556dad1d59b3
+Revision: 26bc5dfe150a958b7157db742234ec85

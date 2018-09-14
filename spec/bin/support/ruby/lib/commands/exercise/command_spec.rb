@@ -30,15 +30,36 @@ module Exercise
 
     # TODO: - put the #on the method name
     describe 'generate' do
-      it 'generates exercises for the current directory' do
-        expect(subject).to receive(:render_exercises).with(dir: Dir.pwd, pretty_exercise_path: nil).and_return(true)
-        subject.generate
+      include_context :templates
+
+      let!(:template) { create_template }
+
+      it 'generates content from the given template' do
+        expect(subject).to receive(:render_exercise).with(template.path, digest_component: anything).and_return(true)
+        subject.generate(template.path)
       end
 
       context 'rendering fails' do
         it 'raises and error' do
-          expect(subject).to receive(:render_exercises).with(dir: Dir.pwd, pretty_exercise_path: nil).and_return(false)
-          expect { subject.generate }.to raise_error(Thor::Error)
+          expect(subject).to receive(:render_exercise).with(template.path, digest_component: anything).and_return(false)
+          expect { subject.generate(template.path) }.to raise_error(Thor::Error)
+        end
+      end
+
+      context 'environment_variables option supplied' do
+        it 'makes those variables available' do
+          subject.options = { environment_variables: 'foo=bar, billy=bob' }
+          subject.generate(template.path)
+          expect(ENV['foo']).to eq('bar')
+          expect(ENV['billy']).to eq('bob')
+        end
+      end
+
+      context '--digest-component' do
+        it 'passes it on when rendering the template' do
+          subject.options = { digest_component: :expected }
+          expect(subject).to receive(:render_exercise).with(template.path, digest_component: :expected).and_return(true)
+          subject.generate(template.path)
         end
       end
     end
