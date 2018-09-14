@@ -50,7 +50,7 @@ namespace :course_content do
   end
 
   desc 'generate course content from .templates/*.erb templates'
-  task :generate, [:mode, :path] do |_task, args|
+  task :generate, [:mode, :path] => :yard do |_task, args|
     path = args[:path] || File.expand_path("#{__dir__}/..")
 
     failures = exercise_directories(path).collect do |templates_dir|
