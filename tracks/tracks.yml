@@ -7,3 +7,4 @@ tracks:
   - name: continuous_integration
     exercises:
     - Introduction to Continuous Integration: 'exercises/CI/introduction_to_ci/README.md'
+    - Linting: 'exercises/CI/linting/README.md'
