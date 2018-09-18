@@ -9,7 +9,7 @@ class CourseContentOutOfDateError < StandardError
   def initialize(files)
     error = <<~ERROR
       The following files are out of date and need to be Re-rendered:
-      - #{files.collect {|file| File.expand_path(file)}.join("\n- ")}"
+      - #{files.collect { |file| File.expand_path(file) }.join("\n- ")}"
     ERROR
 
     super error
@@ -20,7 +20,7 @@ class CourseContentRenderingError < StandardError
   def initialize(files)
     error = <<~ERROR
       Unable to render:
-      - #{files.collect {|file| File.expand_path(file)}.join("\n- ")}"
+      - #{files.collect { |file| File.expand_path(file) }.join("\n- ")}"
     ERROR
 
     super error
@@ -28,7 +28,7 @@ class CourseContentRenderingError < StandardError
 end
 
 def renderer
-  Object.new.tap {|o| o.extend(Exercise::RenderMethods)}
+  Object.new.tap { |o| o.extend(Exercise::RenderMethods) }
 end
 
 namespace :course_content do
@@ -44,13 +44,13 @@ namespace :course_content do
       templates("#{templates_dir}/../")
     end.flatten
 
-    out_of_date_files = out_of_date_files.collect {|template| renderer.render_file_path(template)}
+    out_of_date_files = out_of_date_files.collect { |template| renderer.render_file_path(template) }
 
     raise CourseContentOutOfDateError, out_of_date_files unless out_of_date_files.empty?
   end
 
   desc 'generate course content from .templates/*.erb templates'
-  task :generate, [:mode, :path] => :yard do |_task, args|
+  task :generate, %i[mode path] => :yard do |_task, args|
     path = args[:path] || File.expand_path("#{__dir__}/..")
 
     failures = exercise_directories(path).collect do |templates_dir|
@@ -88,16 +88,12 @@ namespace :course_content do
   end
 
   def updated?(template)
-    template = full_path(template)
     rendered_file = renderer.render_file_path(template)
     return true unless File.exist?(rendered_file)
 
-    parent_directory = full_path("#{File.dirname(template)}/..")
-
-    digest = renderer.digest(path: parent_directory,
+    digest = renderer.digest(path: full_path("#{File.dirname(template)}/.."),
                              digest_component: Courseware.tag,
                              excludes: renderer.excluded_files(full_path(template)))
-
 
     !File.read(rendered_file).include?(digest)
   end
@@ -105,7 +101,7 @@ namespace :course_content do
   def templates(dir)
     dir = File.expand_path(dir)
     Dir["#{dir}/.templates/*.md.erb"].collect do |template|
-      template = File.expand_path(template)
+      template = full_path(template)
       updated?(template) ? template : nil
     end.compact
   end

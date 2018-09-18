@@ -20,9 +20,9 @@ module Exercise
       # puts "files: #{files.join("\n")}"
 
       content = files.map { |f| File.read(f) }.join
-      digest = Digest::MD5.hexdigest(content << digest_component).to_s
+      Digest::MD5.hexdigest(content << digest_component).to_s
       # puts "path: #{digest}"
-      digest
+      # digest
     end
 
     def excluded_files(template)
