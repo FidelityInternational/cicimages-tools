@@ -14,7 +14,8 @@ if docker run --privileged \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
     -w "${volume_path}" \
-    "$(cic_image)" ansible-playbook "$@"
+    "$(cic_image)" \
+    /bin/bash -ilc "ansible-playbook $@"
 then
     container_id=$(docker ps -ql)
 
