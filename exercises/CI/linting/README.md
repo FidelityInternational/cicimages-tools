@@ -18,7 +18,7 @@ This exercise assumes that you have basic knowledge of at least one programming.
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd whatever`
+- `cd ./exercises/CI/linting`
 
 ### Installing a Linter
 All modern Languages have Linters. If your programming in Ruby you might use [Simplcov](https://github.com/colszowka/simplecov). If your using Python then, amongst otheres, there's [Pylint](https://www.pylint.org/). The means of installing your chosen Linter will be specific to the Linter. In the case of Pylint and Simplecov both can be installed using their language's respective package managers (pip and gem).
@@ -129,7 +129,7 @@ Don't forget to make sure that the tests are still passing after making your cha
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_2880, inifile: pytest.ini
+rootdir: /vols/pytest_11503, inifile: pytest.ini
 plugins: testinfra-1.15.0
 collecting 0 items                                                             collecting 0 items                                                             collecting 3 items                                                             collecting 4 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -142,4 +142,4 @@ tests/test_calculator_result.py::test_is_0_by_default PASSED             [100%]
 ```
   
 
-Revision: 40f68ebcf8409d9d84eb1e78177917cd
+Revision: 5cb0c75fb0bf989ac1f6f6f7db499f82

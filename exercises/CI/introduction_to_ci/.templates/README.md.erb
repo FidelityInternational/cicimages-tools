@@ -33,7 +33,6 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 - `cd <%=env('exercise_path') %>`
 
 In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: `<%= command('cic up') %>` <% cic_down_command = after_rendering_run('cic down') %>
-<% sleep 15 %>
 
 If all is well you should see the following:
 ```

@@ -30,10 +30,16 @@ Continuous integration servers are essentially glorified schedulers. They sit lo
 
 In this exercise you will be working using a CI server called Concourse. We've done the hard bit and have provided you with your very own Concourse installation. We've also provided you with a GIT server for your CI server to talk to. To start everything up, run: `cic up` 
 
-
 If all is well you should see the following:
 ```
-  waiting for Concourse to come up
+  waiting for Concourse to come up: 
+waiting for Concourse to come up: 
+waiting for Concourse to come up: 
+waiting for Concourse to come up: 
+waiting for Concourse to come up: 
+waiting for Concourse to come up: 
+waiting for Concourse to come up: 
+waiting for Concourse to come up:
 [OK] Environment cic'd up :)
 
 ```
@@ -176,6 +182,7 @@ Commit and push your team mate's changes to GIT and see what the Concourse makes
 ## Summary
 Continuous Integration plays a vital role in ensuring that the software we right works as intended. As the number of team members and the complexity of a code base goes up, simply being careful is an approach that is guaranteed to fail more often than it succeeds. If business confidence/satisfaction is going to remain high, then the quality and the frequency with which we deliver our software must remain high also. CI isn't a nice to have, rather it is essential and should pretty much be the first thing to be implemented in a project.
 
-**Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.  
+**Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.
+  
 
-Revision: 85a0119ef802a4f0994080b10c5c1d54
+Revision: ef8222d435422670621ebc4a745374f7

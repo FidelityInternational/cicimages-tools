@@ -9,7 +9,7 @@ class CourseContentOutOfDateError < StandardError
   def initialize(files)
     error = <<~ERROR
       The following files are out of date and need to be Re-rendered:
-      - #{files.collect { |file| File.expand_path(file) }.join("\n- ")}"
+      - #{files.collect {|file| File.expand_path(file)}.join("\n- ")}"
     ERROR
 
     super error
@@ -20,7 +20,7 @@ class CourseContentRenderingError < StandardError
   def initialize(files)
     error = <<~ERROR
       Unable to render:
-      - #{files.collect { |file| File.expand_path(file) }.join("\n- ")}"
+      - #{files.collect {|file| File.expand_path(file)}.join("\n- ")}"
     ERROR
 
     super error
@@ -28,7 +28,7 @@ class CourseContentRenderingError < StandardError
 end
 
 def renderer
-  Object.new.tap { |o| o.extend(Exercise::RenderMethods) }
+  Object.new.tap {|o| o.extend(Exercise::RenderMethods)}
 end
 
 namespace :course_content do
@@ -44,7 +44,7 @@ namespace :course_content do
       templates("#{templates_dir}/../")
     end.flatten
 
-    out_of_date_files = out_of_date_files.collect { |template| renderer.render_file_path(template) }
+    out_of_date_files = out_of_date_files.collect {|template| renderer.render_file_path(template)}
 
     raise CourseContentOutOfDateError, out_of_date_files unless out_of_date_files.empty?
   end
@@ -60,7 +60,8 @@ namespace :course_content do
       flags << " --digest-component=#{Courseware.tag}"
 
       say "Rendering templates in: #{templates_dir}"
-      templates(parent_directory).find_all do |template|
+      templates = templates(parent_directory)
+      templates.find_all do |template|
         source = "source #{root_dir}/bin/.env"
         run("#{source} && exercise generate #{relative_path(template, parent_directory)} #{flags}",
             dir: parent_directory,
@@ -74,6 +75,10 @@ namespace :course_content do
     Dir["#{path}/**/.templates"]
   end
 
+  def full_path(path)
+    File.expand_path(path)
+  end
+
   def root_dir
     "#{__dir__}/../"
   end
@@ -83,15 +88,18 @@ namespace :course_content do
   end
 
   def updated?(template)
+    template = full_path(template)
     rendered_file = renderer.render_file_path(template)
     return true unless File.exist?(rendered_file)
 
-    source = "source #{root_dir}/bin/.env"
-    parent_directory = File.expand_path("#{File.dirname(template)}/..").to_s
-    template = relative_path(template, parent_directory)
-    command = "#{source} && exercise checksum #{template} --digest-component #{Courseware.tag}"
+    parent_directory = full_path("#{File.dirname(template)}/..")
 
-    !File.read(rendered_file).include?(run(command, dir: parent_directory).stdout)
+    digest = renderer.digest(path: parent_directory,
+                             digest_component: Courseware.tag,
+                             excludes: renderer.excluded_files(full_path(template)))
+
+
+    !File.read(rendered_file).include?(digest)
   end
 
   def templates(dir)

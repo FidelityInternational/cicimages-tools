@@ -86,21 +86,10 @@ Your playbook will need to:
 
 Because the team wants you to be sure everything is working before you tell them that you're finished, they've helpfully supplied a set of automated acceptance tests for your drive the code that you write. The tests can be found in `./tests`.
 
-Execute the tests by running: `pytest --hostname unavailable_host`
+Execute the tests by running: `pytest --ansible-host=unavailable_host`
 **Note** We haven't built anything yet so it's fine to have run the command as it was specified.
 This outputs the following. (We've omitted the stack traces):
 ```
-============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /usr/bin/python
-cachedir: .pytest_cache
-rootdir: /vols/pytest_24800, inifile: pytest.ini
-plugins: testinfra-1.15.0
-collecting ... collected 4 items
-
-tests/webserver_test.py::test_apache_installed FAILED                    [ 25%]
-tests/webserver_test.py::test_apache_is_enabled_as_service FAILED        [ 50%]
-tests/webserver_test.py::test_apache_installed_is_running FAILED         [ 75%]
-tests/webserver_test.py::test_website_deployed FAILED                    [100%]
 
 ```
 The output shows us that two tests attempted to verify:
@@ -113,7 +102,7 @@ All of these fail because they are unable to connect to the server we specified 
 
 
 ### Writing a playbook
-Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `/vols/ansible_1753/writing_playbooks/ansible/webserver.yml` 
+Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `/vols/ansible_7121/writing_playbooks/ansible/webserver.yml` 
 
 ```YAML
 ---
@@ -140,7 +129,7 @@ Let's create our first playbook using the the YAML we looked at earlier. Write t
 **Note:** Playbooks can be named anything. By convention we will store them in a folder called 'ansible'.
 
 
-Now execute playbook with the following command: `ansible-playbook /vols/ansible_1753/writing_playbooks/ansible/webserver.yml`
+Now execute playbook with the following command: `ansible-playbook /vols/ansible_7121/writing_playbooks/ansible/webserver.yml`
 
 ```
 PLAY [Setup a webserver.] ******************************************************
@@ -190,21 +179,10 @@ This should output the following:
      Stop with   : cic stop cic_container-xxxxxxxxxxxxxxxx
 ```
 Run the test again, this time however we'll point it at the host that we want to run the test against.
-To do this run: `pytest --hostname cic_container-xxxxxxxxxxxxxxxx`
+To do this run: `pytest --ansible-host=cic_container-xxxxxxxxxxxxxxxx`
 
 We can see from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
-============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /usr/bin/python
-cachedir: .pytest_cache
-rootdir: /vols/pytest_28685, inifile: pytest.ini
-plugins: testinfra-1.15.0
-collecting ... collected 4 items
-
-tests/webserver_test.py::test_apache_installed PASSED                    [ 25%]
-tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
-tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
-tests/webserver_test.py::test_website_deployed FAILED                    [100%]
 
 ```
 
@@ -249,18 +227,18 @@ You'll know that you've got it right when the acceptance tests pass :)
 
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /usr/bin/python
+platform linux -- Python 3.7.0, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_7042, inifile: pytest.ini
+rootdir: /vols/pytest_9708, inifile: pytest.ini
 plugins: testinfra-1.15.0
-collecting ... collected 4 items
+collecting 0 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
 tests/webserver_test.py::test_apache_installed PASSED                    [ 25%]
 tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 1.03 seconds ===========================
+=========================== 4 passed in 2.07 seconds ===========================
 ```
 
 Good luck!
@@ -282,4 +260,4 @@ You have just learned how to:
 
   
 
-Revision: 89b27b7a92a5c86fd0f9adbd9918d9e2
+Revision: b66fdf75893f0ef63409896176412736
