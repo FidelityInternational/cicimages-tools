@@ -19,7 +19,7 @@ module Commandline
   def run(command, dir: nil, silent: true)
     options = {}
     options[:chdir] = dir if dir
-    stdin, stdout, stderr, thread = Open3.popen3("bash -c '#{command}'", options)
+    stdin, stdout, stderr, thread = Open3.popen3("bash -lc '#{command}'", options)
     stderr_output = capture_output(stderr, silent: silent)
     stdout_output = capture_output(stdout, silent: silent)
 
