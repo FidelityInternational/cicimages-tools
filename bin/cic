@@ -34,7 +34,7 @@ else
     copy_to_cic_volume "$(pwd)/." "${volume_path}"
 fi
 
-docker run ${options} \
+docker run ${options} -t \
     --volumes-from "$(cic_volumes_container)" \
     --network "$(cic_network)" \
     -w "${volume_path}" \
