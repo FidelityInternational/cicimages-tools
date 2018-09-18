@@ -5,6 +5,11 @@ set -e
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 resources_dir="${script_dir}/../resources"
 repos_dir="${resources_dir}/git-server/repos"
-rm -R "${resources_dir}/git-server/repos"
+
+if [ -d "${repos_dir}" ]; then
+  rm -R "${repos_dir}"
+fi
+
 mkdir "${repos_dir}"
+
 cp -R "${resources_dir}/backup/application-repo.git" "${repos_dir}/"
