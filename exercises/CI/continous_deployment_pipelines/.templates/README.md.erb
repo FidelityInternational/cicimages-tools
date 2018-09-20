@@ -1,9 +1,18 @@
+<% require 'yaml' %>
+<% concourse_address = 'http://concourse:8080' %>
+
+<% substitute(concourse_address => 'http://127.0.0.1:8080')%>
+<%
+  fly_cli = './resources/linux/fly'
+%>
 ## Introduction
 Continuous integration is an important step in ensuring that code is of good quality and works as intended, however well tested code isn't worth much if it's not released and bringing value to users.
 
-Continuous deployment is, as the name suggest, the practice of automating the release of software as soon as it's verified to be ready.
+Continuous Deployment (CD) is, as the name suggest, the practice of automating the release of software as soon as it's verified to be ready.
 
-It may sound obvious to say but releasing software when it's ready is increadibly important
+A CD pipeline is the name given to an automated process constructed to take a new/updated code and put it through all of the stages, checks and balances necessary to verify it's suitability and to ultimately release that code to production without the need for human intervention.
+
+It may sound obvious to say but releasing software when it's ready is incredibly important
 
 When a new product is built it is the result of a lot of hard work. E.g. analysis, programming and testing. However until a product is released to it's target audience, all of that effort can be considered waste activity as it is for nothing unless a release happens. Often a new version of a product contains new features that are based on assumptions as to what users want and how they will want to use it. Those assumptions can be tested until the product is in users hand's and they are actually using it. Getting feedback on new features is key to driving requirements for subsequent releases. Companies that are able to release software very frequently put themselves at a huge advantage, when compared to competitors who are unable to do so, because they are able to:
 - react more quickly
@@ -12,7 +21,6 @@ When a new product is built it is the result of a lot of hard work. E.g. analysi
 
 ## Learning Objectives
 - Learn the features of Concourse that enable building continuous deployment pipelines
-- Use concourse ci to setup a continous deployment pipeline
 
 ## Useful Terminology
 `# Optional - any key terms you intend to use in your exercise, if appropriate, could be listed here`
@@ -24,23 +32,363 @@ When a new product is built it is the result of a lot of hard work. E.g. analysi
     - Create and trigger pipelines
     - Navigate the user interface.
 - Appreciation of continuous integration
-Don't worry if you need to brush up on either of these things, take a look at the [Introduction to CI]() exercise to get up to speed.
+Don't worry if you need to brush up on either of these things, take a look at the [Introduction to CI](https://github.com/lvl-up/ci-cd-training/tree/master/exercises/CI/introduction_to_ci) exercise to get up to speed.
+
+## Concourse
+Concourse is a CI server that has an important philosophy, that being that every, that is EVERYTHING, should be totally portable. I.e. should be possible to move builds to another instance of concourse without the need for customisation to the server itself. This removes the anxiety that surround aging CI server installations that people rely on, nobody know's how to rebuild and that would cause chaos if they were to disappear. Concourse achieves this by putting the onus on users to store and version control configuration and to supply the environments that all commands run on. This includes the ones that are part of configured tasks themselves.
+
+Concourse uses [YAML](http://yaml.org/spec/1.2/spec.html) to configure it. YAML is a simple medium structuring data and is very similar to JSON. Be aware the YAML is white space sensitive as indenting data relates it to the surrounding item.
 
 ## Tutorial
-### pipelines
-Concourse
-### Resources
-### Jobs
+**Note:** Before going any further do the following:
+- `cd YOUR_CLONE_OF_THIS REPO`
+- `source ./bin/env`
+- `cd <%=env('exercise_path') %>`
+
+
+The following tutorial will see us use Concourse, in order to do so we must be logged in. run `<%= command("#{fly_cli} -t local login --concourse-url #{concourse_address} -u test -p test") %>`
+
+<%
+
+repo_resource_yaml=<<YAML
+- name: repo
+  type: git
+  source:
+    uri: http://git-server/repo.git
+    branch: master
+
+YAML
+
+build_job_yaml=<<YAML
+- name: build
+  plan:
+  - get: repo
+    trigger: true
+  - task: pytest
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: lvlup/ci_course_python
+      inputs:
+      - name: repo
+        path: .
+      run:
+        path: ls
+
+
+YAML
+
+docker_resource_name = 'release-candidate'
+docker_resource_yaml=<<YAML
+- name: #{docker_resource_name}
+  type: docker-image
+  source:
+    repository: docker-registry:5000/lvlup/experiment
+    tag: "latest"
+    insecure_registries: [ "docker-registry:5000" ]
+YAML
+
+put_to_docker_resource_yaml=<<YAML
+- put: #{docker_resource_name}
+  params:
+    build: repo
+YAML
+
+integration_test_job_yaml=<<YAML
+- name: integration-test
+  plan:
+  - get: release-candidate
+    trigger: true
+    passed:
+    - build
+  - task: Integration Test
+    image: release-candidate
+    config:
+      platform: linux
+      run:
+        dir: ../../../cic/bin
+        path: shovel
+        args: [ test.integration ]
+YAML
+
+security_test_job_yaml=<<YAML
+- name: security-test
+  plan:
+  - get: release-candidate
+    trigger: true
+    passed:
+    - build
+  - task: Security Test
+    image: release-candidate
+    config:
+      platform: linux
+      run:
+        dir: ../../../cic/bin
+        path: shovel
+        args: [ test.security ]
+YAML
+
+stage_deploy_job_yaml=<<YAML
+- name: staging
+  plan:
+  - get: release-candidate
+    trigger: true
+    passed:
+    - security-test
+    - integration-test
+  - task: Deploy Stage
+    image: release-candidate
+    config:
+      platform: linux
+      run:
+        dir: ../../../cic/bin
+        path: shovel
+        args: [ deploy.stage ]
+YAML
+
+production_deploy_job_yaml=<<YAML
+- name: production
+  plan:
+  - get: release-candidate
+    trigger: true
+    passed:
+    - staging
+  - task: Deploy production
+    image: release-candidate
+    config:
+      platform: linux
+      run:
+        dir: ../../../cic/bin
+        path: shovel
+        args: [ deploy.production ]
+YAML
+
+
+pipeline_name = 'simple-pipeline'
+simple_pipeline_path = "#{pipeline_name}.yml"
+pipeline_url = "#{concourse_address}/teams/main/pipelines/#{pipeline_name}"
+
+
+def yl string
+  YAML.load(string)
+end
+
+
+yaml = {
+    'resources' => yl(repo_resource_yaml).concat(yl(docker_resource_yaml)),
+    'jobs' => YAML.load(build_job_yaml).tap do | jobs |
+      jobs.first['plan'].push(*yl(put_to_docker_resource_yaml))
+    end.concat(yl(integration_test_job_yaml))
+                  .concat(yl(security_test_job_yaml))
+                  .concat(yl(stage_deploy_job_yaml))
+                  .concat(yl(production_deploy_job_yaml))
+}
+pipeline_name = 'simple-pipeline'
+simple_pipeline_path = "#{pipeline_name}.yml"
+
+pipeline_url = "#{concourse_address}/teams/main/pipelines/#{pipeline_name}"
+
+write_to_file(simple_pipeline_path, yaml.to_yaml)
+command("#{fly_cli}  -t local set-pipeline -p #{pipeline_name} -c #{simple_pipeline_path} -n")
+command("#{fly_cli} -t local expose-pipeline -p #{pipeline_name}")
+%>
+
+![Passing Pipeline](<%= continuous_deployment_pipeline_image = capture(pipeline_url,  './more_complicated_pipeline.png') %>)
+
+A [pipeline](https://concourse-ci.org/pipelines.html) consists of [Resources](https://concourse-ci.org/resources.html) and [Jobs](https://concourse-ci.org/jobs.html) which are groups of [Tasks](https://concourse-ci.org/tasks.html). These elements are strung together to aciave some particular outcome.
+
+The example pipeline above uses these elements to wait for changes to appear in the VCS resource called `repo` and triggers job called `build` to produce a docker image resource called `<%= docker_resource_name %>`. From here `<%= docker_resource_name %>` is used in both `security-test` and `integration-test` jobs before it it is deployed to the staging environment using the `staging` job. If `staging` is successful, then and only then is `<%= docker_resource_name %>` deployed to the production environment using the `production` job.
+
+By the end of this tutorial you'll have learn't about each of the building blocks mentioned above and have built this pipeline for yourself. Let's get cracking!
+
 ### Tasks
-#### Inputs
+Tasks are simply units of work. They can be configured to do what ever you want them to. Let's define our first task
+
+<%
+  helloworld_task_path = 'hello-world-task.yml'
+  platform = 'platform: linux'
+
+  image_resource=<<RESOURCE
+image_resource:
+  type: 'docker-image'
+  source: {repository: busybox}
+RESOURCE
+
+  helloworld_command =<<RUN
+run:
+  path: bash
+  args:
+   - |
+     echo "hello"
+RUN
+
+  helloworld_task_yaml =<<YAML
+#{platform}
+
+#{image_resource}
+#{helloworld_command}
+YAML
+
+%>
+
+Write the following content to a file called <%= write_to_file(helloworld_task_path, helloworld_task_yaml) %>
+
+```YAML
+<%= helloworld_task_yaml %>
+```
+
+now let's get concourse to run this task for us.
+run `<%= command("#{fly_cli} -t local execute -c #{helloworld_task_path}") %>`
+
+This should output the following:
+```
+<%= last_command_output %>
+```
+
+The output communicates the following:
+0. The instruction to execute our task has been received
+0. The environment that is needed to execute our command has been downloaded
+0. The command has been run
+0. The output of the command
+
+
+Let's take a look at the YAML and what it instructed Concourse to do more closely:
+
+The above yaml specified the two things:
+- Environment required to run the command on
+```
+<%= platform %>
+
+<%= image_resource %>
+```
+Earlier we said that Concourse promotes portable builds by requiring the user to supply the environment that all commands run on. The above config is specifying that a Linux type environment is required to run the command and that the environment should be created by using a docker image.
+
+**Note:** 'type' is indented underneath 'image_resource', in [YAML](http://yaml.org/spec/1.2/spec.html) it is a child of this structure indeed is required to be in this position in order to properly describe the 'image_resource' to Concourse.
+
+- The command itself
+```
+<%= helloworld_command %>
+```
+The above command is very simple, the echo command is being called with a parameter of 'hello world'
+
+For more information on how tasks can be configured see the [Concourse documentation on Tasks](https://concourse-ci.org/tasks.html)
+
+#### Resources
+Resources are how concourse is told where to get things from and where things can be put. Indeed the above tasks defined a resource:
+```
+<%= image_resource %>
+```
+
+In the task we defined we early, we defined an image_resource, this by default is interpreted as a [docker-image-resource](https://github.com/concourse/docker-image-resource). In the [source configuration section](https://github.com/concourse/docker-image-resource#source-configuration) of of the docker-image-resource documentation you will find all of configuration options available for specifying a target docker image.
+
+**Note: **  For now avoid reading any lower than the [source configuration section](https://github.com/concourse/docker-image-resource#source-configuration) as the subsequent documentation specifies how to use the docker-image-resource as an output for publishing docker images.
+
+Another common resource type will be repositories from which concourse should pull code.
+```YAML
+resources:
+- name: repo
+  type: git
+  source:
+    uri: ssh://git@git-server/git-server/repos/application-repo.git
+    branch: master
+```
+
+The above resource configuration defines a resource:
+- Named: repo
+- Of type: git - This identifies that the [git resource plugin](https://github.com/concourse/git-resource) should be used to access the resource specified.
+- who's source can be found at the given uri and on the given branch.
+
+Each resource can be used as an output, the specific configuration for doing this is specific to each type of resource. We will look at how to do this for our 'release-candidate' docker-image-resource shortly.
+
+### Pipelines and Jobs
+Now that we know how to define resources and tasks, we can glue them together with jobs and start to build our pipeline.
+
+#### Declaring Dependencies
+First lets configure a pipeline that simply builds our release candidate but doesn't go as far as outputting it to the release-candidate resource. In order to do this we will need to define a resource to represent our git repository and a job that is dependant on it.
+
+<%
+build_pipeline_yaml = {
+  'resources' => yl(repo_resource_yaml),
+  'jobs' => yl(build_job_yaml)
+}.to_yaml
+
+build_pipeline_name = 'build_pipeline'
+build_pipeline_yaml_path = write_to_file("#{build_pipeline_name}.yml", build_pipeline_yaml)
+push_build_pipeline_command = command("#{fly_cli}  -t local set-pipeline -p #{build_pipeline_name} -c #{build_pipeline_yaml_path} -n")
+command("#{fly_cli} -t local expose-pipeline -p #{build_pipeline_name}")
+
+build_pipeline_url = "#{concourse_address}/teams/main/pipelines/#{build_pipeline_name}"
+%>
+
+To do this, write the following YAML to a file called <%=  build_pipeline_yaml_path %>:
+
+```YAML
+<%= build_pipeline_yaml %>
+```
+
+Important things to notice are:
+- Repo Resource
+    - **source:** This is a privately running repository that was brought up on your machine by the `cic up` command. **Note:** You would **not** ordinarily hard code the private key in to this definition for security reasons, however as this is a key for a test repository that only you can access and will disappear as soon as you run `cic down`, it's not something that we have to worry about for now.
+- Build Job
+  - **plan:get** - A requirement on the repo resource defined above is declared.
+  - **plan:get:trigger true** - This job will be triggered if a change is made to the repo resource. E.g. a commit is detected.
+  - **task** - This is a list of tasks. In our case we have declared a sigle task which is declared to run the command `pytest` on a docker-image-resource. This task takes the a copy of the repo resource as input.
+
+Push the pipeline to concourse by running: `<%= push_build_pipeline_command %>` and login in to to the Concourse dashboard, with user 'test and password 'test', to see the pipeline that the pipeline you pushed looks just like the following:
+![Build Pipeline](<%= capture(build_pipeline_url,  './build_pipeline.png') %>)
+
+The Concourse UI [provides a graphical representation](https://medium.com/concourse-ci/concourse-pipeline-ui-explained-87dfeea83553) of pipelines and their state. In our pipeline, the 'repo' resource is denoted as a resource by being in a box with a black background. There is a solid connecting 'repo' to 'run tests' which indicates that the changes to 'repo' will automatically trigger 'run tests.
+
+
+<%
+
+build_job = yl(build_job_yaml).tap do | jobs |
+  jobs.first['plan'].push(*yl(put_to_docker_resource_yaml))
+end
+build_pipeline_yaml = {
+  'resources' => yl(repo_resource_yaml).concat(yl(docker_resource_yaml)),
+  'jobs' => build_job
+}.to_yaml
+
+%>
+
 #### Outputs
+The next step is to publish our `release-candidate`. Jobs can can be configured to push output to resources. Concourse's [plugin framework](https://concourse-ci.org/implementing-resources.html) dictates that plugins must provide an `in` and and `out` by which resources can be pulled and pushed respectively. When a job such as the following declares a `get: repo`, this is tells concourse to use the in hook provided by the git-resource plugin to pull a copy of repo in to the job.
+```YAML
+<%= build_job_yaml %>
+```
 
-## Exercise
-`# required - Following the tutorial, provide an exercise that requires the participant use the knowledge that they have gained through the intro and tutorial`
+Similarly adding the following `put` declaration to the job definition in <%= write_to_file(build_pipeline_yaml_path, build_pipeline_yaml) %> tells concourse to push a new version of the `release-candidate` resource via the out hook provided by the [docker-image-resource plugin](https://github.com/concourse/docker-image-resource)
+```YAML
+<%= put_to_docker_resource_yaml %>
+```
 
-## Verification test
-`# Ideal but optional - Supply an acceptance test that participants can execute to validate that they have completed the exercise`
+After adding the above snippet to your job YAML you should have a definition that reads as follows:
+```YAML
+  <%= build_job.to_yaml %>
+```
+
+Re-push the pipeline to concourse by running: `<%= command(push_build_pipeline_command) %>`, refresh the browser and you should see that your pipeline looks as follows:
+
+![Publishing Build Pipeline](<%= capture(build_pipeline_url,  './publishing_build_pipeline.png') %>)
+
+## Now it's your turn.
+Believe it or not you have now learnt all that you need to know in order to build the rest of the pipeline we looked at earlier and that is shown below.
+
+![Publishing Build Pipeline](<%= continuous_deployment_pipeline_image %>)
+
+Use the what you've learnt so far, and the above image as guidance, declare the rest of the YAML necessary to push the required pipeline to concourse.
+
+The additional jobs should do the following:
+- integration tests - should run the command 'shovel test.integration' using the `release-candidate`
+- security tests - should run the command 'shovel test.security' using the `release-candidate`
+- staging - should run the command 'deploy.stage' using the `release-candidate` **only** if there is a version available that made it through the integration and security tests jobs. Check out the [ste passed](https://concourse-ci.org/get-step.html#get-step-passed) for information on how to do this.
+- production - should run the command 'shovel deploy.production' using the `release-candidate` **only** if there is a version available that made it through the staging job.
 
 
 
-Revision: 9c5e63708081ca743d6cf48af3f22642
+
+
+

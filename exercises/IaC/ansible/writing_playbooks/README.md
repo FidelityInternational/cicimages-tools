@@ -15,7 +15,7 @@ Ansible is a powerful tool that removes a number of the complexities of working 
  - Write your first ansible playbook
 
 ## Introduction to YAML
-Before we go any further let's break down the anatomy of playbooks. Playbooks are written in [YAML](http://yaml.org/spec/1.2/spec.html). YAML used in playbooks typically takes the following form:
+Before we go any further let's break down the anatomy of playbooks. Playbooks are written in [YAML](e). YAML used in playbooks typically takes the following form:
 ```YAML
 ---
 # Comment

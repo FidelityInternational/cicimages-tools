@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'colorize'
+gem 'git'
 gem 'json'
 gem 'netrc'
 gem 'octokit'
