@@ -14,5 +14,5 @@ docker run -t\
   -w "${volume_path}" \
   -e PYTHONDONTWRITEBYTECODE=1 \
    "$(cic_image)" \
-   /bin/bash -ilc "pytest $@"
+   /bin/bash -ilc "pylint $@"
 

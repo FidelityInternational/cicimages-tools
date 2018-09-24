@@ -88,7 +88,7 @@ Your playbook will need to:
 
 Because the team wants you to be sure everything is working before you tell them that you're finished, they've helpfully supplied a set of automated acceptance tests for your drive the code that you write. The tests can be found in `<%= path('./tests') %>`.
 
-Execute the tests by running: `<%= command('pytest --hostname unavailable_host', fail_on_error: false) %>`
+Execute the tests by running: `<%= command('pytest --ansible-host=unavailable_host', fail_on_error: false) %>`
 **Note** We haven't built anything yet so it's fine to have run the command as it was specified.
 This outputs the following. (We've omitted the stack traces):
 ```
@@ -145,7 +145,7 @@ This should output the following:
 <%= last_command_output %>
 ```
 Run the test again, this time however we'll point it at the host that we want to run the test against.
-To do this run: `<%= command("pytest --hostname #{container_id}", fail_on_error: false) %>`
+To do this run: `<%= command("pytest --ansible-host=#{container_id}", fail_on_error: false) %>`
 
 We can see from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
@@ -209,7 +209,7 @@ Add a task, using the synchronise module, to deploy the code supplied in the `<%
 You'll know that you've got it right when the acceptance tests pass :)
 
 ```
-<%= command_output("pytest --hostname #{cic_output.container_id}") %>
+<%= command_output("pytest --ansible-host=#{cic_output.container_id}") %>
 ```
 
 Good luck!

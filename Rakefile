@@ -16,6 +16,6 @@ task :clean do
   FileUtils.rm_rf("#{__dir__}/coverage")
 end
 
-default_tasks = %i[clean spec course_content:checksum rubocop shellcheck coverage_check yard]
+default_tasks = %i[clean spec course_content:checksum rubocop shellcheck coverage_check]
 desc default_tasks.join(',')
 task default: default_tasks

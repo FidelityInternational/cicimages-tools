@@ -108,7 +108,7 @@ Having tests that can be run on demand provides great power. These tests can be 
 
 This exercise contains a test called <%= path("./tests/apache_ansible_test.py") %> written in python using the pytest and testinfra APIs.
 
-To run this script, execute the following command: `<%= command("pytest --ansible-host #{container_id}") %>`
+To run this script, execute the following command: `<%= command("pytest --ansible-host=#{container_id}") %>`
 
 This should output the following:
 ```

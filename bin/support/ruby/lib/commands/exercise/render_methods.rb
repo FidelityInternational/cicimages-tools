@@ -13,8 +13,16 @@ module Exercise
         excludes.include?(f) || ignored?(path, f)
       end
 
+      # puts "path: #{path}"
+      # puts "digest_component: #{digest_component}"
+      # puts "excludes: #{excludes}"
+      # puts "Number of files: #{files.size}"
+      # puts "files: #{files.join("\n")}"
+
       content = files.map { |f| File.read(f) }.join
       Digest::MD5.hexdigest(content << digest_component).to_s
+      # puts "path: #{digest}"
+      # digest
     end
 
     def excluded_files(template)
@@ -87,7 +95,7 @@ module Exercise
     end
 
     def ignored?(path, file)
-      ignored_files(path).find { |ignore| file.include?(ignore) }
+      ignored_files(path).find { |ignore| file.include?(ignore) || Pathname.new(file).fnmatch?(ignore) }
     end
 
     def ignored_files(path)

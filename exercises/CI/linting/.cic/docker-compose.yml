@@ -16,7 +16,7 @@ services:
     - PGDATA=/database
 
   concourse:
-    image: concourse/concourse:4.0.0
+    image: concourse/concourse
     command: quickstart
     privileged: true
     depends_on: [concourse-db]
@@ -37,7 +37,7 @@ services:
     restart: always
     container_name: git-server
     ports:
-      - "3333:22"
+    - "3333:22"
     volumes:
     - ${CIC_PWD}/resources/git-server/keys:/git-server/keys
     - ${CIC_PWD}/resources/git-server/repos:/git-server/repos

@@ -4,15 +4,15 @@ FROM solita/ubuntu-systemd
 
 RUN apt-get -y -q update && apt-get -y install software-properties-common python-software-properties
 RUN apt-add-repository ppa:git-core/ppa
-RUN apt-get -y -q install curl build-essential bash wget unzip python python-dev ca-certificates vim openssh-server libssl-dev libreadline-dev zlib1g-dev git chromium-browser netcat && apt-get clean
+RUN apt-get -y -q install checkinstall tk-dev libgdbm-dev libncursesw5-dev libreadline-gplv2-dev libsqlite3-dev curl build-essential libbz2-dev libc6-dev bash wget unzip ca-certificates vim openssh-server openssl libffi-dev libssl-dev python3-dev python3-setuptools zlib1g-dev git chromium-browser netcat && apt-get clean
+
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc && echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+
+RUN ["/bin/bash", "-c", "PYENV_ROOT=\"$HOME/.pyenv\" && export PATH=\"$PYENV_ROOT/bin:$PATH\" && eval \"$(pyenv init -)\" && pyenv install 3.7.0 && pyenv global 3.7.0 && pip install ansible pytest testinfra pylint"]
 
 RUN systemctl enable ssh.service
 RUN ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa && cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
 RUN echo "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" > ~/.ssh/config
-
-RUN curl https://bootstrap.pypa.io/get-pip.py | python -
-RUN pip install ansible pytest testinfra
-
 
 RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash; exit 0
 
