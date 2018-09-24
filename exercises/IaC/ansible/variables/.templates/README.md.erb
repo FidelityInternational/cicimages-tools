@@ -1,0 +1,179 @@
+# Variables
+
+## Introduction
+
+Ansible requires a list of hosts to execute playbooks and ad-hoc commands against.  Ansible refers to this target host list as an inventory.  This exercise will outline some basic inventory concepts - inventory formats, grouping, setting and using variables.
+
+## Exercise Learning Objectives
+
+  - Use variables to manage differences across systems
+  - Learn how a `host_vars` and `group_vars` hierarchy can help to keep code and data separate
+  - Keep playbooks flexible using variables set from the command line
+
+## Introduction
+
+Like most other configuration management tools, Ansible lets us use variables to make code simpler, easier to read, and more efficient.  Ansible supports all variable types that are supported by YAML (single values, arrays, dictionaries).  Variables can be set in a number of places:
+
+  - On the command line - by passing `-e VAR=VAL`
+  - Within the playbook - with `set_fact:`
+  - The inventory (see Inventory exercise)
+  - Within the 'vars:' section of a play or task
+  - Detected from system facts (number of cores, memory, operating system, etc)
+  - From dedicated variable files
+
+Variables are referenced via Jinja2 templates:
+
+```
+- name: Display a variable
+  debug: msg="My hostname is {{ ansible_fqdn }}"
+```
+
+In the case above, the task is referencing a fact provided by Ansible.  With the exception of the `when:` attribute, variables are always referenced via `{{ VARIABLE }}` notation.
+
+### Scope
+
+For the most part, Ansible variables are defined in a global namespace and are scoped per-host.  Given this, the are a few things that we need to remember when using variables:
+
+  - A common variable name can have different values for each host in the play
+  - Within a play, a assigning a value to a variable that is already defined will overwrite it
+
+The exception to the rules above are where variables are set from the command line, environment or dedicated variable files - these are considered global variables and are set consistently when run against any host.
+
+More details on how Ansible handles variable scope can be found in the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-scopes).
+
+## Exercises
+
+**Note:** Before starting the exercises, please do the following:
+  - `cd YOUR_CLONE_OF_THIS REPO`
+  - `source ./bin/env`
+  - `cd <%=env('exercise_path') %>`  
+  - `<%= command("cic up") %>`
+
+These commands will configure an environment and will bring up three docker containers for use in the exercises that follow.
+
+### Dealing with differences across systems
+
+We can also use Ansible variables for managing differences across our target systems without having to write 
+additional logic in our code.  A very common requirement is to be able to handle differences in operating
+systems in a concise and logical way, we can achieve that by using two variable files.  Take a look at the following files:
+
+```
+# ansible/vars/prod.yml
+---
+prompt: 'PROD'
+```
+
+```
+# ansible/vars/dev.yml
+---
+prompt: 'DEV'
+```
+
+These files both contain the same variable definitions; we can use a variable provided by the inventory to switch between `dev.yml` and `prod.yml` variable definitions, create that file now too:
+
+```
+# ansible/inventory
+server1 environment=dev
+server2 environment=prod
+server3 environment=prod
+```
+
+Finally, the playbook would look like this:
+
+```
+---
+- hosts: all
+  tasks:
+    - name: Include per-environment variables
+      include_vars: "vars/{{ environment }}.yml"
+    
+    - name: Set root prompt
+      lineinfile:
+        dest: /root/.bashrc
+        line: |
+          PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h({{ prompt }}):\w\$'
+        insert_before: EOF
+```
+
+You can see that we can handle different types of systems by leveraging variables.
+
+When executed we should get the right results (prod servers get a PROD prompt, dev servers get a DEV prompt),, but we should run the acceptance test to be sure:
+
+```pytest```
+
+Initially the tests should fail, but lets execute the provided playbook:
+
+```ansible-playbook ansible/prompt.yml -i ansible/inventory```
+
+And then run the tests again with ```pytest``` and all tests should now pass.
+
+### Separate code from data using a `group_vars` and `host_vars` hierarchy
+
+We can use the precedence that Ansible applies to variables implement a simple hierarchy and give us flexibility in the parameters that we pass to our Ansible tasks.  Create a new playbook:
+
+```
+# ansible/webservice.yml
+---
+- hosts:
+  tasks:
+    - debug:
+        msg: "Web Service URL: {{ webservice_url }}"
+
+    - name: Write a file with the webservice URL
+      copy:
+        content: "{{ webservice_url }}"
+        dest: /tmp/webservice.url
+```
+
+Ansible will check the playbook directory for sub-directories named `group_vars` and `host_vars`.  We can drop variable files into those directories named after the group or hostname.  Ansible will read these files for matching group/hosts and make all variables within them available to the Ansible run.
+
+The example inventory (ansible/inventory) defines two groups `devservers` and `prodservers`.  Create a
+variable file to define the `webservice_url` variable for servers in the devservers group:
+
+```
+# group_vars/devservers.yml
+webservice_url: http://dev.example.com
+```
+
+In the same way, create a variable file for hosts in the `prodservers` group:
+
+```
+# group_vars/devservers.yml
+webservice_url: http://prod.example.com
+```
+
+Run the playbook and inspect the output, the appropriate webservices_url should be shown for each system.
+
+Ansible also allows variables to be set for each host; create another variable file to override the `webservice_url` variable, this time just for server3:
+
+```
+# host_vars/server3.yml
+webservice_url: http://test.example.com
+```
+
+Run the playbook again and you should notice that the webservice_url is now different for server3.
+
+You can see how we can begin to keep data and code separate through the use of group and host specific 
+variable files.
+
+### Command line variables
+
+Ansible allows for variables to be passed via the command line `--extra-vars`.  These variables take precidence over all other variables during the execution of the play, so we can use them as ad-hoc overrides.
+
+Using the example from the previous exercise, lets run the playbook on server2 with an override:
+
+```
+ansible-playbook ansible/webservice.yml -i ansible/inventory -l server2 --extra-vars 'webservice_url: http://alt.example.com'
+```
+
+### Scenario
+
+
+## Summary
+# In this tutorial and exercises, you should have seen that:
+
+#   - Ansible supports multiple inventory formats
+#   - Inventories can contain groups and variables (as well as lists of hosts)
+#   - Hosts can be part of multiple groups
+#   - Variables can be assigned to hosts or to groups
+#   - You can use limit strings (or the hosts: parameter) to restrict which groups Ansible targets

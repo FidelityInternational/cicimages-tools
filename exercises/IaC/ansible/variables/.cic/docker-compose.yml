@@ -1,0 +1,22 @@
+version: '2'
+networks:
+  default:
+    external:
+      name: cic
+
+services:
+  server1:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+
+  server2:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+
+  server3:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+
