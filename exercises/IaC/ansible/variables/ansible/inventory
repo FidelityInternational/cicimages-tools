@@ -1,6 +1,0 @@
-[devservers]
-server1 app_env=dev
-
-[prodservers]
-server2 app_env=prod
-server3 app_env=prod

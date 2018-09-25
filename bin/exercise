@@ -12,7 +12,7 @@ copy_to_cic_volume "$(pwd)/." "${volume_path}"
 command="$(bootstrap_cic_environment) $(cic_bin)/support/ruby/bin/exercise $*"
 
 # shellcheck disable=SC2140
-docker run -t \
+docker run -it \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
     -v /var/run/docker.sock:/var/run/docker.sock \

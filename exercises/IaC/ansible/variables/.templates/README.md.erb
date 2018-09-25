@@ -1,179 +1,378 @@
 # Variables
+<%
+cic_connect_command  = 'cic connect'
+cic_up_command = 'cic up'
+cic_down_command = 'cic down'
+%>
 
 ## Introduction
+Variables are crucial to allowing the Ansible we write to be reusable. The cost of maintaining code that is effectively duplicated barring values that make it specific to a given environment is a risky business. Snow blindness can easily set in and seemingly weird errors can occur if you you forget to rollout a change across all of the duplicate code. If only it was possible to inject the values that need to vary from one execution to the next... That's where variables come in.
 
-Ansible requires a list of hosts to execute playbooks and ad-hoc commands against.  Ansible refers to this target host list as an inventory.  This exercise will outline some basic inventory concepts - inventory formats, grouping, setting and using variables.
+In this exercise we'll introduce the different ways that Ansible provides of supplying variables and the reasons for using them.
 
 ## Exercise Learning Objectives
+In this exercise you'll learn how to use variables to:
+  - manage differences across systems
+  - keep code and configuration separate.
+  - organise your configuration.
 
-  - Use variables to manage differences across systems
-  - Learn how a `host_vars` and `group_vars` hierarchy can help to keep code and data separate
-  - Keep playbooks flexible using variables set from the command line
-
-## Introduction
-
-Like most other configuration management tools, Ansible lets us use variables to make code simpler, easier to read, and more efficient.  Ansible supports all variable types that are supported by YAML (single values, arrays, dictionaries).  Variables can be set in a number of places:
-
-  - On the command line - by passing `-e VAR=VAL`
-  - Within the playbook - with `set_fact:`
-  - The inventory (see Inventory exercise)
-  - Within the 'vars:' section of a play or task
-  - Detected from system facts (number of cores, memory, operating system, etc)
-  - From dedicated variable files
-
-Variables are referenced via Jinja2 templates:
-
-```
-- name: Display a variable
-  debug: msg="My hostname is {{ ansible_fqdn }}"
-```
-
-In the case above, the task is referencing a fact provided by Ansible.  With the exception of the `when:` attribute, variables are always referenced via `{{ VARIABLE }}` notation.
-
-### Scope
-
-For the most part, Ansible variables are defined in a global namespace and are scoped per-host.  Given this, the are a few things that we need to remember when using variables:
-
-  - A common variable name can have different values for each host in the play
-  - Within a play, a assigning a value to a variable that is already defined will overwrite it
-
-The exception to the rules above are where variables are set from the command line, environment or dedicated variable files - these are considered global variables and are set consistently when run against any host.
-
-More details on how Ansible handles variable scope can be found in the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-scopes).
-
-## Exercises
+## Useful Terminology
+- DRY (Don't Repeat Yourself) - keeping code DRY is a very simple but important idea, that being that the duplication is best avoided so keep your code DRY and don't repeat yourself.
 
 **Note:** Before starting the exercises, please do the following:
   - `cd YOUR_CLONE_OF_THIS REPO`
   - `source ./bin/env`
-  - `cd <%=env('exercise_path') %>`  
+  - `cd <%=env('exercise_path') %>`
   - `<%= command("cic up") %>`
 
-These commands will configure an environment and will bring up three docker containers for use in the exercises that follow.
 
-### Dealing with differences across systems
+Having run this command, test infrastructure consisting of all the environments you will need has been stood up for you.
 
-We can also use Ansible variables for managing differences across our target systems without having to write 
-additional logic in our code.  A very common requirement is to be able to handle differences in operating
-systems in a concise and logical way, we can achieve that by using two variable files.  Take a look at the following files:
+Runing <%= after_rendering_run(cic_down_command) %> will stop these environments and drop any changes that you have made to them.
+
+## Referencing variables
+Consider the following playbook:
+
+<%
+  name_variable="Micky"
+  hello_world_path='ansible/hello_world.yml'
+  hello_world_yaml=<<YAML
+- name: Variables example
+  hosts: localhost
+  tasks:
+    - name: Display a variable
+      debug: msg="Hello {{name_variable}}, how are you?"
+
+YAML
+%>
+
+```YAML
+<%= hello_world_yaml %>
+```
+
+Against the 'Display a variable' task you'll notice a string containing `{{name_variable}}` is being passed to the `debug` module. This notation denotes a variable called: `name_variable` is expected to be supplied at runtime.
+
+**Note:** Playbooks are processed using the [Jinja2 templating engine](http://jinja.pocoo.org/docs/2.10/). With the exception of the `when:` attribute, variables are always referenced via `{{ VARIABLE }}` notation.
+
+There are number of different ways of supply the value for a variable
+
+### Supplying from variables through the commandline
+Write the above ansible to a file <%= write_to_file(hello_world_path, hello_world_yaml) %> and run: <%= command(%Q{ansible-playbook #{hello_world_path} -c local --extra-vars="name_variable=Micky"} ) %>
+
+This should produce the following output:
+```
+<%= last_command_output %>
+```
+
+## Inline variable declarations
+Duplication is a code smell. Assigning repeated values to variables is a good way of removing this duplication and making code easier to maintain.
+
+Variables can be declared directly within a Playbook, Inventory, Tasks and Roles.
+
+Consider the following Playbook:
+<%
+ hello_world_yaml=<<YAML
+- name: Variables example
+  hosts: localhost
+  tasks:
+    - name: Say hello
+      debug: msg="Hello #{name_variable}, how are you?"
+    - name: Say goodbye
+      debug: msg="Hello #{name_variable}, goodbye and have a nice day"
+YAML
+
+%>
+```YAML
+<%= hello_world_yaml %>
+```
+
+<%
+  write_to_file(hello_world_path, hello_world_yaml)
+  command("ansible-playbook -c local #{hello_world_path}")
+%>
+
+Whilst it's trivial, it demonstrates some duplication. In this case the name '<%= name_variable %>'' is repeated and so is the greeting 'Hello'. We can define variables within the playbook and the tasks themselves to DRY things up.
+
+<%
+hello_world_yaml=<<YAML
+- name: Variables example
+  vars:
+    name_variable: "Micky"
+    greeting: "Hello"
+  hosts: localhost
+  tasks:
+  - name: Say hello
+    debug: msg="{{greeting}} {{name_variable}}, how are you?"
+  - name: Say goodbye
+    vars:
+      greeting: 'Yo!'
+    debug: msg="{{greeting}} {{name_variable}}, goodbye and have a nice day"
+YAML
+write_to_file(hello_world_path, hello_world_yaml)
+%>
+```YAML
+<%= hello_world_yaml %>
+```
+
+In the above, both `name_variable` and `greeting` have been pulled out to variable. In the second task the `greeting` variable has been overridden by declaring it again within the task itself.
 
 ```
-# ansible/vars/prod.yml
+<%= command_output("ansible-playbook -c local #{hello_world_path}")%>
+```
+
+## Scope/Precidence
+Ansible has 3 mains scopes:
+- Global - These are values set in config, environment variables or on the commandline
+- Per play
+- Per host
+
+More details on how Ansible handles variable scope can be found in the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-scopes).
+
+In Ansible, variables can be declared in a number of different places and have a different precedence depending on where they are defined. For example, variables set via the commandline have the highest precedence. In the given the example above, values for the `name` and `greeting` were defined at the playbook level. These can be overidden using the variables defined at the commandline level which running `<%= command(%Q{ansible-playbook -c local #{hello_world_path} --extra-vars='name_variable=Daffy'}) %>` shows.
+```
+<%= last_command_output %>
+```
+
+Take a look at the [Ansible docs on precedence](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) for more information.
+
+## Keeping config seperate
+
+### Variables files
+<%
+prod_yaml =<<YAML
 ---
-prompt: 'PROD'
-```
+prompt: PROD
+YAML
 
-```
-# ansible/vars/dev.yml
+dev_yaml =<<YAML
 ---
-prompt: 'DEV'
+prompt: DEV
+YAML
+%>
+
+Not every system that you are installing will be identical. Take for example the scenario where you are setting up the development and production environments for a continuous deployment pipeline. It can be useful for these environments to be subtly different. For example maybe having the commandline prompt differentiate an environment as either belonging to development or production.
+
+Variables are a good way of managing the differences between target systems without the need to introduce logic, as we will now see.
+
+<%
+dev_server = 'dev1'
+%>
+
+When `<%= cic_up_command %>` was run, the following environments with given hostnames were  stood up:
+
+- <%= dev_server %>
+- prod1
+- prod2
+
+To connect to any of these environment simply use the `<%=cic_connect_command %>` connect command, e.g.  `<%= cic_connect_command %> <%= dev_server %>`
+
+
+Write the following development specific config to `<%= write_to_file('ansible/vars/dev.yml', dev_yaml) %>`
+```YAML
+<%= dev_yaml %>
 ```
 
-These files both contain the same variable definitions; we can use a variable provided by the inventory to switch between `dev.yml` and `prod.yml` variable definitions, create that file now too:
 
-```
-# ansible/inventory
-server1 environment=dev
-server2 environment=prod
-server3 environment=prod
+Write the following production specific config to `<%= write_to_file('ansible/vars/prod.yml', prod_yaml) %>`
+```YAML
+<%= dev_yaml %>
 ```
 
-Finally, the playbook would look like this:
+Each of the files defines a variable `prompt` that will be displayed on the console.
 
-```
+**Note** There is nothing special about the folder name `vars`, its purely arbitrary.
+
+<%
+dev_prompt= 'dev'
+prompt_playbook=<<YAML
 ---
 - hosts: all
   tasks:
     - name: Include per-environment variables
-      include_vars: "vars/{{ environment }}.yml"
-    
+      include_vars: "vars/{{ app_env }}.yml"
+
     - name: Set root prompt
       lineinfile:
         dest: /root/.bashrc
-        line: |
-          PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h({{ prompt }}):\w\$'
-        insert_before: EOF
+        line: 'PS1="[{{prompt}}]$ "'
+        insertbefore: EOF
+YAML
+%>
+
+<%
+inventory_yaml=<<YAML
+[dev-servers]
+#{dev_server} app_env=#{dev_prompt}
+
+[prod-servers]
+prod1 app_env=dev
+prod2 app_env=dev
+YAML
+%>
+
+These variable files can be loaded via the [include_vars](https://docs.ansible.com/ansible/latest/modules/include_vars_module.html) module. Write the following playbook too <%=write_to_file('ansible/prompt.yml', prompt_playbook) %>
+```YAML
+<%= prompt_playbook %>
 ```
 
-You can see that we can handle different types of systems by leveraging variables.
-
-When executed we should get the right results (prod servers get a PROD prompt, dev servers get a DEV prompt),, but we should run the acceptance test to be sure:
-
-```pytest```
-
-Initially the tests should fail, but lets execute the provided playbook:
-
-```ansible-playbook ansible/prompt.yml -i ansible/inventory```
-
-And then run the tests again with ```pytest``` and all tests should now pass.
-
-### Separate code from data using a `group_vars` and `host_vars` hierarchy
-
-We can use the precedence that Ansible applies to variables implement a simple hierarchy and give us flexibility in the parameters that we pass to our Ansible tasks.  Create a new playbook:
-
+Here we can see that the `include_vars` module is being used to load the variables. The file that the variables should be loaded from are determined by inspecting the value of the `app_env` variable at run time. The `app_env` variable could be set against each server definition in the inventory for example. Write the following to <%= write_to_file('ansible/inventory', inventory_yaml) %>, which does just that.
+<% %>
+```YAML
+<%= inventory_yaml %>
 ```
-# ansible/webservice.yml
+
+Before running the playbook, run `cic connect <%= dev_server %>` and note that the prompt does contain the text `<%= dev_prompt %>`. After executing the playbook by running `<%=command("ansible-playbook ansible/prompt.yml -i ansible/inventory")%>`, connect back to <%= dev_server %> and you will see that the prompt now reads as required.
+
+### Organising your config with `group_vars` and `host_vars`
+Separating config from code is a principle of good software development, and Ansible provides strong conventions which make providing configuration for hosts and groups of hosts easy.
+
+ The host specific variables are prioritised over variables defined for a group, meaning that group wide variables can easily be overridden.
+
+ host and group based variables files should be put in to the `host_vars` and `group_vars` directories respectively. Each of these directories should be local to the playbook.
+
+Host variable files should be named after the hosts for which they contain variables. For example if inventory contains a host named `server1` then the corresponding host_vars file would be `host_vars/server1.yml`. The same is true for group variables files. I.e. they should be located within the `group_vars` folder and be named after the group as it is identified within inventory. E.g. if a group was defined in the inventory as `dev-servers` then the corresponding group variables file would be at `group_vars/dev-servers.yml`
+
+The playbook in the previous example, whilst flexible, contained a code smell in that the Inventory file duplicates the `app_env` variable for each host.
+
+<%
+revised_inventory=<<YAML
+[dev-servers]
+#{dev_server}
+
+[prod-servers]
+prod1
+prod2
+YAML
+%>
+Both the Inventory and Playbook can be dried up by making use of Ansible's `group_vars` feature. Update `<%= write_to_file('ansible/inventory', revised_inventory) %>` to remove the declaration of `app_env` for each host. This should mean that the inventory now looks like the following:
+```YAML
+<%= revised_inventory %>
+```
+
+The following group variables files can be used instead.
+
+<%
+prod_group_vars=<<YAML
+prompt: PROD
+YAML
+
+dev_group_vars=<<YAML
+prompt: DEV
+YAML
+%>
+
+<%= write_to_file('ansible/group_vars/prod-servers.yml', prod_group_vars) %>
+```YAML
+<%= prod_group_vars %>
+```
+<%= write_to_file('ansible/group_vars/dev-servers.yml', dev_group_vars) %>
+```YAML
+<%= dev_group_vars %>
+```
+
+<%
+  revised_playbook=<<YAML
 ---
-- hosts:
+- hosts: all
   tasks:
-    - debug:
-        msg: "Web Service URL: {{ webservice_url }}"
+    - name: Set root prompt
+      lineinfile:
+        dest: /root/.bashrc
+        line: 'PS1="[{{prompt}}]$ "'
+        insertbefore: EOF
 
-    - name: Write a file with the webservice URL
-      copy:
-        content: "{{ webservice_url }}"
-        dest: /tmp/webservice.url
+YAML
+%>
+
+Now that `app_env` is no longer required we can also remove the `include_vars` statement from the playbook. Update <%=write_to_file('ansible/prompt.yml', revised_playbook) %> to read as follows:
+
+```YAML
+<%= revised_playbook %>
 ```
 
-Ansible will check the playbook directory for sub-directories named `group_vars` and `host_vars`.  We can drop variable files into those directories named after the group or hostname.  Ansible will read these files for matching group/hosts and make all variables within them available to the Ansible run.
-
-The example inventory (ansible/inventory) defines two groups `devservers` and `prodservers`.  Create a
-variable file to define the `webservice_url` variable for servers in the devservers group:
-
+Run `<%= command(cic_down_command) %>` and then `<%= command(cic_up_command) %>` to reset the test infrastructure and rerun <%= command('ansible-playbook ansible/prompt.yml -i ansible/inventory') %>
 ```
-# group_vars/devservers.yml
-webservice_url: http://dev.example.com
+<%= last_command_output %>
 ```
 
-In the same way, create a variable file for hosts in the `prodservers` group:
+Use the `<%=cic_connect_command %>` command to connect to any of the servers and you will see that their prompts continue to be set correctly.
 
+## Now it's your turn!
+The operations team are looking after the development and production environments for an application. The two environments are made up 2 development server and 2 production servers.
+
+Their hostnames are:
+
+- dev-app1
+- dev-app2
+- prod-app1
+- prod-app2
+
+The application deployed to these environments requires a file to be located at `/etc/app.id`. This file should containing a single line in the format:
+
+```APPSTRING:ENVIRONMENT:HOSTNAME```
+
+- `APPSTRING` is a static string - almost always `ABCAPP`, but sometimes the team need to change this for ad-hoc testing, so they would like this to default to ```CIC_WEBAPP``` but be overridable from the command line.
+
+- `ENVIRONMENT` is the environment that the server is a member of. This should be DEV for development machines and PROD for production machines.
+
+- `HOSTNAME` is the hostname of the system.  Ansible makes this information available to you, you just need to find out how :)
+
+Your mission, should you choose to accept it, is to create a Playbook to meet this requirement.
+
+<%
+
+prod_group_vars=<<YAML
+app_env: PROD
+YAML
+
+dev_group_vars=<<YAML
+app_env: DEV
+YAML
+
+inventory_yaml=<<YAML
+[dev-servers]
+dev-app1
+dev-app2
+
+[prod-servers]
+prod-app1
+prod-app2
+YAML
+
+playbook_yaml = <<YAML
+---
+- name: app_id deployer
+  vars:
+    app_name: CIC_WEBAPP
+  hosts: all
+  tasks:
+  - name: Create app_id file
+    copy:
+      dest: "/etc/app.id"
+      content: |
+        {{app_name}}:{{app_env}}:{{ansible_hostname}}
+YAML
+
+
+write_to_file('ansible/group_vars/prod-servers.yml', prod_group_vars)
+write_to_file('ansible/group_vars/dev-servers.yml', dev_group_vars)
+write_to_file('ansible/inventory', inventory_yaml)
+write_to_file('ansible/app_id.yml', playbook_yaml)
+
+command("ansible-playbook ansible/app_id.yml -i ansible/inventory")
+
+%>
+You'll know when you got the job done when you are able to run the command `<%= command('pytest')%>` and see the following output:
 ```
-# group_vars/devservers.yml
-webservice_url: http://prod.example.com
+<%= last_command_output %>
 ```
-
-Run the playbook and inspect the output, the appropriate webservices_url should be shown for each system.
-
-Ansible also allows variables to be set for each host; create another variable file to override the `webservice_url` variable, this time just for server3:
-
-```
-# host_vars/server3.yml
-webservice_url: http://test.example.com
-```
-
-Run the playbook again and you should notice that the webservice_url is now different for server3.
-
-You can see how we can begin to keep data and code separate through the use of group and host specific 
-variable files.
-
-### Command line variables
-
-Ansible allows for variables to be passed via the command line `--extra-vars`.  These variables take precidence over all other variables during the execution of the play, so we can use them as ad-hoc overrides.
-
-Using the example from the previous exercise, lets run the playbook on server2 with an override:
-
-```
-ansible-playbook ansible/webservice.yml -i ansible/inventory -l server2 --extra-vars 'webservice_url: http://alt.example.com'
-```
-
-### Scenario
-
 
 ## Summary
-# In this tutorial and exercises, you should have seen that:
+Variables are very useful for removing a range of code smells that make our code less easy to read or maintain. They also are invaluable improving the re-usability of our code.
+Ansible provides a rich feature set that makes it easy to:
 
-#   - Ansible supports multiple inventory formats
-#   - Inventories can contain groups and variables (as well as lists of hosts)
-#   - Hosts can be part of multiple groups
-#   - Variables can be assigned to hosts or to groups
-#   - You can use limit strings (or the hosts: parameter) to restrict which groups Ansible targets
+  - Supply variables that apply global but can still be overridden
+  - Separate and organise config independent of the code itself.
+  - [Jinja2](http://jinja.pocoo.org/docs/2.10/) provides some powerful options when it comes to computing variable values at runtime.
+
+**Note:** Now that you've finished the exercise, remember to run `<%= cic_down_command %>` to shutdown your test infrastructure.
