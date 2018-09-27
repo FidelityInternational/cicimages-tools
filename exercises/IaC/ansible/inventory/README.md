@@ -22,8 +22,8 @@ Ansible supports a number of inventory file formats:
   - Any executable that outputs valid JSON/YAML
   - Directories; Ansible will read all inventory files in the specified directory
   - Python plugins
- 
-You can find mode information on supported inventory formats in the official 
+
+You can find mode information on supported inventory formats in the official
 [Ansible documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html).
 
 ### Basic Inventory
@@ -93,8 +93,8 @@ per host, within the inventory file:
 server1   dns_server=1.1.1.1
 
 [dbservers]
-server2   dns_server=2.2.2.2
-server3   dns_server=3.3.3.3
+server2   dns_server=2.2.2.2   ntp_server=4.4.4.4
+server3   dns_server=3.3.3.3   ntp_server=4.4.4.4
 ```
 
 They can also be defined by group with a special section in the inventory file:
@@ -114,7 +114,7 @@ dns_server=1.1.1.1
 dns_server=2.2.2.2
 ```
 
-This allows hosts to be added to the `webservers` or `dbservers` groups without having to specify the 
+This allows hosts to be added to the `webservers` or `dbservers` groups without having to specify the
 `dns_server` variable directly.
 
 ## Exercise
@@ -122,7 +122,7 @@ This allows hosts to be added to the `webservers` or `dbservers` groups without 
 **Note:** Before starting the exercises, please do the following:
 
 - `cd YOUR_CLONE_OF_THIS REPO`
-- `. bin/setup`
+- `. ./bin/.env`
 - `cd ./exercises/IaC/ansible/inventory`
 - `cic up`
 
@@ -175,8 +175,8 @@ ansible -i ansible/inventory -m debug -a var=dns_server all -o
 Which should show output as follows:
 
 ```
-server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
 server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
+server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
 server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
 ```
 
@@ -192,7 +192,7 @@ should be configured to show the server's region and some other details when a u
 Create a new static inventory that:
 
   - Defines the three servers (`server1`, `server2`, `server3`)
-  - Groups the servers into two groups `ukservers` and `asiaservers` (server1 is in the UK, server2 and 
+  - Groups the servers into two groups `ukservers` and `asiaservers` (server1 is in the UK, server2 and
     server3 are in Asia)
   - Ensures that a `region` variable is set for every `ansible-playbook` run
   - Should allow other servers to be easily added to each group without having to set the region variable
@@ -212,7 +212,7 @@ inventory file and run the playbook successfully:
 ============================= test session starts ==============================
 platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
 cachedir: .pytest_cache
-rootdir: /vols/pytest_18623, inifile: pytest.ini
+rootdir: /vols/pytest_25206, inifile: pytest.ini
 plugins: testinfra-1.14.1
 collecting ... collected 3 items
 
@@ -220,7 +220,7 @@ tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
 tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
 tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
-=========================== 3 passed in 1.47 seconds ===========================
+=========================== 3 passed in 1.75 seconds ===========================
 ```
 
 ## Summary
@@ -233,4 +233,4 @@ In this tutorial and exercises, you should have seen that:
   - You can use limit strings (or the hosts: parameter) to restrict which groups Ansible targets
   
 
-Revision: 28bb6661204312ef41619865cb55018578adb264fe6e3adbae5d5676bc96339f
+Revision: 77411c0149b13032b870c81623215af04d66701872f5dd94989bb790afa2182e
