@@ -1,0 +1,12 @@
+---
+- name: Install and configure ntpd
+  hosts: all
+  tasks:
+    - name: Configure motd
+      copy:
+        dest: /etc/issue
+        content: |
+          ***********************************************
+          Hostname: {{ ansible_host }}
+          Region:   {{ region }}
+          ***********************************************
