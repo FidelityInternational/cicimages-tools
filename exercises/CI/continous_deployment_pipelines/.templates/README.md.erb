@@ -218,10 +218,8 @@ RESOURCE
 
   helloworld_command =<<RUN
 run:
-  path: bash
-  args:
-   - |
-     echo "hello"
+  path: echo
+  args: [hello]
 RUN
 
   helloworld_task_yaml =<<YAML
