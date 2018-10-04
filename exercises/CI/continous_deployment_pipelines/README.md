@@ -71,20 +71,22 @@ image_resource:
   source: {repository: busybox}
 
 run:
-  path: bash
-  args:
-   - |
-     echo "hello"
+  path: echo
+  args: [hello]
 
 
 ```
 
 now let's get concourse to run this task for us.
-
+run `./resources/linux/fly -t local execute -c hello-world-task.yml`
 
 This should output the following:
 ```
-exposed 'simple-pipeline'
+executing build 2 at http://127.0.0.1:8080/builds/2 
+initializing
+running echo hello
+hello
+succeeded
 ```
 
 The output communicates the following:
@@ -113,10 +115,8 @@ Earlier we said that Concourse promotes portable builds by requiring the user to
 - The command itself
 ```
 run:
-  path: bash
-  args:
-   - |
-     echo "hello"
+  path: echo
+  args: [hello]
 
 ```
 The above command is very simple, the echo command is being called with a parameter of 'hello world'
@@ -276,10 +276,10 @@ Believe it or not you have now learnt all that you need to know in order to buil
 Use the what you've learnt so far, and the above image as guidance, declare the rest of the YAML necessary to push the required pipeline to concourse.
 
 The additional jobs should do the following:
-- integration tests - should run the command 'blah blah' using the `release-candidate`
-- security tests - should run the command 'blah security' using the `release-candidate`
-- staging - should run the command 'blah' using the `release-candidate` **only** if there is a version available that made it through the integration and security tests jobs. Check out the [ste passed](https://concourse-ci.org/get-step.html#get-step-passed) for information on how to do this.
-- production - should run the command 'blah' using the `release-candidate` **only** if there is a version available that made it through the staging job.
+- integration tests - should run the command 'shovel test.integration' using the `release-candidate`
+- security tests - should run the command 'shovel test.security' using the `release-candidate`
+- staging - should run the command 'deploy.stage' using the `release-candidate` **only** if there is a version available that made it through the integration and security tests jobs. Check out the [ste passed](https://concourse-ci.org/get-step.html#get-step-passed) for information on how to do this.
+- production - should run the command 'shovel deploy.production' using the `release-candidate` **only** if there is a version available that made it through the staging job.
 
 
 
@@ -289,4 +289,4 @@ The additional jobs should do the following:
 
   
 
-Revision: b6516d70b415155cacf04591f2c3e0d8
+Revision: 25db7a2e805a92f46a7eb69b82974940
