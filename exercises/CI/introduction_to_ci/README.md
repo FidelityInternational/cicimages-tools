@@ -33,12 +33,6 @@ In this exercise you will be working using a CI server called Concourse. We've d
 If all is well you should see the following:
 ```
   waiting for Concourse to come up: 
-waiting for Concourse to come up: 
-waiting for Concourse to come up: 
-waiting for Concourse to come up: 
-waiting for Concourse to come up: 
-waiting for Concourse to come up: 
-waiting for Concourse to come up: 
 waiting for Concourse to come up:
 [OK] Environment cic'd up :)
 
@@ -185,4 +179,4 @@ Continuous Integration plays a vital role in ensuring that the software we right
 **Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.
   
 
-Revision: ef8222d435422670621ebc4a745374f7
+Revision: 7ce55c4461d29c9507c8614cc4da3d7b

@@ -44,7 +44,6 @@ Usage:  pylint [options] modules_or_packages
 Pylint needs some python code to look at so change directory to `cd resources` and run `ls src` and you'll see there is some code to run `pylint` against.
 ```
 __init__.py
-__pycache__
 calculator.py
 operations.py
 ```
@@ -127,10 +126,10 @@ Your code has been rated at 10.00/10
 Don't forget to make sure that the tests are still passing after making your changes. Run pytest to execute them.
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
+platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_7793, inifile: pytest.ini
-plugins: testinfra-1.15.0
+rootdir: /vols/pytest_24459, inifile: pytest.ini
+plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 0 items                                                             collecting 3 items                                                             collecting 4 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
 tests/test_calculator_add.py::test_adds_value PASSED                     [ 25%]
@@ -147,4 +146,4 @@ Linter's are an invaluable tool for digging out code smells. They are fast and u
 Linters are opinionated but can also be tuned to the needs of project, this gives the opportunity for team mates to agree on a set of principles and leave policing to the tool and their CI process.
   
 
-Revision: 0994460271f62c872d403a41d9af42ed
+Revision: dd7eda32c918ccdc272402a7cd047b48

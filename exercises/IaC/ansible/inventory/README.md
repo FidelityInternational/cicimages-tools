@@ -175,9 +175,9 @@ ansible -i ansible/inventory -m debug -a var=dns_server all -o
 Which should show output as follows:
 
 ```
-server2 | SUCCESS => {    "changed": false,     "dns_server": "2.2.2.2"}
-server1 | SUCCESS => {    "changed": false,     "dns_server": "1.1.1.1"}
-server3 | SUCCESS => {    "changed": false,     "dns_server": "3.3.3.3"}
+server1 | SUCCESS => {    "changed": false,    "dns_server": "1.1.1.1"}
+server2 | SUCCESS => {    "changed": false,    "dns_server": "2.2.2.2"}
+server3 | SUCCESS => {    "changed": false,    "dns_server": "3.3.3.3"}
 ```
 
 The output shows the result of running the `debug` module on each of the three hosts in the inventory file.
@@ -210,17 +210,22 @@ inventory file and run the playbook successfully:
 
 ```
 ============================= test session starts ==============================
-platform linux2 -- Python 2.7.12, pytest-3.7.2, py-1.5.4, pluggy-0.7.1 -- /usr/bin/python
+platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_25206, inifile: pytest.ini
-plugins: testinfra-1.14.1
-collecting ... collected 3 items
+rootdir: /vols/pytest_2438, inifile: pytest.ini
+plugins: testinfra-1.16.0
+collecting 0 items                                                             collecting 2 items                                                             collecting 3 items                                                             collected 3 items                                                              
 
 tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
 tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
 tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
-=========================== 3 passed in 1.75 seconds ===========================
+=============================== warnings summary ===============================
+<unknown>:7: DeprecationWarning: invalid escape sequence \s
+<unknown>:7: DeprecationWarning: invalid escape sequence \s
+
+-- Docs: https://docs.pytest.org/en/latest/warnings.html
+===================== 3 passed, 2 warnings in 1.24 seconds =====================
 ```
 
 ## Summary
@@ -231,6 +236,7 @@ In this tutorial and exercises, you should have seen that:
   - Hosts can be part of multiple groups
   - Variables can be assigned to hosts or to groups
   - You can use limit strings (or the hosts: parameter) to restrict which groups Ansible targets
+
   
 
-Revision: 77411c0149b13032b870c81623215af04d66701872f5dd94989bb790afa2182e
+Revision: bcdcbf6685ae3a0a566475ae3fcb5774

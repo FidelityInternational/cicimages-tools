@@ -59,7 +59,7 @@ Concourse uses [YAML](http://yaml.org/spec/1.2/spec.html) to configure it. YAML 
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS_REPO`
 - `source ./bin/env`
-- `cd blah`
+- `cd ./exercises/CI/continous_deployment_pipelines`
 - run `cic up` to bring up the tutorial environment.
 
 **Note:** once you've finished this exercise, don't forget to run the `cic down` to stop your the environment that you've been using for this tutorial.
@@ -331,4 +331,4 @@ Have fun and good luck! :)
 
   
 
-Revision: 486a8c0984eed805f151a2942301eeed
+Revision: 69369369b741b03be615f0b2f1b5de74
