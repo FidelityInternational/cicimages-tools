@@ -8,3 +8,4 @@ tracks:
     exercises:
     - Introduction to Continuous Integration: 'exercises/CI/introduction_to_ci/README.md'
     - Linting: 'exercises/CI/linting/README.md'
+    - Continuous Deployment Pipelines: 'exercises/CI/introduction_to_ci/README.md'
