@@ -102,7 +102,7 @@ All of these fail because they are unable to connect to the server we specified 
 
 
 ### Writing a playbook
-Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `/vols/ansible_21286/writing_playbooks/ansible/webserver.yml` 
+Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `/vols/ansible_16746/writing_playbooks/ansible/webserver.yml` 
 
 ```YAML
 ---
@@ -129,7 +129,7 @@ Let's create our first playbook using the the YAML we looked at earlier. Write t
 **Note:** Playbooks can be named anything. By convention we will store them in a folder called 'ansible'.
 
 
-Now execute playbook with the following command: `ansible-playbook /vols/ansible_21286/writing_playbooks/ansible/webserver.yml`
+Now execute playbook with the following command: `ansible-playbook /vols/ansible_16746/writing_playbooks/ansible/webserver.yml`
 
 ```
 PLAY [Setup a webserver.] ******************************************************
@@ -152,13 +152,11 @@ localhost                  : ok=3    changed=2    unreachable=0    failed=0
 The terminal output shows us that our 2 tasks ran:
  - installing apache2
 ```
- TASK [install apache2] *********************************************************
-changed: [localhost]
+ 
 ```
  - starting apache2
 ```
-TASK [Start service apache2, if not running] ***********************************
-changed: [localhost]
+
 ```
 
 The last line of output came from the courseware installed on your machine and gives us the ID we need to start the container up and run our tests again.
@@ -227,9 +225,9 @@ You'll know that you've got it right when the acceptance tests pass :)
 
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
+platform linux -- Python 3.7.0, pytest-3.8.2, py-1.7.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_17404, inifile: pytest.ini
+rootdir: /vols/pytest_31809, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -238,7 +236,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.82 seconds ===========================
+=========================== 4 passed in 0.84 seconds ===========================
 ```
 
 Good luck!
@@ -260,4 +258,4 @@ You have just learned how to:
 
   
 
-Revision: ec250995194a26b068e1ad14ac5da6b9
+Revision: e8bc4bbf1b59c2d920d810c1592c415a
