@@ -6,7 +6,7 @@ RUN apt-get -y -q update && apt-get -y install software-properties-common python
 RUN apt-add-repository ppa:git-core/ppa
 RUN apt-get -y -q install checkinstall tk-dev libgdbm-dev libncursesw5-dev libreadline-gplv2-dev libsqlite3-dev curl build-essential libbz2-dev libc6-dev bash wget unzip ca-certificates vim openssh-server openssl libffi-dev libssl-dev python3-dev python3-setuptools zlib1g-dev git chromium-browser netcat && apt-get clean
 
-RUN apt-get clean && apt-get -y upgrade git
+
 
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc && echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 
@@ -33,6 +33,6 @@ ADD Gemfile* /cic/
 
 WORKDIR '/cic'
 
-
+RUN apt-get clean && apt-get update && apt-get -y upgrade git
 RUN mkdir /etc/ansible && echo "[localhost]\n127.0.0.1  ansible_connection=local" > /etc/ansible/hosts
 RUN ["/bin/bash", "-c", "eval \"$(rbenv init -)\" && gem install bundler && bundle install"]
