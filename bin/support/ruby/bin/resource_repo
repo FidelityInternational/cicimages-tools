@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+require_relative '../lib/utils/commandline'
+require_relative '../lib/utils/docker'
+require 'git'
+class ResourceRepo < Thor
+
+  desc 'create', 'creates a resource repository'
+  def create
+    bare_repo_dir = 'repo.git'
+    `git init --bare #{bare_repo_dir}`
+    checkout(bare_repo_dir)
+
+  end
+
+  desc 'checkout', 'checkout the repo resource to work on'
+  def checkout(repo)
+    Git.clone(repo, 'checkout')
+  end
+
+  include Commandline
+end
+
+ResourceRepo.start(ARGV)

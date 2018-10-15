@@ -125,7 +125,7 @@ This allows hosts to be added to the `webservers` or `dbservers` groups without 
 - `. ./bin/.env`
 - `cd ./exercises/IaC/ansible/inventory`
 - `<%= command("cic up") %>`
-<% after_all('cic down')  %>
+<% after_rendering_run('cic down')  %>
 
 These commands will configure an environment and will bring up three docker containers for use in the exercises
 that follow.

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+TIME_WAITED=0
+sleep_time=5
+max_timeout="70"
+
+function concourse_http_status(){
+    echo "$(curl -I http://concourse:8080 2>/dev/null | grep HTTP/1.1 | awk '{print $2}')"
+}
+
+until [[ "$(concourse_http_status)" -eq "200" ]] || [[ "${TIME_WAITED}" -eq "${max_timeout}" ]]
+do
+    echo "waiting for Concourse to come up: $(concourse_http_status)"
+    sleep "${sleep_time}"
+    TIME_WAITED=$(($TIME_WAITED + $sleep_time))
+done;
+
+if [[ "${TIME_WAITED}" -eq "${max_timeout}" ]]
+then
+    echo "Concourse did not come up in time :("
+    exit 1
+fi
+
+
+

@@ -27,6 +27,7 @@ GEM
     faraday (0.15.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
+    git (1.5.0)
     haml (5.0.4)
       temple (>= 0.8.0)
       tilt
@@ -128,6 +129,7 @@ DEPENDENCIES
   capybara (= 2.15.2)
   chromedriver-helper
   colorize
+  git
   i18n
   json
   mirage (= 4.0.0.alpha10)

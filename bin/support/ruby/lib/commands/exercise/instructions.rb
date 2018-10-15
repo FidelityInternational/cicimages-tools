@@ -159,6 +159,7 @@ module Exercise
       directory = File.dirname(path)
       FileUtils.mkdir_p(directory)
       File.write(path, content)
+      after_rendering_run("rm -rf #{path}")
       path
     end
 

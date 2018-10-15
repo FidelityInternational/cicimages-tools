@@ -150,17 +150,17 @@ To run this script, execute the following command: `pytest --ansible-host=cic_co
 This should output the following:
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.0, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
+platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_16658, inifile: pytest.ini
-plugins: testinfra-1.15.0
+rootdir: /vols/pytest_21140, inifile: pytest.ini
+plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 3 items                                                             collected 3 items                                                              
 
 tests/apache_ansible_test.py::test_apache_installed PASSED               [ 33%]
 tests/apache_ansible_test.py::test_apache_is_enabled_as_service PASSED   [ 66%]
 tests/apache_ansible_test.py::test_apache_installed_is_running PASSED    [100%]
 
-=========================== 3 passed in 1.44 seconds ===========================
+=========================== 3 passed in 0.82 seconds ===========================
 ```
 
 In just a second or so the test has validated that:
@@ -175,4 +175,4 @@ Ansible is a great tool for configuring infrastructure. Baked in to its philosop
 
   
 
-Revision: b17a0e7c1b50f6cc3d470d60256c1734
+Revision: 61f48c4a38a2f5eae3632177a2b7bf10
