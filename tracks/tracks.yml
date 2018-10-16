@@ -3,6 +3,8 @@ tracks:
     exercises:
       - Running Ansible: 'exercises/IaC/ansible/running_ansible/README.md'
       - Writing Playbooks: 'exercises/IaC/ansible/writing_playbooks/README.md'
+      - Variables: 'exercises/IaC/ansible/variables/README.md'
+      - Inventory: 'exercises/IaC/ansible/inventory/README.md'
 
   - name: continuous_integration
     exercises:
