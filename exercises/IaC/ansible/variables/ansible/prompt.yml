@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: Set root prompt
+      lineinfile:
+        dest: /root/.bashrc
+        line: 'PS1="[{{prompt}}]$ "'
+        insertbefore: EOF
