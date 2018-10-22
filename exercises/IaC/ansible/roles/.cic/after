@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ansible_dir="${script_dir}/../ansible"
+mkdir -p  "${ansible_dir}"
+cp "${script_dir}/inventory.yml" "${ansible_dir}"
+

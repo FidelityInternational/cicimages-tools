@@ -1,0 +1,20 @@
+version: '3'
+networks:
+  default:
+    external:
+      name: cic
+
+services:
+  jetty-server:
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    privileged: true
+    command: /sbin/init
+    ports: ["8080:8080", "8888:80" ]
+
+
+  tomcat-server:
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    privileged: true
+    command: /sbin/init
+    ports: ["9090:8080", "9999:80" ]
+

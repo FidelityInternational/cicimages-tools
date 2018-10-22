@@ -1,0 +1,380 @@
+## Introduction
+<% command("rm -Rf #{Dir.pwd}/ansible") %>
+<% after_rendering_run("rm -Rf #{Dir.pwd}/ansible") %>
+Roles in Ansible are the way that related tasks and variables can be grouped together and shared. The choice of the word 'Role' comes from the idea that hosts are mapped to well defined roles.
+
+In this exercise we will look at how Roles themselves are defined and imported within Ansible playbooks.
+
+### Learning Objectives
+- How to use Roles to DRY up playbooks by extracting tasks and removing duplication.
+
+## Required prequisite knowledge
+It is assumed that you know enough about Ansible to define a simple Platbook and define inventory to run it against.
+
+<%
+cic_down_command = 'cic down'
+cic_up_command = 'cic up'
+%>
+
+**Note:** Before going any further do the following:
+- `cd YOUR_CLONE_OF_THIS REPO`
+- `source ./bin/env`
+- `cd <%=env('exercise_path') %>`
+
+run `<%= command('cic up') %>` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `<% after_rendering_run('cic down')%>`
+
+## Setting the Scene
+The following playbook contains two plays. The first installs tomcat and the second installs [Eclipse Jetty](https://www.eclipse.org/jetty/), both of which are Java based web application containers. Both of the `jetty-server` and `tomcat-server` hosts referenced in the Playbook are real and can be connected to via the `cic connect` command. E.g. `cic connect tomcat-server`.
+
+```YAML
+
+---
+<%=
+playbook_yaml=<<YAML
+- name: install tomcat
+  hosts: tomcat-server
+  vars:
+    tomcat_installation_dir: /tmp/tomcat
+    tomcat_download: /tmp/tomcat.zip
+    tomcat_download_url: http://mirrors.ukfast.co.uk/sites/ftp.apache.org/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz
+  tasks:
+  - name: install java
+    apt:
+      name: default-jdk
+      state: latest
+
+  - name: download tomcat
+    get_url:
+      url: "{{tomcat_download_url}}"
+      dest: "{{tomcat_download}}"
+
+  - name: create directory for tomcat installation
+    file:
+      path: "{{tomcat_installation_dir}}"
+      state: directory
+      mode: 0755
+
+  - name: unzip tomcat
+    unarchive:
+      src: "{{tomcat_download}}"
+      dest: "{{tomcat_installation_dir}}"
+      remote_src: yes
+
+  - name: move files up one
+    command: bash -c 'cd {{tomcat_installation_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+
+  - name: start tomcat
+    command: bash -c 'cd {{tomcat_installation_dir}}/bin && nohup ./startup.sh'
+
+- name: install jetty
+  hosts: jetty-server
+  vars:
+    jetty_install_dir: /tmp/jetty
+    jetty_download: /tmp/jetty.zip
+    jetty_download_url: https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/jetty-distribution-9.4.12.v20180830.zip
+
+  tasks:
+  - name: install java
+    apt:
+      name: default-jdk
+      state: latest
+
+  - name: download jetty
+    get_url:
+      url: "{{jetty_download_url}}"
+      dest: "{{jetty_download}}"
+
+  - name: create directory for jetty installation
+    file:
+      path: "{{jetty_install_dir}}"
+      state: directory
+      mode: 0755
+
+  - name: unzip jetty
+    unarchive:
+      src: "{{jetty_download}}"
+      dest: "{{jetty_install_dir}}"
+      remote_src: yes
+
+  - name: move files up one
+    command: bash -c 'cd {{jetty_install_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+
+  - name: start jetty
+    command: bash -c 'cd {{jetty_install_dir}}/demo-base && nohup java -jar ../start.jar &'
+YAML
+
+playbook_yaml_path = 'ansible/app_servers_automated.yaml'
+ansible_playbook_command = "ansible-playbook #{playbook_yaml_path} -i ansible/inventory.yml"
+%>
+```
+
+Write the above Playbook to `<%= write_to_file(playbook_yaml_path, playbook_yaml) %>` and run it with `<%= command(ansible_playbook_command) %>`. If everything is working, you should see the following output:
+```
+<%= last_command_output %>
+```
+
+Visit [http://localhost:8080](http://localhost:8080) and [http://localhost:9090](http://localhost:8080) and you will see that both Tomcat and Jetty are both up and running.
+
+Whilst the above playbook works it has a couple of issues:
+- It's verbose which makes it difficult, at a glance, to tell what it does.
+- There is a a lot of duplication, in fact the only difference between the two plays is the command required to start each of the servers.
+
+## How to define a Role
+**Note:** Before going any further run `<%=command(cic_down_command) %>` and `<%= command(cic_up_command) %>` to reset the cic test infrastructure.
+
+The playbook we looked at earlier essentially gave the a role of application server to both the `tomcat-server` and `jetty-server` hosts. Therefore lets define a role called `application-server` that:
+
+- Installs Java
+- Downloads an archive containing the application server
+- Unpacks the archive to the desired location
+- Starts the server
+
+Ansible automatically tries to find any role that you reference in a directory called `roles`. The `roles` directory should be local to the Playbook.
+
+Let's start by by the creating the `roles` directory at `ansible/roles`, i.e. run "<%= command('mkdir ansible/roles') %>".
+
+<%
+role_name='application-server'
+role_path = "ansible/roles/#{role_name}"
+command("mkdir #{role_path}")
+%>
+Each directory inside the `roles` directory represents a role. Therefore to create a role called `<%= role_name %>` create the following directory `<%= role_path %>`.
+
+### Role components
+Within a role, if required, the following directories can be supplied:
+- **tasks** - contains the main list of tasks to be executed by the role.
+- **handlers** - contains handlers, which may be used by this role or even anywhere outside this role.
+- **defaults** - default variables for the role (see Variables for more information).
+- **vars** - other variables for the role (see Variables for more information).
+- **files** - contains files which can be deployed via this role.
+- **templates** - contains templates which can be deployed via this role.
+- **meta** - defines meta data detailing things as dependencies
+
+By default anything written in side a file called `main.yml` in any of these directories will automatically be picked up when the Role is loaded as part of a Playbook.
+
+<%
+ task_yaml =<<YAML
+- name: install java
+  apt:
+    name: default-jdk
+    state: latest
+
+- name: download App Server
+  get_url:
+    url: "{{download_url}}"
+    dest: "{{download_location}}"
+
+- name: create directory for tomcat installation
+  file:
+    path: "{{installation_dir}}"
+    state: directory
+    mode: 0755
+
+- name: unzip app server archive
+  unarchive:
+    src: "{{download_location}}"
+    dest: "{{installation_dir}}"
+    remote_src: yes
+
+- name: move files up one
+  command: bash -c 'cd {{installation_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+
+- name: start app server
+  command: bash -c 'cd {{installation_dir}} && {{start_command}}'
+YAML
+%>
+
+Studying our playbook we can see that if
+- install location
+- download url
+- startup command
+
+were supplied as variables, it would be possible to generify a set of tasks that could be extracted in to our `<%= role_name %>` role. This means creating entries in the `tasks` and `vars` within our `<%= role_name %>` role.
+
+Starting with `vars`, move to the  `<%= role_name %>` directory (`<%= cd(role_path) %>`) and make the `tasks` directory by running: `<%= command("mkdir tasks") %>`. Now write the following tasks to <%= write_to_file('tasks/main.yml', task_yaml)%>
+
+```YAML
+<%= task_yaml %>
+```
+
+Due to defining these tasks within the `tasks` directory, we are only required to list the tasks themselves. There is no need to nest them underneath `tasks:` as is necessary when defining tasks within a Playbook.
+
+In order to make these tasks reusable we have extracted the following variables:
+- download_url
+- download_location
+- installation_dir
+- start_command
+
+<%
+  vars_yaml=<<YAML
+download_url:
+start_command:
+YAML
+%>
+
+Make a directory called by `vars` by running and `<%= command('mkdir vars') %>` and write the following variable declarations to `<%= write_to_file('vars/main.yml', vars_yaml) %>`
+
+```YAML
+<%= vars_yaml %>
+```
+
+<%
+defaults_yaml=<<YAML
+download_location: /tmp/server.download
+installation_dir: /tmp/applicaton-server
+YAML
+%>
+
+You'll notice that we haven't defined either `download_location` or `installation_dir`. This is because unless the user explicitly wants to set these they can be defaulted. Default variables are defined in the `defaults` directory. Create the `defaults` directory and write the following to `<%= write_to_file('defaults/main.yml', defaults_yaml) %>`.
+
+```YAML
+<%= defaults_yaml %>
+```
+
+<%= updated_playbook=<<YAML
+---
+- name: install tomcat
+  hosts: tomcat-server
+  roles:
+  - { role: application-server,
+      download_url: "http://mirrors.ukfast.co.uk/sites/ftp.apache.org/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz",
+      start_command: "nohup {{installation_dir}}/bin/startup.sh"
+  }
+
+- name: install jetty
+  hosts: jetty-server
+  roles:
+  - { role: application-server,
+      download_url: "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/jetty-distribution-9.4.12.v20180830.zip",
+      start_command: "cd {{installation_dir}}/demo-base && nohup java -jar ../start.jar &"
+  }
+YAML
+%>
+
+Now that the `<%= role_name %>` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `<%= cd('../../../') %>` and write the following to `<%=  write_to_file(playbook_yaml_path, updated_playbook)%>`
+
+```YAML
+<%= updated_playbook %>
+```
+
+With the duplicate tasks removed, our Playbook is now much more concise and easy to read.
+
+Re-run the Playbook by running `<%= command(ansible_playbook_command) %>` and you should see that the [Tomcat](http://localhost:8080) and [Jetty](http://localhost:9090) servers are setup exactly as before.
+```
+<%= last_command_output %>
+```
+
+## Now it's your turn
+<%
+  role_path = 'ansible/roles/web-frontend'
+  command("mkdir #{role_path}")
+  tasks_path = "#{role_path}/tasks"
+  command("mkdir #{tasks_path}")
+  vars_path = "#{role_path}/vars"
+  command("mkdir #{vars_path}")
+
+  tasks_yaml=<<YAML
+- name: install apache2
+  apt:
+    name: apache2
+    update_cache: yes
+    state: latest
+
+- name: Start service apache2, if not running
+  service:
+    name: apache2
+    enabled: yes
+    state: started
+
+- name: Enable http_proxy
+  command: "a2enmod proxy_http"
+  notify:
+  - restart apache2
+
+- name: apache2 virtualhost
+  copy:
+    content: |
+      <VirtualHost *:80>
+      ProxyPreserveHost On
+      ProxyPass / {{proxy_url}}/
+      ProxyPassReverse / {{proxy_url}}
+      </VirtualHost>
+    dest: /etc/apache2/sites-enabled/000-default.conf
+  notify:
+  - restart apache2
+YAML
+
+  write_to_file("#{tasks_path}/main.yml", tasks_yaml)
+
+  handlers_yaml =<<YAML
+- name: restart apache2
+  command: /etc/init.d/apache2 restart
+YAML
+  write_to_file("#{role_path}/handlers/main.yml", handlers_yaml)
+
+  vars_yaml=<<VARS
+proxy_url:
+VARS
+
+  write_to_file("#{vars_path}/main.yml", vars_yaml)
+
+  playbook=<<PLAYBOOK
+---
+- name: install tomcat
+  hosts: tomcat-server
+  roles:
+  - { role: application-server,
+      download_url: "http://mirrors.ukfast.co.uk/sites/ftp.apache.org/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz",
+      start_command: "nohup {{installation_dir}}/bin/startup.sh"
+  }
+  - { role: web-frontend, proxy_url: "http://127.0.0.1:8080" }
+
+- name: install jetty
+  hosts: jetty-server
+  roles:
+  - { role: application-server,
+      download_url: "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/jetty-distribution-9.4.12.v20180830.zip",
+      start_command: "cd {{installation_dir}}/demo-base && nohup java -jar ../start.jar &"
+  }
+  - { role: web-frontend, proxy_url: "http://127.0.0.1:8080" }
+PLAYBOOK
+
+write_to_file(playbook_yaml_path, playbook)
+command(cic_down_command)
+command(cic_up_command)
+command(ansible_playbook_command)
+%>
+
+Write a second Role called `web-frontend` that will install `apache2` and proxy http traffic through to a given port defined by the user of the Role. Apply the `web-frontend` Role to both the `tomcat-server` and `jetty-server` hosts to proxy traffic through to port 8080 on each.
+
+Before starting, visit [http://localhost:8888/](http://localhost:8888/) and [http://localhost:9999](http://localhost:9999/) and you'll notice that neither is accessible. The ports on the end of these URLs are mapped from localhost to port80 on the `jetty-server` and `tomcat-server` hosts, meaning that they should work once you are done.
+
+Write the new Role and implement it correctly within the Playbook to pass the supplied exercise acceptance tests. Run `<%= command('pytest') %> to execute them. When you have been successful you should see the following:
+```
+<%= last_command_output %>
+```
+
+#### Helpful Hints
+Apache2 can be configured using a [Virtualhost](https://httpd.apache.org/docs/2.4/vhosts/examples.html) definition to proxy traffic to another destination. E.g.
+
+```XML
+<VirtualHost *:80>
+ProxyPreserveHost On
+ProxyPass / http://127.0.0.1:8080/
+ProxyPassReverse / http://127.0.0.1:8080/
+</VirtualHost>
+```
+The above virtual host definition proxies all traffic received on port 80 to port 8080 on the loop back address for the current server. Configuration for Apache2 can be found under `/etc/apache2`.
+
+You might find it useful to use the `cic connect` command to connect to one of the servers and experiment.
+
+Remember the changes you make to either of the servers can be undone by shutting the cic test infrastructure down and bringing it back up again using the `<%=cic_down_command%>` and `<%= cic_up_command %> commands.
+
+Have fun and good luck! :)
+
+**Note:** once you've finished the exercise, don't forget to run the `cic down` to stop your the environment that you've been using for this tutorial.
+
+## Summary
+As Playbooks get larger, Ansible Roles are a good way of encapsulating and sharing common sets of tasks. During this exercise we have looked at how to define Roles, to read more about what can be done with Roles look at the [Ansible Roles documentation](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_reuse_roles.html)
+
+

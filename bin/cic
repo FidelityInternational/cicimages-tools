@@ -49,7 +49,9 @@ docker run ${options} -t \
 result=$?
 
 if [ "${subcommand}" != "track" ]; then
-    docker cp "$(cic_volumes_container):${volume_path}/." .
+    if [ "${subcommand}" != "connect" ]; then
+      docker cp "$(cic_volumes_container):${volume_path}/." .
+    fi
 fi
 
 exit $?
