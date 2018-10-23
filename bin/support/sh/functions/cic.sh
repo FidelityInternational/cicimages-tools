@@ -41,7 +41,7 @@ function bootstrap_cic_environment(){
     # shellcheck disable=SC2016
     local rbenv_init='eval "$(rbenv init -)"'
     local source_bin_scripts
-    source_bin_scripts=". $(cic_bin)/.env"
+    source_bin_scripts=". $(cic_bin)/env"
     echo "${rbenv_init} && ${source_bin_scripts} && $(cic_exports)"
 }
 

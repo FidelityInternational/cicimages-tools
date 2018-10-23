@@ -104,7 +104,7 @@ All of these fail because they are unable to connect to the server we specified 
 
 <% webserver_yaml_path = File.expand_path('ansible/webserver.yml') %>
 ### Writing a playbook
-Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `<%= playbook_yml = write_to_file(webserver_yaml_path, yaml) %>` <% after_rendering_run("rm #{webserver_yaml_path}") %>
+Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `<%= playbook_yml = write_to_file(webserver_yaml_path, yaml) %>`
 
 ```YAML
 <%= yaml %>

@@ -19,12 +19,10 @@ In this exercise you'll learn how to use variables to:
   - `cd YOUR_CLONE_OF_THIS REPO`
   - `source ./bin/env`
   - `cd ./exercises/IaC/ansible/variables`
-  - `cic up`
+  - `cic up` - This command provisions the test environment that you will need for this exercise.
 
 
-Having run this command, test infrastructure consisting of all the environments you will need has been stood up for you.
-
-Runing cic down will stop these environments and drop any changes that you have made to them.
+Runing cic down will stop the environment and drop any changes that you have made to them.
 
 ## Referencing variables
 Consider the following playbook:
@@ -41,16 +39,18 @@ Consider the following playbook:
 
 ```
 
-Against the 'Display a variable' task you'll notice a string containing `{{name_variable}}` is being passed to the `debug` module. This notation denotes a variable called: `name_variable` is expected to be supplied at runtime.
+Against the 'Display a variable' task you'll notice a string containing `{{name_variable}}` is being passed to the `debug` module. This notation denotes a variable called: `name_variable` is expected to be supplied at runtime. When this line executes, the value that has been assigned to the `name_variable` variable will substituted in the outputted message.
 
 **Note:** Playbooks are processed using the [Jinja2 templating engine](http://jinja.pocoo.org/docs/2.10/). With the exception of the `when:` attribute, variables are always referenced via `{{ VARIABLE }}` notation.
 
-There are number of different ways of supply the value for a variable
+There are many different ways of supplying variables in Ansible
 
-### Supplying from variables through the commandline
-Write the above ansible to a file ansible/hello_world.yml and run: ansible-playbook ansible/hello_world.yml -c local --extra-vars="name_variable=Micky"
+### Supplying variables through the commandline
 
-This should produce the following output:
+Supplying variables via the command line is done via the `--extra-vars` option.
+
+Write the example Playbook given above to ansible/hello_world.yml and run: ansible-playbook ansible/hello_world.yml -c local --extra-vars="name_variable=Micky". This command supplied a value of "Micky" for the `name_variable` variable which was then used within the playbook as can be seen in the output:
+
 ```
 PLAY [Variables example] *******************************************************
 
@@ -235,7 +235,7 @@ prod2 app_env=dev
 
 ```
 
-Before running the playbook, run `cic connect dev1` and note that the prompt does contain the text `dev`. After executing the playbook by running `ansible-playbook ansible/prompt.yml -i ansible/inventory`, connect back to dev1 and you will see that the prompt now reads as required.
+Before running the playbook, run `cic connect dev1` and note that the prompt does not contain the text `DEV`. After executing the playbook by running `ansible-playbook ansible/prompt.yml -i ansible/inventory`, connect back to dev1 and you will see that the prompt now reads as required.
 
 ### Organising your config with `group_vars` and `host_vars`
 Separating config from code is a principle of good software development, and Ansible provides strong conventions which make providing configuration for hosts and groups of hosts easy.
@@ -297,13 +297,13 @@ Run `cic down` and then `cic up` to reset the test infrastructure and rerun ansi
 PLAY [all] *********************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [prod2]
-ok: [dev1]
 ok: [prod1]
+ok: [dev1]
+ok: [prod2]
 
 TASK [Set root prompt] *********************************************************
-changed: [prod2]
 changed: [prod1]
+changed: [prod2]
 changed: [dev1]
 
 PLAY RECAP *********************************************************************
@@ -338,13 +338,15 @@ The application deployed to these environments requires a file to be located at 
 
 Your mission, should you choose to accept it, is to create a Playbook to meet this requirement.
 
+**Note:** Be careful not to choose a variable name that is one of [the variable names used by Ansible](https://docs.ansible.com/ansible/2.5/reference_appendices/playbooks_keywords.html) as doing so can lead to unexpected results.
+
 
 You'll know when you got the job done when you are able to run the command `pytest` and see the following output:
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.2, py-1.7.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
+platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_7982, inifile: pytest.ini
+rootdir: /vols/pytest_19979, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -353,7 +355,7 @@ tests/devservers_test.py::test_dev_app2_server PASSED                    [ 50%]
 tests/devservers_test.py::test_prod_app1_server PASSED                   [ 75%]
 tests/devservers_test.py::test_prod_app2_server PASSED                   [100%]
 
-=========================== 4 passed in 1.68 seconds ===========================
+=========================== 4 passed in 1.76 seconds ===========================
 ```
 
 ## Summary
@@ -368,4 +370,4 @@ Ansible provides a rich feature set that makes it easy to:
 
   
 
-Revision: fd46e6391c75b5f2cdee1374b01c8d99
+Revision: 624808641ce9cef003028b25c902edc8

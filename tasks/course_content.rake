@@ -62,7 +62,7 @@ namespace :course_content do
       say "Rendering templates in: #{templates_dir}"
       templates = templates(parent_directory)
       templates.find_all do |template|
-        source = "source #{root_dir}/bin/.env"
+        source = "source #{root_dir}/bin/env"
         run("#{source} && exercise generate #{relative_path(template, parent_directory)} #{flags}",
             dir: parent_directory,
             silent: false).error?

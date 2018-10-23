@@ -126,9 +126,9 @@ Your code has been rated at 10.00/10
 Don't forget to make sure that the tests are still passing after making your changes. Run pytest to execute them.
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.2, py-1.7.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
+platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_11668, inifile: pytest.ini
+rootdir: /vols/pytest_32032, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 0 items                                                             collecting 3 items                                                             collecting 4 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -146,4 +146,4 @@ Linter's are an invaluable tool for digging out code smells. They are fast and u
 Linters are opinionated but can also be tuned to the needs of project, this gives the opportunity for team mates to agree on a set of principles and leave policing to the tool and their CI process.
   
 
-Revision: 0a892c31d885a67d3a7dba404b7f17e1
+Revision: 47deacffab506c9c2d7f2473a11cada8

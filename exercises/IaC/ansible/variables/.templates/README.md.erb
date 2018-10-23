@@ -23,12 +23,10 @@ In this exercise you'll learn how to use variables to:
   - `cd YOUR_CLONE_OF_THIS REPO`
   - `source ./bin/env`
   - `cd <%=env('exercise_path') %>`
-  - `<%= command("cic up") %>`
+  - `<%= command("cic up") %>` - This command provisions the test environment that you will need for this exercise.
 
 
-Having run this command, test infrastructure consisting of all the environments you will need has been stood up for you.
-
-Runing <%= after_rendering_run(cic_down_command) %> will stop these environments and drop any changes that you have made to them.
+Runing <%= after_rendering_run(cic_down_command) %> will stop the environment and drop any changes that you have made to them.
 
 ## Referencing variables
 Consider the following playbook:
@@ -50,16 +48,18 @@ YAML
 <%= hello_world_yaml %>
 ```
 
-Against the 'Display a variable' task you'll notice a string containing `{{name_variable}}` is being passed to the `debug` module. This notation denotes a variable called: `name_variable` is expected to be supplied at runtime.
+Against the 'Display a variable' task you'll notice a string containing `{{name_variable}}` is being passed to the `debug` module. This notation denotes a variable called: `name_variable` is expected to be supplied at runtime. When this line executes, the value that has been assigned to the `name_variable` variable will substituted in the outputted message.
 
 **Note:** Playbooks are processed using the [Jinja2 templating engine](http://jinja.pocoo.org/docs/2.10/). With the exception of the `when:` attribute, variables are always referenced via `{{ VARIABLE }}` notation.
 
-There are number of different ways of supply the value for a variable
+There are many different ways of supplying variables in Ansible
 
-### Supplying from variables through the commandline
-Write the above ansible to a file <%= write_to_file(hello_world_path, hello_world_yaml) %> and run: <%= command(%Q{ansible-playbook #{hello_world_path} -c local --extra-vars="name_variable=Micky"} ) %>
+### Supplying variables through the commandline
 
-This should produce the following output:
+Supplying variables via the command line is done via the `--extra-vars` option.
+
+Write the example Playbook given above to <%= write_to_file(hello_world_path, hello_world_yaml) %> and run: <%= command(%Q{ansible-playbook #{hello_world_path} -c local --extra-vars="name_variable=Micky"} ) %>. This command supplied a value of "Micky" for the `name_variable` variable which was then used within the playbook as can be seen in the output:
+
 ```
 <%= last_command_output %>
 ```
@@ -183,7 +183,8 @@ Each of the files defines a variable `prompt` that will be displayed on the cons
 **Note** There is nothing special about the folder name `vars`, its purely arbitrary.
 
 <%
-dev_prompt= 'dev'
+dev_prompt= 'DEV'
+dev_app_env = 'dev'
 prompt_playbook=<<YAML
 ---
 - hosts: all
@@ -202,7 +203,7 @@ YAML
 <%
 inventory_yaml=<<YAML
 [dev-servers]
-#{dev_server} app_env=#{dev_prompt}
+#{dev_server} app_env=#{dev_app_env}
 
 [prod-servers]
 prod1 app_env=dev
@@ -221,7 +222,7 @@ Here we can see that the `include_vars` module is being used to load the variabl
 <%= inventory_yaml %>
 ```
 
-Before running the playbook, run `cic connect <%= dev_server %>` and note that the prompt does contain the text `<%= dev_prompt %>`. After executing the playbook by running `<%=command("ansible-playbook ansible/prompt.yml -i ansible/inventory")%>`, connect back to <%= dev_server %> and you will see that the prompt now reads as required.
+Before running the playbook, run `cic connect <%= dev_server %>` and note that the prompt does not contain the text `<%= dev_prompt %>`. After executing the playbook by running `<%=command("ansible-playbook ansible/prompt.yml -i ansible/inventory")%>`, connect back to <%= dev_server %> and you will see that the prompt now reads as required.
 
 ### Organising your config with `group_vars` and `host_vars`
 Separating config from code is a principle of good software development, and Ansible provides strong conventions which make providing configuration for hosts and groups of hosts easy.
@@ -318,6 +319,8 @@ The application deployed to these environments requires a file to be located at 
 - `HOSTNAME` is the hostname of the system.  Ansible makes this information available to you, you just need to find out how :)
 
 Your mission, should you choose to accept it, is to create a Playbook to meet this requirement.
+
+**Note:** Be careful not to choose a variable name that is one of [the variable names used by Ansible](https://docs.ansible.com/ansible/2.5/reference_appendices/playbooks_keywords.html) as doing so can lead to unexpected results.
 
 <%
 
