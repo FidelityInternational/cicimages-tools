@@ -297,9 +297,9 @@ Run `cic down` and then `cic up` to reset the test infrastructure and rerun ansi
 PLAY [all] *********************************************************************
 
 TASK [Gathering Facts] *********************************************************
+ok: [dev1]
 ok: [prod2]
 ok: [prod1]
-ok: [dev1]
 
 TASK [Set root prompt] *********************************************************
 changed: [prod2]
@@ -346,7 +346,7 @@ You'll know when you got the job done when you are able to run the command `pyte
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_7986, inifile: pytest.ini
+rootdir: /vols/pytest_31045, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -355,7 +355,7 @@ tests/devservers_test.py::test_dev_app2_server PASSED                    [ 50%]
 tests/devservers_test.py::test_prod_app1_server PASSED                   [ 75%]
 tests/devservers_test.py::test_prod_app2_server PASSED                   [100%]
 
-=========================== 4 passed in 1.64 seconds ===========================
+=========================== 4 passed in 1.69 seconds ===========================
 ```
 
 ## Summary
@@ -370,4 +370,4 @@ Ansible provides a rich feature set that makes it easy to:
 
   
 
-Revision: 31a76124199d3a47ad7ca2493cf48b99
+Revision: 5361e1667dbb16c94ddf8a87c1880a6c
