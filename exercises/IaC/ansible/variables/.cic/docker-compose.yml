@@ -1,0 +1,53 @@
+version: '2'
+networks:
+  default:
+    external:
+      name: cic
+
+services:
+  dev1:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+    hostname: dev1
+
+  prod1:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+    hostname: prod1
+
+  prod2:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+    hostname: prod2
+
+
+  dev-app1:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+    hostname: dev-app1
+
+  dev-app2:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+    hostname: dev-app2
+
+  prod-app1:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+    hostname: prod-app1
+
+  prod-app2:
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    command: /sbin/init
+    hostname: prod-app2
+
+
+
+

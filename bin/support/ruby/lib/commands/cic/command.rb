@@ -21,12 +21,12 @@ module Commands
 
       desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
       option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
-
       def connect(container_name)
-        command = "-it #{container_name} "
+        command = "-it #{container_id(container_name)} "
         command << (options[:command] || 'bash -l')
         docker_exec(command)
       end
+
 
       desc 'down', 'Bring down environment supporting current exercise'
 

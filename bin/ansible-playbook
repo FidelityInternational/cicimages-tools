@@ -13,7 +13,7 @@ copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
 command="ansible-playbook $@"
 
-if docker run --privileged \
+if docker run -t --privileged \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
     -w "${volume_path}" \
