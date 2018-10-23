@@ -212,7 +212,7 @@ inventory file and run the playbook successfully:
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_18697, inifile: pytest.ini
+rootdir: /vols/pytest_13222, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 2 items                                                             collecting 3 items                                                             collected 3 items                                                              
 
@@ -225,7 +225,7 @@ tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 <unknown>:7: DeprecationWarning: invalid escape sequence \s
 
 -- Docs: https://docs.pytest.org/en/latest/warnings.html
-===================== 3 passed, 2 warnings in 1.26 seconds =====================
+===================== 3 passed, 2 warnings in 1.20 seconds =====================
 ```
 
 ## Summary
@@ -239,4 +239,4 @@ In this tutorial and exercises, you should have seen that:
 
   
 
-Revision: bd0e1872320c4cbd24a9ddab6d1e2602
+Revision: d8c96df922a613181bf32a6e677c6e1e

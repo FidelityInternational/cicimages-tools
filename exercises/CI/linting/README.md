@@ -128,7 +128,7 @@ Don't forget to make sure that the tests are still passing after making your cha
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_32032, inifile: pytest.ini
+rootdir: /vols/pytest_7220, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 0 items                                                             collecting 3 items                                                             collecting 4 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -137,7 +137,7 @@ tests/test_calculator_add.py::test_adds_on_to_running_total PASSED       [ 50%]
 tests/test_calculator_add.py::test_minus_numbers PASSED                  [ 75%]
 tests/test_calculator_result.py::test_is_0_by_default PASSED             [100%]
 
-=========================== 4 passed in 0.02 seconds ===========================
+=========================== 4 passed in 0.03 seconds ===========================
 ```
 
 ## Summary
@@ -146,4 +146,4 @@ Linter's are an invaluable tool for digging out code smells. They are fast and u
 Linters are opinionated but can also be tuned to the needs of project, this gives the opportunity for team mates to agree on a set of principles and leave policing to the tool and their CI process.
   
 
-Revision: 47deacffab506c9c2d7f2473a11cada8
+Revision: b85e5a26e7b2dcb2208d6f737cae2aa1
