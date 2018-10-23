@@ -12,7 +12,7 @@ A CD pipeline is the name given to an automated process constructed to take a ne
 
 It may sound obvious to say but releasing software when it's ready is incredibly important!
 
-When a new product is built it is the result of a lot of hard work. E.g. analysis, programming and testing. However until a product is released to it's target audience, all of that effort can be considered wasted activity. Often a new version of a product contains new features that are based on assumptions as to what users want and how they will want to use it. Those assumptions can't be tested until the product is in the users' hands and they are actually and their feedback can be obtained. Getting feedback on new features is key to driving requirements for subsequent releases. Companies that are able to release software very frequently put themselves at a huge advantage, when compared to competitors who are unable to do so, because they are able to:
+When a new product is built it is the result of a lot of hard work. E.g. analysis, programming and testing. However until a product is released to it's target audience, all of that effort can be considered wasted activity. Often a new version of a product contains new features that are based on assumptions as to what users want and how they will want to use it. Those assumptions can't be tested until the product is in the users' hands and their feedback can be obtained. Getting feedback on new features is key to driving requirements for subsequent releases. Companies that are able to release software very frequently put themselves at a huge advantage, when compared to competitors who are unable to do so, because they are able to:
 - react more quickly
 - get feedback more frequently
 - de-risk the release process by making each release small
@@ -22,15 +22,16 @@ When a new product is built it is the result of a lot of hard work. E.g. analysi
 
 ## Required prequisite knowledge
 - basic knowledge of Concourse CI:
-  You know how to use the Concourse command line interface (CLI) to:
-    - Login
-    - Create and trigger pipelines
+  You know how to use the Concourse command line interface (fly) to:
+    - Login.
+    - Create and trigger pipelines.
     - Navigate the user interface.
-- Appreciation of continuous integration
+- Appreciation of continuous integration.
+
 Don't worry if you need to brush up on either of these things, take a look at the [Introduction to CI](https://github.com/lvl-up/ci-cd-training/tree/master/exercises/CI/introduction_to_ci) exercise to get up to speed.
 
 ## Quality Gates
-A quality gate represents a milestone that encompasses as set of requirements/standards that must be met to pass it. Although the detail of what is checked will be different from one CD pipeline will be different to the next, most pipelines will have a number of quality gates that have the same overarching objectives:
+A quality gate represents a milestone that encompasses a set of requirements/standards that must be met to pass it. Although the detail of what is checked will be different from one CD pipeline will be different to the next, most pipelines will have a number of quality gates that have the same overarching objectives:
 
 - **Build/Compilation** - Depending on the language in use, compilation or packaging may be required before anything else can happen. If so this is most likely going to be the first step of the pipeline.
 
@@ -42,7 +43,7 @@ A quality gate represents a milestone that encompasses as set of requirements/st
 
 - **Performance** - Verifies that the release candidate performs as required. E.g. can handle a given number of users.
 
-- **Staging** - The staging environment is an environment that is equivalent/identical to the production environment. I.e. it has the same firewall rules and layout etc... as production. This gate requires proof that the automation required to release the candidate to production environment works correctly.
+- **Staging** - The staging environment is an environment that is equivalent/identical to the production environment. I.e. it has equivalent configuration, firewall rules and layout to production. This gate requires proof that the automation required to release the candidate to production environment works correctly.
 
 - **Production** - This is where the release candidate is actually deployed to the production environment.
 
@@ -124,10 +125,10 @@ succeeded
 
 The output communicates the following:
 
-0. The instruction to execute our task has been received
-0. The environment that is needed to execute our command has been downloaded
-0. The command has been run
-0. The output of the command
+1. The instruction to execute our task has been received
+1. The environment that is needed to execute our command has been downloaded
+1. The command has been run
+1. The output of the command
 
 
 Let's take a look at the YAML and what it instructed Concourse to do more closely:
@@ -324,11 +325,6 @@ Have fun and good luck! :)
 
 **Note:** once you've finished the exercise, don't forget to run the `cic down` to stop your the environment that you've been using for this tutorial.
 
-
-
-
-
-
   
 
-Revision: 69369369b741b03be615f0b2f1b5de74
+Revision: e3f181f6c23a00d05271552159b18cee
