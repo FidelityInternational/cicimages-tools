@@ -102,7 +102,7 @@ The output shows us that two tests attempted to verify:
 
 All of these fail because they are unable to connect to the server we specified as we are yet to build it. (see the lines that in the output prefixed with 'E').
 
-<% webserver_yaml_path = File.expand_path('ansible/webserver.yml') %>
+<% webserver_yaml_path = 'ansible/webserver.yml' %>
 ### Writing a playbook
 Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `<%= playbook_yml = write_to_file(webserver_yaml_path, yaml) %>`
 
