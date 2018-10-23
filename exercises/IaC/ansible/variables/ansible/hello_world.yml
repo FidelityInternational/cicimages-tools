@@ -1,5 +1,0 @@
-- name: Variables example
-  hosts: localhost
-  tasks:
-    - name: Display a variable
-      debug: msg="Hello {{name_variable}}, how are you?"

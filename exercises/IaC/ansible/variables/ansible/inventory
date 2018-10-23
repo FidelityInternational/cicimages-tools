@@ -1,7 +1,0 @@
-[dev-servers]
-dev-app1
-dev-app2
- 
-[prod-servers]
-prod-app1
-prod-app2
