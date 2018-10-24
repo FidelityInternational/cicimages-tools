@@ -9,7 +9,7 @@ In this exercise we will look at how Roles themselves are defined and imported w
 - How to use Roles to DRY up playbooks by extracting tasks and removing duplication.
 
 ## Required prequisite knowledge
-It is assumed that you know enough about Ansible to define a simple Platbook and define inventory to run it against.
+It is assumed that you know enough about Ansible to define a simple Playbook and define inventory to run it against.
 
 
 
@@ -18,7 +18,7 @@ It is assumed that you know enough about Ansible to define a simple Platbook and
 - `source ./bin/env`
 - `cd ./exercises/IaC/ansible/roles`
 
-run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run ``
+run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`
 
 ## Setting the Scene
 The following playbook contains two plays. The first installs tomcat and the second installs [Eclipse Jetty](https://www.eclipse.org/jetty/), both of which are Java based web application containers. Both of the `jetty-server` and `tomcat-server` hosts referenced in the Playbook are real and can be connected to via the `cic connect` command. E.g. `cic connect tomcat-server`.
@@ -27,6 +27,7 @@ The following playbook contains two plays. The first installs tomcat and the sec
 
 
 
+---
 ---
 - name: install tomcat
   hosts: tomcat-server
@@ -57,11 +58,15 @@ The following playbook contains two plays. The first installs tomcat and the sec
       dest: "{{tomcat_installation_dir}}"
       remote_src: yes
 
-  - name: move files up one
-    command: bash -c 'cd {{tomcat_installation_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+  - name: move files to parent directory
+    shell: dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"
+    args:
+      chdir: "{{tomcat_installation_dir}}"
 
   - name: start tomcat
-    command: bash -c 'cd {{tomcat_installation_dir}}/bin && nohup ./startup.sh'
+    shell: nohup ./startup.sh
+    args:
+      chdir: "{{tomcat_installation_dir}}/bin"
 
 - name: install jetty
   hosts: jetty-server
@@ -93,11 +98,16 @@ The following playbook contains two plays. The first installs tomcat and the sec
       dest: "{{jetty_install_dir}}"
       remote_src: yes
 
-  - name: move files up one
-    command: bash -c 'cd {{jetty_install_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+  - name: move files to parent directory
+    shell: dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"
+    args:
+      chdir: "{{jetty_install_dir}}"
+
 
   - name: start jetty
-    command: bash -c 'cd {{jetty_install_dir}}/demo-base && nohup java -jar ../start.jar &'
+    shell: nohup java -jar ../start.jar &
+    args:
+      chdir: "{{jetty_install_dir}}/demo-base"
 
 ```
 
@@ -120,7 +130,7 @@ changed: [tomcat-server]
 TASK [unzip tomcat] ************************************************************
 changed: [tomcat-server]
 
-TASK [move files up one] *******************************************************
+TASK [move files to parent directory] ******************************************
 changed: [tomcat-server]
 
 TASK [start tomcat] ************************************************************
@@ -143,7 +153,7 @@ changed: [jetty-server]
 TASK [unzip jetty] *************************************************************
 changed: [jetty-server]
 
-TASK [move files up one] *******************************************************
+TASK [move files to parent directory] ******************************************
 changed: [jetty-server]
 
 TASK [start jetty] *************************************************************
@@ -156,7 +166,7 @@ tomcat-server              : ok=7    changed=6    unreachable=0    failed=0
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
-Visit [http://localhost:8080](http://localhost:8080) and [http://localhost:9090](http://localhost:8080) and you will see that both Tomcat and Jetty are both up and running.
+Visit [http://localhost:8080](http://localhost:8080) and [http://localhost:9090](http://localhost:8080) and you will see that both Jetty and Tomcat are both up and running.
 
 Whilst the above playbook works it has a couple of issues:
 - It's verbose which makes it difficult, at a glance, to tell what it does.
@@ -165,16 +175,16 @@ Whilst the above playbook works it has a couple of issues:
 ## How to define a Role
 **Note:** Before going any further run `cic down` and `cic up` to reset the cic test infrastructure.
 
-The playbook we looked at earlier essentially gave the a role of application server to both the `tomcat-server` and `jetty-server` hosts. Therefore lets define a role called `application-server` that:
+The playbook we looked at earlier essentially gave the role of application server to both the `tomcat-server` and `jetty-server` hosts. Therefore let's define a role called `application-server` that:
 
 - Installs Java
 - Downloads an archive containing the application server
 - Unpacks the archive to the desired location
 - Starts the server
 
-Ansible automatically tries to find any role that you reference in a directory called `roles`. The `roles` directory should be local to the Playbook.
+Ansible automatically tries to find any role that you reference in a directory called `roles`. The `roles` directory should be relative to the Playbook.
 
-Let's start by by the creating the `roles` directory at `ansible/roles`, i.e. run "mkdir ansible/roles".
+Let's start by by the creating the `roles` directory at `ansible/roles`, i.e. run `mkdir ansible/roles`.
 
 
 Each directory inside the `roles` directory represents a role. Therefore to create a role called `application-server` create the following directory `ansible/roles/application-server`.
@@ -189,7 +199,7 @@ Within a role, if required, the following directories can be supplied:
 - **templates** - contains templates which can be deployed via this role.
 - **meta** - defines meta data detailing things as dependencies
 
-By default anything written in side a file called `main.yml` in any of these directories will automatically be picked up when the Role is loaded as part of a Playbook.
+With the exceptioon of the `templates` and `files` directories, anything written inside a file called `main.yml` in any of these directories will automatically be picked up when the Role is loaded as part of a Playbook.
 
 
 
@@ -198,7 +208,7 @@ Studying our playbook we can see that if
 - download url
 - startup command
 
-were supplied as variables, it would be possible to generify a set of tasks that could be extracted in to our `application-server` role. This means creating entries in the `tasks` and `vars` within our `application-server` role.
+were supplied as variables, it would be possible to generify a set of tasks that could be extracted into our `application-server` role. This means creating entries in the `tasks` and `vars` within our `application-server` role.
 
 Starting with `vars`, move to the  `application-server` directory (`cd ansible/roles/application-server`) and make the `tasks` directory by running: `mkdir tasks`. Now write the following tasks to tasks/main.yml
 
@@ -225,11 +235,15 @@ Starting with `vars`, move to the  `application-server` directory (`cd ansible/r
     dest: "{{installation_dir}}"
     remote_src: yes
 
-- name: move files up one
-  command: bash -c 'cd {{installation_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+- name: move files to parent directory
+  shell: dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"
+  args:
+    chdir: "{{installation_dir}}"
 
 - name: start app server
-  command: bash -c 'cd {{installation_dir}} && {{start_command}}'
+  shell: "{{start_command}}"
+  args:
+    chdir: "{{installation_dir}}"
 
 ```
 
@@ -264,7 +278,7 @@ installation_dir: /tmp/applicaton-server
 
 
 
-Now that the `application-server` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `cd ../../../` and write the following to `ansible/app_servers.yml`
+Now that the `application-server` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `cd ../../../` and replace the content of `ansible/app_servers.yml` with the following:
 
 ```YAML
 ---
@@ -307,7 +321,7 @@ changed: [tomcat-server]
 TASK [application-server : unzip app server archive] ***************************
 changed: [tomcat-server]
 
-TASK [application-server : move files up one] **********************************
+TASK [application-server : move files to parent directory] *********************
 changed: [tomcat-server]
 
 TASK [application-server : start app server] ***********************************
@@ -330,7 +344,7 @@ changed: [jetty-server]
 TASK [application-server : unzip app server archive] ***************************
 changed: [jetty-server]
 
-TASK [application-server : move files up one] **********************************
+TASK [application-server : move files to parent directory] *********************
 changed: [jetty-server]
 
 TASK [application-server : start app server] ***********************************
@@ -348,19 +362,19 @@ tomcat-server              : ok=7    changed=6    unreachable=0    failed=0
 
 Write a second Role called `web-frontend` that will install `apache2` and proxy http traffic through to a given port defined by the user of the Role. Apply the `web-frontend` Role to both the `tomcat-server` and `jetty-server` hosts to proxy traffic through to port 8080 on each.
 
-Before starting, visit [http://localhost:8888/](http://localhost:8888/) and [http://localhost:9999](http://localhost:9999/) and you'll notice that neither is accessible. The ports on the end of these URLs are mapped from localhost to port80 on the `jetty-server` and `tomcat-server` hosts, meaning that they should work once you are done.
+Before starting, visit [http://localhost:8888/](http://localhost:8888/) and [http://localhost:9999](http://localhost:9999/) and you'll notice that neither is accessible. The ports on the end of these URLs are mapped from localhost to port 80 on the `jetty-server` and `tomcat-server` hosts, meaning that they should work once you are done.
 
-Write the new Role and implement it correctly within the Playbook to pass the supplied exercise acceptance tests. Run `pytest to execute them. When you have been successful you should see the following:
+Write the new Role and implement it correctly within the Playbook to pass the supplied exercise acceptance tests. Run `pytest` to execute them. When you have been successful you should see the following:
 ```
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_22857, inifile:
+rootdir: /vols/pytest_25204, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 2 items                                                             collected 2 items                                                              
 
 tests/webservers_test.py ..                                              [100%]
 
-=========================== 2 passed in 1.38 seconds ===========================
+=========================== 2 passed in 1.78 seconds ===========================
 ```
 
 #### Helpful Hints
@@ -377,7 +391,7 @@ The above virtual host definition proxies all traffic received on port 80 to por
 
 You might find it useful to use the `cic connect` command to connect to one of the servers and experiment.
 
-Remember the changes you make to either of the servers can be undone by shutting the cic test infrastructure down and bringing it back up again using the `cic down` and `cic up commands.
+Remember the changes you make to either of the servers can be undone by shutting the cic test infrastructure down and bringing it back up again using the `cic down` and `cic up` commands.
 
 Have fun and good luck! :)
 
@@ -390,4 +404,4 @@ As Playbooks get larger, Ansible Roles are a good way of encapsulating and shari
 
   
 
-Revision: 05f852377a8a0e09db198d63cafaae8d
+Revision: a67f1f08c1816658ce10c9bab095c151

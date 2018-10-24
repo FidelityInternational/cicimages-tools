@@ -9,7 +9,7 @@ In this exercise we will look at how Roles themselves are defined and imported w
 - How to use Roles to DRY up playbooks by extracting tasks and removing duplication.
 
 ## Required prequisite knowledge
-It is assumed that you know enough about Ansible to define a simple Platbook and define inventory to run it against.
+It is assumed that you know enough about Ansible to define a simple Playbook and define inventory to run it against.
 
 <%
 cic_down_command = 'cic down'
@@ -21,7 +21,7 @@ cic_up_command = 'cic up'
 - `source ./bin/env`
 - `cd <%=env('exercise_path') %>`
 
-run `<%= command('cic up') %>` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `<% after_rendering_run('cic down')%>`
+run `<%= command('cic up') %>` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `<%= after_rendering_run('cic down')%>`
 
 ## Setting the Scene
 The following playbook contains two plays. The first installs tomcat and the second installs [Eclipse Jetty](https://www.eclipse.org/jetty/), both of which are Java based web application containers. Both of the `jetty-server` and `tomcat-server` hosts referenced in the Playbook are real and can be connected to via the `cic connect` command. E.g. `cic connect tomcat-server`.
@@ -30,6 +30,7 @@ The following playbook contains two plays. The first installs tomcat and the sec
 
 <%
 playbook_yaml=<<YAML
+---
 - name: install tomcat
   hosts: tomcat-server
   vars:
@@ -59,11 +60,15 @@ playbook_yaml=<<YAML
       dest: "{{tomcat_installation_dir}}"
       remote_src: yes
 
-  - name: move files up one
-    command: bash -c 'cd {{tomcat_installation_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+  - name: move files to parent directory
+    shell: dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"
+    args:
+      chdir: "{{tomcat_installation_dir}}"
 
   - name: start tomcat
-    command: bash -c 'cd {{tomcat_installation_dir}}/bin && nohup ./startup.sh'
+    shell: nohup ./startup.sh
+    args:
+      chdir: "{{tomcat_installation_dir}}/bin"
 
 - name: install jetty
   hosts: jetty-server
@@ -95,17 +100,20 @@ playbook_yaml=<<YAML
       dest: "{{jetty_install_dir}}"
       remote_src: yes
 
-  - name: move files up one
-    command: bash -c 'cd {{jetty_install_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+  - name: move files to parent directory
+    shell: dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"
+    args:
+      chdir: "{{jetty_install_dir}}"
+
 
   - name: start jetty
-    command: bash -c 'cd {{jetty_install_dir}}/demo-base && nohup java -jar ../start.jar &'
+    shell: nohup java -jar ../start.jar &
+    args:
+      chdir: "{{jetty_install_dir}}/demo-base"
 YAML
 playbook_yaml_path = 'ansible/app_servers.yml'
 ansible_playbook_command = "ansible-playbook #{playbook_yaml_path} -i ansible/inventory.yml"
 %>
-
----
 <%= playbook_yaml%>
 ```
 
@@ -114,7 +122,7 @@ Write the above Playbook to `<%= write_to_file(playbook_yaml_path, playbook_yaml
 <%= last_command_output %>
 ```
 
-Visit [http://localhost:8080](http://localhost:8080) and [http://localhost:9090](http://localhost:8080) and you will see that both Tomcat and Jetty are both up and running.
+Visit [http://localhost:8080](http://localhost:8080) and [http://localhost:9090](http://localhost:8080) and you will see that both Jetty and Tomcat are both up and running.
 
 Whilst the above playbook works it has a couple of issues:
 - It's verbose which makes it difficult, at a glance, to tell what it does.
@@ -123,16 +131,16 @@ Whilst the above playbook works it has a couple of issues:
 ## How to define a Role
 **Note:** Before going any further run `<%=command(cic_down_command) %>` and `<%= command(cic_up_command) %>` to reset the cic test infrastructure.
 
-The playbook we looked at earlier essentially gave the a role of application server to both the `tomcat-server` and `jetty-server` hosts. Therefore lets define a role called `application-server` that:
+The playbook we looked at earlier essentially gave the role of application server to both the `tomcat-server` and `jetty-server` hosts. Therefore let's define a role called `application-server` that:
 
 - Installs Java
 - Downloads an archive containing the application server
 - Unpacks the archive to the desired location
 - Starts the server
 
-Ansible automatically tries to find any role that you reference in a directory called `roles`. The `roles` directory should be local to the Playbook.
+Ansible automatically tries to find any role that you reference in a directory called `roles`. The `roles` directory should be relative to the Playbook.
 
-Let's start by by the creating the `roles` directory at `ansible/roles`, i.e. run "<%= command('mkdir ansible/roles') %>".
+Let's start by by the creating the `roles` directory at `ansible/roles`, i.e. run `<%= command('mkdir ansible/roles') %>`.
 
 <%
 role_name='application-server'
@@ -151,7 +159,7 @@ Within a role, if required, the following directories can be supplied:
 - **templates** - contains templates which can be deployed via this role.
 - **meta** - defines meta data detailing things as dependencies
 
-By default anything written in side a file called `main.yml` in any of these directories will automatically be picked up when the Role is loaded as part of a Playbook.
+With the exceptioon of the `templates` and `files` directories, anything written inside a file called `main.yml` in any of these directories will automatically be picked up when the Role is loaded as part of a Playbook.
 
 <%
  task_yaml =<<YAML
@@ -177,11 +185,15 @@ By default anything written in side a file called `main.yml` in any of these dir
     dest: "{{installation_dir}}"
     remote_src: yes
 
-- name: move files up one
-  command: bash -c 'cd {{installation_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+- name: move files to parent directory
+  shell: dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"
+  args:
+    chdir: "{{installation_dir}}"
 
 - name: start app server
-  command: bash -c 'cd {{installation_dir}} && {{start_command}}'
+  shell: "{{start_command}}"
+  args:
+    chdir: "{{installation_dir}}"
 YAML
 %>
 
@@ -190,7 +202,7 @@ Studying our playbook we can see that if
 - download url
 - startup command
 
-were supplied as variables, it would be possible to generify a set of tasks that could be extracted in to our `<%= role_name %>` role. This means creating entries in the `tasks` and `vars` within our `<%= role_name %>` role.
+were supplied as variables, it would be possible to generify a set of tasks that could be extracted into our `<%= role_name %>` role. This means creating entries in the `tasks` and `vars` within our `<%= role_name %>` role.
 
 Starting with `vars`, move to the  `<%= role_name %>` directory (`<%= cd(role_path) %>`) and make the `tasks` directory by running: `<%= command("mkdir tasks") %>`. Now write the following tasks to <%= write_to_file('tasks/main.yml', task_yaml)%>
 
@@ -254,7 +266,7 @@ YAML
 %>
 
 
-Now that the `<%= role_name %>` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `<%= cd('../../../') %>` and write the following to `<%=  write_to_file(playbook_yaml_path, updated_playbook)%>`
+Now that the `<%= role_name %>` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `<%= cd('../../../') %>` and replace the content of `<%=  write_to_file(playbook_yaml_path, updated_playbook)%>` with the following:
 
 ```YAML
 <%= updated_playbook %>
@@ -290,7 +302,7 @@ Re-run the Playbook by running `<%= command(ansible_playbook_command) %>` and yo
     state: started
 
 - name: Enable http_proxy
-  command: "a2enmod proxy_http"
+  shell: "a2enmod proxy_http"
   notify:
   - restart apache2
 
@@ -311,7 +323,7 @@ YAML
 
   handlers_yaml =<<YAML
 - name: restart apache2
-  command: /etc/init.d/apache2 restart
+  shell: /etc/init.d/apache2 restart
 YAML
   write_to_file("#{role_path}/handlers/main.yml", handlers_yaml)
 
@@ -326,20 +338,22 @@ VARS
 - name: install tomcat
   hosts: tomcat-server
   roles:
-  - { role: application-server,
-      download_url: "http://mirrors.ukfast.co.uk/sites/ftp.apache.org/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz",
-      start_command: "nohup {{installation_dir}}/bin/startup.sh"
-  }
-  - { role: web-frontend, proxy_url: "http://127.0.0.1:8080" }
+  - role: application-server
+    download_url: "http://mirrors.ukfast.co.uk/sites/ftp.apache.org/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz"
+    start_command: "nohup {{installation_dir}}/bin/startup.sh"
+
+  - role: web-frontend
+    proxy_url: "http://127.0.0.1:8080"
 
 - name: install jetty
   hosts: jetty-server
   roles:
-  - { role: application-server,
-      download_url: "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/jetty-distribution-9.4.12.v20180830.zip",
-      start_command: "cd {{installation_dir}}/demo-base && nohup java -jar ../start.jar &"
-  }
-  - { role: web-frontend, proxy_url: "http://127.0.0.1:8080" }
+  - role: application-server
+    download_url: "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/jetty-distribution-9.4.12.v20180830.zip"
+    start_command: "cd {{installation_dir}}/demo-base && nohup java -jar ../start.jar &"
+  - role: web-frontend
+    proxy_url: "http://127.0.0.1:8080"
+
 PLAYBOOK
 
 write_to_file(playbook_yaml_path, playbook)
@@ -350,9 +364,9 @@ command(ansible_playbook_command)
 
 Write a second Role called `web-frontend` that will install `apache2` and proxy http traffic through to a given port defined by the user of the Role. Apply the `web-frontend` Role to both the `tomcat-server` and `jetty-server` hosts to proxy traffic through to port 8080 on each.
 
-Before starting, visit [http://localhost:8888/](http://localhost:8888/) and [http://localhost:9999](http://localhost:9999/) and you'll notice that neither is accessible. The ports on the end of these URLs are mapped from localhost to port80 on the `jetty-server` and `tomcat-server` hosts, meaning that they should work once you are done.
+Before starting, visit [http://localhost:8888/](http://localhost:8888/) and [http://localhost:9999](http://localhost:9999/) and you'll notice that neither is accessible. The ports on the end of these URLs are mapped from localhost to port 80 on the `jetty-server` and `tomcat-server` hosts, meaning that they should work once you are done.
 
-Write the new Role and implement it correctly within the Playbook to pass the supplied exercise acceptance tests. Run `<%= command('pytest') %> to execute them. When you have been successful you should see the following:
+Write the new Role and implement it correctly within the Playbook to pass the supplied exercise acceptance tests. Run `<%= command('pytest') %>` to execute them. When you have been successful you should see the following:
 ```
 <%= last_command_output %>
 ```
@@ -371,7 +385,7 @@ The above virtual host definition proxies all traffic received on port 80 to por
 
 You might find it useful to use the `cic connect` command to connect to one of the servers and experiment.
 
-Remember the changes you make to either of the servers can be undone by shutting the cic test infrastructure down and bringing it back up again using the `<%=cic_down_command%>` and `<%= cic_up_command %> commands.
+Remember the changes you make to either of the servers can be undone by shutting the cic test infrastructure down and bringing it back up again using the `<%=cic_down_command%>` and `<%= cic_up_command %>` commands.
 
 Have fun and good luck! :)
 
