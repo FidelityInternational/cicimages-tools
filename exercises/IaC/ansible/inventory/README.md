@@ -176,8 +176,8 @@ Which should show output as follows:
 
 ```
 server2 | SUCCESS => {    "changed": false,    "dns_server": "2.2.2.2"}
-server3 | SUCCESS => {    "changed": false,    "dns_server": "3.3.3.3"}
 server1 | SUCCESS => {    "changed": false,    "dns_server": "1.1.1.1"}
+server3 | SUCCESS => {    "changed": false,    "dns_server": "3.3.3.3"}
 ```
 
 The output shows the result of running the `debug` module on each of the three hosts in the inventory file.
@@ -212,7 +212,7 @@ inventory file and run the playbook successfully:
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_9471, inifile: pytest.ini
+rootdir: /vols/pytest_1367, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 2 items                                                             collecting 3 items                                                             collected 3 items                                                              
 
@@ -225,7 +225,7 @@ tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 <unknown>:7: DeprecationWarning: invalid escape sequence \s
 
 -- Docs: https://docs.pytest.org/en/latest/warnings.html
-===================== 3 passed, 2 warnings in 1.36 seconds =====================
+===================== 3 passed, 2 warnings in 1.30 seconds =====================
 ```
 
 ## Summary
@@ -239,4 +239,4 @@ In this tutorial and exercises, you should have seen that:
 
   
 
-Revision: dc6f54d24141f96f7777e4d63d3b6ec1
+Revision: 9ca15e0cb174e7863f39b5169bdf22af

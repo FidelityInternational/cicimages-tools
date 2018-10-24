@@ -28,7 +28,7 @@ The readme to the exercise should include the following:
 ## Useful Terminology
 `# Optional - any key terms you intend to use in your exercise, if appropriate, could be listed here`
 
-## Required prequisite knowledge
+## Required knowledge
 `# Optional - if knowledge of certain topics are needed to be able to complete this exercise, list them here. Provide links to information on these topics where possible`
 
 ### Tutorial

@@ -20,7 +20,7 @@ When a new product is built it is the result of a lot of hard work. E.g. analysi
 ## Learning Objectives
 - Learn the features of Concourse that enable building continuous deployment pipelines
 
-## Required prequisite knowledge
+## Required knowledge
 - basic knowledge of Concourse CI:
   You know how to use the Concourse command line interface (fly) to:
     - Login.
@@ -111,7 +111,6 @@ waiting for docker to come up...
 Pulling busybox@sha256:2a03a6059f21e150ae84b0973863609494aad70f0a80eaeb64bddd8d92465812...
 sha256:2a03a6059f21e150ae84b0973863609494aad70f0a80eaeb64bddd8d92465812: Pulling from library/busybox
 90e01955edcd: Pulling fs layer
-90e01955edcd: Verifying Checksum
 90e01955edcd: Download complete
 90e01955edcd: Pull complete
 Digest: sha256:2a03a6059f21e150ae84b0973863609494aad70f0a80eaeb64bddd8d92465812
@@ -328,4 +327,4 @@ Have fun and good luck! :)
 
   
 
-Revision: 2e5ba619bb44868ebf6175e36d46e543
+Revision: 446a1f524bf35900c512915dbb98578b

@@ -11,7 +11,7 @@ Linting, isn't a new practice. Linting first started in [1978 at Bell Labs](http
 
 The intention of this exercise is not to exhaustively teach how to use a particular linter for a specific language, rather to introduce the value of using linters. This exercise does use pylint however, if Python is not a language you know, don't worry as very little knowledge of python is required. No matter what your experience of Python is, you should still get all of the intended value from this exercise. If you are interested in  specifically and want to do more extensive reading then check out the [project home page](https://www.pylint.org/) for more information.
 
-## Required prequisite knowledge
+## Required knowledge
 This exercise assumes that you have basic knowledge of at least one programming. Although not essential, knowledge of an object oriented language might be useful.
 
 ### Tutorial
@@ -128,7 +128,7 @@ Don't forget to make sure that the tests are still passing after making your cha
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_28857, inifile: pytest.ini
+rootdir: /vols/pytest_26221, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 0 items                                                             collecting 3 items                                                             collecting 4 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -146,4 +146,4 @@ Linter's are an invaluable tool for digging out code smells. They are fast and u
 Linters are opinionated but can also be tuned to the needs of project, this gives the opportunity for team mates to agree on a set of principles and leave policing to the tool and their CI process.
   
 
-Revision: 9b3ab729fc83e2b9a0482b2e94a855f4
+Revision: b4a69d9b8cda7bcf18e3797ac9f2b8ed

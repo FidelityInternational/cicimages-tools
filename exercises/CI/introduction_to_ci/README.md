@@ -180,4 +180,4 @@ Continuous Integration plays a vital role in ensuring that the software we right
 **Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.
   
 
-Revision: 71208690aca47e8ffcbc2cd8a2851973
+Revision: 6f2210c959c4f6d9a787be6b6a900e25
