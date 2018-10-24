@@ -25,11 +25,83 @@ The following playbook contains two plays. The first installs tomcat and the sec
 
 ```YAML
 
+
+
 ---
-ansible-playbook ansible/app_servers_automated.yaml -i ansible/inventory.yml
+- name: install tomcat
+  hosts: tomcat-server
+  vars:
+    tomcat_installation_dir: /tmp/tomcat
+    tomcat_download: /tmp/tomcat.zip
+    tomcat_download_url: http://mirrors.ukfast.co.uk/sites/ftp.apache.org/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz
+  tasks:
+  - name: install java
+    apt:
+      name: default-jdk
+      state: latest
+
+  - name: download tomcat
+    get_url:
+      url: "{{tomcat_download_url}}"
+      dest: "{{tomcat_download}}"
+
+  - name: create directory for tomcat installation
+    file:
+      path: "{{tomcat_installation_dir}}"
+      state: directory
+      mode: 0755
+
+  - name: unzip tomcat
+    unarchive:
+      src: "{{tomcat_download}}"
+      dest: "{{tomcat_installation_dir}}"
+      remote_src: yes
+
+  - name: move files up one
+    command: bash -c 'cd {{tomcat_installation_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+
+  - name: start tomcat
+    command: bash -c 'cd {{tomcat_installation_dir}}/bin && nohup ./startup.sh'
+
+- name: install jetty
+  hosts: jetty-server
+  vars:
+    jetty_install_dir: /tmp/jetty
+    jetty_download: /tmp/jetty.zip
+    jetty_download_url: https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/jetty-distribution-9.4.12.v20180830.zip
+
+  tasks:
+  - name: install java
+    apt:
+      name: default-jdk
+      state: latest
+
+  - name: download jetty
+    get_url:
+      url: "{{jetty_download_url}}"
+      dest: "{{jetty_download}}"
+
+  - name: create directory for jetty installation
+    file:
+      path: "{{jetty_install_dir}}"
+      state: directory
+      mode: 0755
+
+  - name: unzip jetty
+    unarchive:
+      src: "{{jetty_download}}"
+      dest: "{{jetty_install_dir}}"
+      remote_src: yes
+
+  - name: move files up one
+    command: bash -c 'cd {{jetty_install_dir}} && dirname=$(ls) && mv "${dirname}"/* . && rm -R "${dirname}"'
+
+  - name: start jetty
+    command: bash -c 'cd {{jetty_install_dir}}/demo-base && nohup java -jar ../start.jar &'
+
 ```
 
-Write the above Playbook to `ansible/app_servers_automated.yaml` and run it with `ansible-playbook ansible/app_servers_automated.yaml -i ansible/inventory.yml`. If everything is working, you should see the following output:
+Write the above Playbook to `ansible/app_servers.yml` and run it with `ansible-playbook ansible/app_servers.yml -i ansible/inventory.yml`. If everything is working, you should see the following output:
 ```
 PLAY [install tomcat] **********************************************************
 
@@ -189,25 +261,10 @@ installation_dir: /tmp/applicaton-server
 
 ```
 
----
-- name: install tomcat
-  hosts: tomcat-server
-  roles:
-  - { role: application-server,
-      download_url: "http://mirrors.ukfast.co.uk/sites/ftp.apache.org/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz",
-      start_command: "nohup {{installation_dir}}/bin/startup.sh"
-  }
-
-- name: install jetty
-  hosts: jetty-server
-  roles:
-  - { role: application-server,
-      download_url: "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/jetty-distribution-9.4.12.v20180830.zip",
-      start_command: "cd {{installation_dir}}/demo-base && nohup java -jar ../start.jar &"
-  }
 
 
-Now that the `application-server` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `cd ../../../` and write the following to `ansible/app_servers_automated.yaml`
+
+Now that the `application-server` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `cd ../../../` and write the following to `ansible/app_servers.yml`
 
 ```YAML
 ---
@@ -231,7 +288,7 @@ Now that the `application-server` role has been defined, we can use it within ou
 
 With the duplicate tasks removed, our Playbook is now much more concise and easy to read.
 
-Re-run the Playbook by running `ansible-playbook ansible/app_servers_automated.yaml -i ansible/inventory.yml` and you should see that the [Tomcat](http://localhost:8080) and [Jetty](http://localhost:9090) servers are setup exactly as before.
+Re-run the Playbook by running `ansible-playbook ansible/app_servers.yml -i ansible/inventory.yml` and you should see that the [Tomcat](http://localhost:8080) and [Jetty](http://localhost:9090) servers are setup exactly as before.
 ```
 PLAY [install tomcat] **********************************************************
 
@@ -297,13 +354,13 @@ Write the new Role and implement it correctly within the Playbook to pass the su
 ```
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_17107, inifile:
+rootdir: /vols/pytest_22857, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 2 items                                                             collected 2 items                                                              
 
 tests/webservers_test.py ..                                              [100%]
 
-=========================== 2 passed in 1.88 seconds ===========================
+=========================== 2 passed in 1.38 seconds ===========================
 ```
 
 #### Helpful Hints
@@ -333,4 +390,4 @@ As Playbooks get larger, Ansible Roles are a good way of encapsulating and shari
 
   
 
-Revision: 490d6d8be78192bdf88e87d7de665c88
+Revision: 05f852377a8a0e09db198d63cafaae8d

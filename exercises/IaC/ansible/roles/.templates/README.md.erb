@@ -28,8 +28,7 @@ The following playbook contains two plays. The first installs tomcat and the sec
 
 ```YAML
 
----
-<%=
+<%
 playbook_yaml=<<YAML
 - name: install tomcat
   hosts: tomcat-server
@@ -102,10 +101,12 @@ playbook_yaml=<<YAML
   - name: start jetty
     command: bash -c 'cd {{jetty_install_dir}}/demo-base && nohup java -jar ../start.jar &'
 YAML
-
-playbook_yaml_path = 'ansible/app_servers_automated.yaml'
+playbook_yaml_path = 'ansible/app_servers.yml'
 ansible_playbook_command = "ansible-playbook #{playbook_yaml_path} -i ansible/inventory.yml"
 %>
+
+---
+<%= playbook_yaml%>
 ```
 
 Write the above Playbook to `<%= write_to_file(playbook_yaml_path, playbook_yaml) %>` and run it with `<%= command(ansible_playbook_command) %>`. If everything is working, you should see the following output:
@@ -231,7 +232,8 @@ You'll notice that we haven't defined either `download_location` or `installatio
 <%= defaults_yaml %>
 ```
 
-<%= updated_playbook=<<YAML
+<%
+updated_playbook=<<YAML
 ---
 - name: install tomcat
   hosts: tomcat-server
@@ -250,6 +252,7 @@ You'll notice that we haven't defined either `download_location` or `installatio
   }
 YAML
 %>
+
 
 Now that the `<%= role_name %>` role has been defined, we can use it within our playbook. Change directory back to the root of this exercise, i.e. `<%= cd('../../../') %>` and write the following to `<%=  write_to_file(playbook_yaml_path, updated_playbook)%>`
 
