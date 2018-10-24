@@ -37,7 +37,7 @@ Exercises can consist of the following components:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
 
-On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `exercise create exercise_name`. This command will create a skeleton exercise directory with the all the files that you are likely to need.
+On the command line navigate to the place where the you intend to create your new exercise. For example, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `exercise create exercise_name`. This command will create a skeleton exercise directory with the all the files that you are likely to need.
 ```
 Creating new exercise: exercise_name
 Created: exercise_name/tests
