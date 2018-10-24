@@ -148,7 +148,7 @@ This should output the following:
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_6521, inifile: pytest.ini
+rootdir: /vols/pytest_18989, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 3 items                                                             collected 3 items                                                              
 
@@ -156,7 +156,7 @@ tests/apache_ansible_test.py::test_apache_installed PASSED               [ 33%]
 tests/apache_ansible_test.py::test_apache_is_enabled_as_service PASSED   [ 66%]
 tests/apache_ansible_test.py::test_apache_installed_is_running PASSED    [100%]
 
-=========================== 3 passed in 0.78 seconds ===========================
+=========================== 3 passed in 1.03 seconds ===========================
 ```
 
 In just a second or so the test has validated that:
@@ -171,4 +171,4 @@ Ansible is a great tool for configuring infrastructure. Baked in to its philosop
 
   
 
-Revision: ce457766acb9e3c67efdae41a0d4e30a
+Revision: ee0422926594e665deb01fbf83d9d077

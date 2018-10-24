@@ -8,7 +8,7 @@ In this exercise we will look at how Roles themselves are defined and imported w
 ### Learning Objectives
 - How to use Roles to DRY up playbooks by extracting tasks and removing duplication.
 
-## Required prequisite knowledge
+## Required knowledge
 It is assumed that you know enough about Ansible to define a simple Playbook and define inventory to run it against.
 
 <%
@@ -24,7 +24,7 @@ cic_up_command = 'cic up'
 run `<%= command('cic up') %>` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `<%= after_rendering_run('cic down')%>`
 
 ## Setting the Scene
-The following playbook contains two plays. The first installs tomcat and the second installs [Eclipse Jetty](https://www.eclipse.org/jetty/), both of which are Java based web application containers. Both of the `jetty-server` and `tomcat-server` hosts referenced in the Playbook are real and can be connected to via the `cic connect` command. E.g. `cic connect tomcat-server`.
+The following playbook contains two plays. The first installs [Apache Tomcat](http://tomcat.apache.org/) and the second installs [Eclipse Jetty](https://www.eclipse.org/jetty/), both of which are Java based web application containers. Both of the `jetty-server` and `tomcat-server` hosts referenced in the Playbook are real and can be connected to via the `cic connect` command. E.g. `cic connect tomcat-server`.
 
 ```YAML
 

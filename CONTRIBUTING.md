@@ -35,9 +35,9 @@ Exercises can consist of the following components:
 ### Getting started
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
-- `source ./bin/env`
+- `source ./bin/.env`
 
-On the command line navigate to the place where the you intend to create your new exercise. For example, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `exercise create exercise_name`. This command will create a skeleton exercise directory with the all the files that you are likely to need.
+On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `exercise create exercise_name`. This command will create a skeleton exercise directory with the all the files that you are likely to need.
 ```
 Creating new exercise: exercise_name
 Created: exercise_name/tests
@@ -96,7 +96,7 @@ To render a template in the `.templates` directory, navigate to the root of your
 # Generating template: .templates/README.md.erb #
 #################################################
 Rendering: .templates/README.md.erb
-[OK] Finished: /vols/ansible_8558/exercise_name/.templates/README.md.erb
+[OK] Finished: /vols/ansible_25310/exercise_name/.templates/README.md.erb
 
 ```
 
@@ -123,4 +123,4 @@ There will be times where you want to wait for something to happen before the `c
 
   
 
-Revision: 2a770f0128d202a069808503bef823ce
+Revision: 26f0cff03270c6afb1d64e06e1077b70
