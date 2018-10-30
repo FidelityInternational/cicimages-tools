@@ -68,11 +68,11 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [Runtime requirements check] **********************************************
-fatal: [127.0.0.1]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'installation_dir' is undefined\n\nThe error appears to have been in '/vols/ansible_8163/ansible/logic_examples.yml': line 5, column 5, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n  - name: Runtime requirements check\n    ^ here\n"}
-	to retry, use: --limit @/vols/ansible_8163/ansible/logic_examples.retry
+fatal: [127.0.0.1]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'installation_dir' is undefined\n\nThe error appears to have been in '/vols/ansible_18592/ansible/logic_examples.yml': line 5, column 5, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n  - name: Runtime requirements check\n    ^ here\n"}
+	to retry, use: --limit @/vols/ansible_18592/ansible/logic_examples.retry
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1   
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1
 ```
 
 We can fix this by supplying the `installation_dir` using the the `--extra-vars` option. I.e run `ansible-playbook ansible/logic_examples.yml -c local --extra-vars='installation_dir=/var'`
@@ -89,7 +89,7 @@ TASK [Setup runtime] ***********************************************************
 skipping: [127.0.0.1]
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0   
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
@@ -109,7 +109,7 @@ TASK [Setup runtime] ***********************************************************
 skipping: [127.0.0.1]
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0   
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
@@ -149,7 +149,7 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
@@ -185,7 +185,7 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
@@ -218,6 +218,6 @@ when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 To check if you have been successful in the exercise please run the following verification test:
 
-  
+
 
 Revision: 938f673b0fb74c63047390dc9b32d7d1

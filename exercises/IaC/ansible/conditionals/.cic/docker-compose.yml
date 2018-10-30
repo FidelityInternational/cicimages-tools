@@ -1,1 +1,17 @@
-# This file is used by the cic up/down commands. Add test infrastructure definition here.
+version: '3'
+networks:
+  default:
+    external:
+      name: cic
+
+services:
+  ubuntu-server:
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION} 
+    privileged: true
+    command: /sbin/init
+
+
+  centos-server:
+    image: lvlup/ci_course-centos:0.0.1 
+    privileged: true
+    command: /usr/sbin/init

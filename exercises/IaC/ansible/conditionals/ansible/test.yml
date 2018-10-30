@@ -1,0 +1,19 @@
+---
+- name: super loop
+  hosts: all
+  vars:
+    list_of_packages:
+    - git
+    - ftp
+    - apache2
+  tasks:
+  - name: print the list
+    block:
+    - debug: msg="I would like to install {{item}}"
+      loop: "{{list_of_packages}}"    
+    - apt:
+        name: "{{item}}"
+        state: present
+      loop: "{{list_of_packages}}"
+
+    
