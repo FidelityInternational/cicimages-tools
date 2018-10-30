@@ -21,6 +21,7 @@ module Commands
 
         @api_endpoint = api_endpoint
         raise TracksFileNotFoundError.new(path: tracks_yaml) unless File.exist?(tracks_yaml)
+
         @tracks = load_tracks(YAML.safe_load(File.read(tracks_yaml))['tracks'])
       end
 

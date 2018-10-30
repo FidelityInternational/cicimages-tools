@@ -72,6 +72,7 @@ module Exercise
     def command(command, fail_on_error: true)
       result = test_command(command, fail_on_error: fail_on_error)
       raise CommandError if result.error? && fail_on_error
+
       command
     end
 
@@ -114,6 +115,7 @@ module Exercise
     # @raise [RuntimeError] if given path does not exist
     def path(path)
       raise "#{path} does not exist" unless File.exist?(path)
+
       path
     end
 
@@ -141,6 +143,7 @@ module Exercise
       start_time = Time.now
       until Time.now > start_time + timeout_after
         return true if yield == true
+
         sleep retry_every
       end
       raise TimeoutError, 'Action took to long'

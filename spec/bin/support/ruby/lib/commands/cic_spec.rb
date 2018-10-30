@@ -28,14 +28,14 @@ module Commands
           it 'runs the command against the container' do
             subject.options = { command: 'command' }
             expect(subject).to receive(:container_id).with('container').and_return(:container_id)
-            expect(subject).to receive(:docker_exec).with("-it #{:container_id} command")
+            expect(subject).to receive(:docker_exec).with('-it container_id command')
             subject.connect('container')
           end
         end
 
         it 'connects to the given container' do
           expect(subject).to receive(:container_id).with('container').and_return(:container_id)
-          expect(subject).to receive(:docker_exec).with("-it #{:container_id} bash -l")
+          expect(subject).to receive(:docker_exec).with('-it container_id bash -l')
           subject.connect('container')
         end
       end

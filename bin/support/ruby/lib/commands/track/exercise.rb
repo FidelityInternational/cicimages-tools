@@ -16,6 +16,7 @@ module Commands
       def validate
         raise ArgumentError, name_error_msg unless name
         raise ArgumentError, path_error_msg unless File.exist?(path)
+
         true
       end
 
@@ -35,6 +36,7 @@ module Commands
 
       def preamble
         return '' unless File.exist?(preamble_path)
+
         "#{File.read(preamble_path)}\n"
       end
 

@@ -86,6 +86,7 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
   def apply_expectations(state)
     expectations.each do |key, value|
       raise "api doest support attribute #{key}" unless state.respond_to?(key)
+
       state.public_send(key, value) unless state.required_body_content.find { |content| content.include?(key.to_s) }
     end
   end
