@@ -35,9 +35,9 @@ Exercises can consist of the following components:
 ### Getting started
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
-- `source ./bin/.env`
+- `source ./bin/env`
 
-On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `<%= command("exercise create #{exercise_name}") %>`. This command will create a skeleton exercise directory with the all the files that you are likely to need.
+On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `<%= command("exercise create #{exercise_name}") %>`. This command will create a skeleton exercise directory with all the files that you are likely to need.
 ```
 <%= last_command_output %>
 ```
@@ -51,7 +51,7 @@ Technical exercises can be complicated to write. They are full of commands, and 
 
 To overcome this problem, the CIC content framework allows you to write and execute templates that can be used to generate your files. During the processing of templates, commands can be verified and their output can be inserted in to the documentation that is generated for the participant.
 
-Files files in the `<%=path("#{templates_directory}") %>` directory should end with the extension `.erb`. This identifies them as ERB files and that they should be picked up for processing. ERB is a markup format, the following is what you need to know in order to use CIC's content framework.
+Files in the `<%=path("#{templates_directory}") %>` directory should end with the extension `.erb`. This identifies them as ERB files and that they should be picked up for processing. ERB is a markup format, the following is what you need to know in order to use CIC's content framework.
 
 #### Documenting commands
 <% example_command='mkdir new_directory' %>
@@ -100,7 +100,7 @@ You will often want to supply resources to support your exercise. Put these file
 
 ### Defining support infrastructure
 <% cic_up_command='cic up' %>
-Some exercises will require some kind of test infrastructure to for participants to run their exercise code against. The `<%= cic_up_command %>` wraps docker-compose to stand up the infrastructure you prescribe in `<%= path('.cic/docker-compose.yml')%>`. To read more about what can be done with docker-compose read the [documentation](https://docs.docker.com/compose/).
+Some exercises will require some kind of test infrastructure to for participants to run their exercise code against. The `<%= cic_up_command %>` command wraps docker-compose to stand up the infrastructure you prescribe in `<%= path('.cic/docker-compose.yml')%>`. To read more about what can be done with docker-compose read the [documentation](https://docs.docker.com/compose/).
 
 #### CIC_PWD
 To reference files within the exercise directory, specify paths relative to the `CIC_PWD` environment variable. E.g. `${CIC_PWD}/resources/a_file`
