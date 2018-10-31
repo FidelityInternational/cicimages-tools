@@ -37,6 +37,7 @@ module Commandline
       result = run command
       say result.stdout
       next unless result.error?
+
       fail = true
       say result.stderr
       say error fail_message

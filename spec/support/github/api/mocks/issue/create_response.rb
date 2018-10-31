@@ -18,6 +18,7 @@ module Github
 
           def title(title = nil)
             return title unless title
+
             title = title
             @required_body_content << %("title":"#{title}")
           end

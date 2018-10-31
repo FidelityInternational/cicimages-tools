@@ -15,6 +15,7 @@ module Docker
   def docker_container_running?(name)
     result = docker_container_info(name)
     return false if result.empty?
+
     result.first[:State] && result.first[:State][:Status] == 'running'
   end
 

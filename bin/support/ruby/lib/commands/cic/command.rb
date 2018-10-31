@@ -27,7 +27,6 @@ module Commands
         docker_exec(command)
       end
 
-
       desc 'down', 'Bring down environment supporting current exercise'
 
       def down
@@ -93,6 +92,7 @@ module Commands
         def in_cic_directory
           cic_directory = '.cic'
           raise CICDirectoryMissing unless File.exist?(cic_directory)
+
           Dir.chdir(cic_directory) do
             yield
           end

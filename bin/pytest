@@ -4,6 +4,8 @@ CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=bin/support/sh/functions/cic_docker.sh
 source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
+# shellcheck source=bin/support/sh/functions/wrapped_commands.sh
+source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
 
 volume_path="$(volume_path pytest)"
 copy_to_cic_volume "$(pwd)/." "${volume_path}"
@@ -14,5 +16,5 @@ docker run -t\
   -w "${volume_path}" \
   -e PYTHONDONTWRITEBYTECODE=1 \
    "$(cic_image)" \
-   /bin/bash -ilc "pytest $@"
+   /bin/bash -ilc "$(build_command "pytest" "$@")"
 

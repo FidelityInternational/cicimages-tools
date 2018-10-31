@@ -60,6 +60,7 @@ module Commands
           options = { netrc: true, api_endpoint: api_endpoint }
           Octokit::Client.new(options).tap do |client|
             raise NetrcMissingError unless File.exist?(client.netrc_file)
+
             host = URI(client.api_endpoint).host
             raise MissingCredentialsError, host unless Netrc.read(client.netrc_file)[host]
           end
@@ -92,6 +93,7 @@ module Commands
         repo = github_client.repo(fork)
 
         raise RepoIsNotForkError, fork unless repo['fork'] == true
+
         enable_issues
       end
     end

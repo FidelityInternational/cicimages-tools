@@ -176,7 +176,7 @@ module Exercise
           content = <<~CONTENT
             <%# instruction:run_in_temp_directory%>
             <%= '#{expected_text}' % Dir['*.*'].size %>
-CONTENT
+          CONTENT
 
           write_to_file('temp.file', 'content')
           template = create_template(content: content)
