@@ -1,8 +1,10 @@
 ## Introduction
-Being able to reuse code is a very important aspect to think about when writing it.
+Quite often configuration for servers is very similar baring a few environment specific value.
+
+It is common for servers performing the same functions to have near identical configuration with specific environment specific differences. Consistency between these environments is highly desirable as variations can lead to servers exhibiting different issues and becoming a maintenance nightmare. Maintaining duplicate configuration is a low tech solution that is prone to error. Templates that can be used stamp out configuration is an ideal solution in this situation. In this exercise we look at how to write templates in the Ansible..
 
 ## Learning Objectives
-Using ansible's templating features to make config reusable accross different servers.
+Using ansible's templating features to make config reusable across different servers.
 
 ## Required prequisite knowledge
 Basic knowledge of Ansible
@@ -19,7 +21,7 @@ The result of a statement written between nested braces will appear in the rende
 
 
 
-The following example declares a simple template contains an expression that referrences  the `template_variable` variable. In this case the `template_variable` resolves to the assigned value of "World" which was set in the `vars:` section of the task.
+The following example declares a simple template contains an expression that references  the `template_variable` variable. In this case the `template_variable` resolves to the assigned value of "World" which was set in the `vars:` section of the task.
 
 
 ```YAML
@@ -232,7 +234,7 @@ The automated tests that accompany this exercise should also pass. Run `pytest` 
 ```
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_6723, inifile:
+rootdir: /vols/pytest_650, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 1 item                                                              collected 1 item                                                               
 
@@ -243,9 +245,6 @@ tests/test_rabbitmq_cluster.py .                                         [100%]
 
 **Note:** Don't forget to run `cic down` to shutdown the test infrastructure once you've finished the exercise.
 
-## Summary
-Templating is a vital feature in ansible that helps keep duplication down. Templates can be defined in line within task definitions and within separate files...
-
   
 
-Revision: 8dddd995cfde7cef6588788ff80f7e9c
+Revision: e46c90a1ad284f37efe599ad52f614fc
