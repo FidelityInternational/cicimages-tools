@@ -8,3 +8,4 @@ vendor/
 checkout/
 ci-cd-training.iml
 .yardoc/
+.DS_Store

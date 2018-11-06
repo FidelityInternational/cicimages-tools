@@ -175,6 +175,7 @@ This should output the following:
 [OK] Starting container
      Connect with: cic connect cic_container-xxxxxxxxxxxxxxxx
      Stop with   : cic stop cic_container-xxxxxxxxxxxxxxxx
+here
 ```
 Run the test again, this time however we'll point it at the host that we want to run the test against.
 To do this run: `pytest --ansible-host=cic_container-xxxxxxxxxxxxxxxx`
@@ -227,7 +228,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_16841, inifile: pytest.ini
+rootdir: /vols/pytest_4595, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -236,7 +237,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.78 seconds ===========================
+=========================== 4 passed in 0.85 seconds ===========================
 ```
 
 Good luck!
@@ -258,4 +259,4 @@ You have just learned how to:
 
   
 
-Revision: fc5cbbc37ca8781ceef62a1beabb01ac
+Revision: 5de1c688209cb4804284dcccb2d7c62f
