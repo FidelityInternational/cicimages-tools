@@ -19,7 +19,7 @@ then
 fi
 
 say "$(ok "Fetching course images from dockerhub")"
-if ! (docker pull "$(cic_image)"  && docker pull codeclimate/codeclimate)
+if ! (docker pull "$(cic_image)"  && docker pull codeclimate/codeclimate && docker pull lvlup/ci_course-ubuntu-0.0.1 && docker pull lvlup/ci_course-centos-0.0.1)
 then
     say "$(error "Failed to pull course images")"
     exit 1

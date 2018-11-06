@@ -6,7 +6,7 @@ networks:
 
 services:
   ubuntu-server:
-    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION} 
+    image: lvlup/ci_course-ubuntu:0.0.1
     privileged: true
     command: /sbin/init
 

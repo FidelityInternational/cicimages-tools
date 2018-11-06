@@ -1,0 +1,12 @@
+FROM solita/ubuntu-systemd
+RUN apt-get update -q -y
+RUN apt-get -y -q install vim openssh-server
+
+CMD ["/usr/sbin/init"]
+#RUN systemctl enable ssh.service
+RUN mkdir /root/.ssh
+ADD ./keys/id_rsa* /root/.ssh/
+RUN chmod 0600 /root/.ssh/id_rsa*
+RUN cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+RUN echo "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" > ~/.ssh/config
+

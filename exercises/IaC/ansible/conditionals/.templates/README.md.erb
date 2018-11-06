@@ -11,11 +11,11 @@ How to use Conditionals to add logic to Playbooks.
 
 It is assumed that you are familiar with the basics of Ansible, such that you can define a simple Playbook.
 
-*Note:* Before going any further do the following:
+**Note:** Before going any further do the following:
 
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd ./exercises/IaC/ansible/roles`
+- `cd <%=env('exercise_path') %>`
 
 Run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`.
 
@@ -25,13 +25,7 @@ Run `cic up` to bring up all the test infrastructure and support files required 
 
 The When Statement defines the condition for **when** a certain action should happen.
 
-The condition is declared within the task itself using the when clause:
 
-```
-tasks:
-  - name: example task
-    when: a condition is met
-```
 
 <%
  example_logic_path = 'ansible/logic_examples.yml'
@@ -48,35 +42,37 @@ tasks:
 
   - name: Setup runtime
     shell: echo "Logging at '{{ #{optional_variable_name} }}'"
-    when: log_evel is defined
+    when: #{optional_variable_name} is defined
 
 YAML
 %>
 
-The following example declares 2 tasks:
+The condition is declared within the task itself using the `when` clause. The following example declares 2 tasks:
 - `Runtime requirements check` - This will fail if the `<%= required_variable_name%>` variable is not supplied
 - `Setup runtime` - which outputs a message if the `<%= optional_variable_name%>` variable is supplied.
 
-
-Write this example yaml to file to so that you can try running it `<%= write_to_file(example_logic_path, example_logic_yaml) %>`
-
 ```
+
 <%= example_logic_yaml %>
 ```
 
-In this example the when clause is defined using a `test`. There are many ways you can utilise tests to define your conditionals, more information can be found [here.](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_tests.html)
+In this example the when clause is defined using a 'test'. There are many ways you can utilise tests to define your conditionals, more information can be found [here.](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_tests.html)
+
+Write the above yaml to `<%= write_to_file(example_logic_path, example_logic_yaml) %>` so that you can try running it.
 
 Running `<%= command("ansible-playbook #{example_logic_path} -c local", fail_on_error: false)%>`, i.e. not supplying the required `<%= required_variable_name %>` causes the first of our tasks to fail:
 ```
 <%= last_command_output%>
 ```
 
-We can fix this by supplying the `<%= required_variable_name %>` using the the `--extra-vars` option. I.e run `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var'")%>`
+We can fix this by supplying the `<%= required_variable_name %>` variable using the the `--extra-vars` option. Run `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var'")%>`
 ```
 <%= last_command_output %>
 ```
 
-You'll notice that this time the playbook executed successfully but that the `Setup runtime` task did not execute. This is because we did not supply the optional `<%= optional_variable_name%>` variable. Run: `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var #{optional_variable_name}=debug'")%>` to see the `Setup runtime`
+You'll notice that this time the playbook executed successfully but that the `Setup runtime` task did not execute. This is because we did not supply the optional `<%= optional_variable_name%>` variable that our when condition was looking for.
+
+Run: `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var #{optional_variable_name}=debug'")%>` to see the `Setup runtime`
 task execute.
 ```
 <%= last_command_output%>
@@ -102,7 +98,7 @@ YAML
   hosts: all
   vars:
     day: Monday
-    time: 17:00
+    time: 5
 
   tasks:
   - debug:
@@ -111,56 +107,92 @@ YAML
 YAML
 %>
 
-To combine multiple conditions you can make use of 'or' and 'and', where the play will execute if one of the conditons is met, or if both of the conditions are met, respectively.
+To combine multiple conditions you can make use of 'or' and 'and', where the play will execute if one of the conditions is met, or if both of the conditions are met, respectively.
 
-Rewrite your file to `<%= write_to_file(example_logic_path, example_or_yaml) %>` with the following yaml so that you can try running it:
+Replace the content of `<%= write_to_file(example_logic_path, example_or_yaml) %>` with the following yaml:
 
 ```
 <%= example_or_yaml %>
 ```
 
-Running `<%= command("ansible-playbook #{example_logic_path} -c local")%>`, will print the statement as one of the two conditions are met.
+Running `<%= command("ansible-playbook #{example_logic_path} -c local")%>`, will print the out of office statement, because the `day` variable has been set to Saturday.
 
 ```
 <%= last_command_output%>
 ```
 
-Alternatively, we can require both conditions to be met. Overwrite your yaml, `<%= write_to_file(example_logic_path, example_and_yaml) %>`, with the following yaml:
+Alternatively, we can require both conditions to be met by using the `and` operator. Replace your yaml, `<%= write_to_file(example_logic_path, example_and_yaml) %>`, with the following:
 
 ```
 <%= example_and_yaml %>
 ```
 
-Running `<%= command("ansible-playbook #{example_logic_path} -c local")%>`, will now print an alternative message for a weekday that indicates no one will be in the office till the following morning.
+In this scenario we have met both conditions with values set against `day` and `time` so can expect the message to be printed.
+
+Run `<%= command("ansible-playbook #{example_logic_path} -c local")%>` to see that this happens.
 
 ```
+
 <%= last_command_output%>
 ```
+### Now it's your turn!
+You are in a team that is required to install the following packages to a selection of servers:
 
+- Apache
+- Git
+- FTP
 
-### Exercise
+These servers all have different operating systems. Make use of the when statement and looping to write a playbook to install these packages on both of the server types.
 
-You are in a team who is required to install Apache on a selection of servers. These servers all have different operating systems. Make use of the when statement and looping to write a playbook that iterates through the servers and installs Apache in the corresponding manner.
+**Hints:**
+Apache has the package name `httpd` on Centos and `apache2` on Ubuntu.
 
-Hints:
-Apache has a different package name in Ubuntu and CentOS.
+<%
 
-```
+playbook_yaml=<<YAML
 ---
-- hosts: webserver
-  become: sudo
+- name: super loop
+  hosts: all
+  vars:
+    list_of_packages:
+      Ubuntu:
+      - git
+      - ftp
+      - apache2
+      CentOS:
+      - git
+      - ftp
+      - httpd
   tasks:
-    - mame: install apache2
-      yum:
-        name:
-        state: latest
-      apt:
-        name:
-        state: latest
+  - name: print the list
+    block:
+    - apt:
+        name: "{{item}}"
+        state: present
+      loop: "{{list_of_packages[ansible_distribution]}}"
+      when: ansible_distribution=="Ubuntu"
+    - yum:
+        name: "{{item}}"
+        state: present
+      loop: "{{list_of_packages[ansible_distribution]}}"
+      when: ansible_distribution=="CentOS"
+YAML
 
-when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+inventory_yaml=<<YAML
+centos-server
+ubuntu-server
+YAML
+
+write_to_file('ansible/playbook.yml', playbook_yaml)
+write_to_file('ansible/inventory.yml', inventory_yaml)
+
+command("ansible-playbook ansible/playbook.yml -i ansible/inventory.yml")
+
+ %>
+
+If you've got everything right then the tests we've written for you should pass. Run `<%=command('pytest')%>` and you should see the following when they do pass:
+```
+<%=last_command_output%>
 ```
 
-### Verification test
-
-To check if you have been successful in the exercise please run the following verification test:
+Good Luck!!

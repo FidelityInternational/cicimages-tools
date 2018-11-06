@@ -11,11 +11,11 @@ How to use Conditionals to add logic to Playbooks.
 
 It is assumed that you are familiar with the basics of Ansible, such that you can define a simple Playbook.
 
-*Note:* Before going any further do the following:
+**Note:** Before going any further do the following:
 
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd ./exercises/IaC/ansible/roles`
+- `cd blah`
 
 Run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`.
 
@@ -25,24 +25,16 @@ Run `cic up` to bring up all the test infrastructure and support files required 
 
 The When Statement defines the condition for **when** a certain action should happen.
 
-The condition is declared within the task itself using the when clause:
-
-```
-tasks:
-  - name: example task
-    when: a condition is met
-```
 
 
 
-The following example declares 2 tasks:
+
+The condition is declared within the task itself using the `when` clause. The following example declares 2 tasks:
 - `Runtime requirements check` - This will fail if the `installation_dir` variable is not supplied
 - `Setup runtime` - which outputs a message if the `log_level` variable is supplied.
 
-
-Write this example yaml to file to so that you can try running it `ansible/logic_examples.yml`
-
 ```
+
 ---
 - name: setup environment
   hosts: all
@@ -53,14 +45,14 @@ Write this example yaml to file to so that you can try running it `ansible/logic
 
   - name: Setup runtime
     shell: echo "Logging at '{{ log_level }}'"
-    when: log_evel is defined
+    when: log_level is defined
 
 
 ```
 
 In this example the when clause is defined using a `test`. There are many ways you can utilise tests to define your conditionals, more information can be found [here.](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_tests.html)
 
-Running `ansible-playbook ansible/logic_examples.yml -c local`, i.e. not supplying the required `installation_dir` causes the first of our tasks to fail:
+Write this example yaml to `ansible/logic_examples.yml` so that you can try running it. Running `ansible-playbook ansible/logic_examples.yml -c local`, i.e. not supplying the required `installation_dir` causes the first of our tasks to fail:
 ```
 PLAY [setup environment] *******************************************************
 
@@ -68,11 +60,11 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [Runtime requirements check] **********************************************
-fatal: [127.0.0.1]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'installation_dir' is undefined\n\nThe error appears to have been in '/vols/ansible_18592/ansible/logic_examples.yml': line 5, column 5, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n  - name: Runtime requirements check\n    ^ here\n"}
-	to retry, use: --limit @/vols/ansible_18592/ansible/logic_examples.retry
+fatal: [127.0.0.1]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'installation_dir' is undefined\n\nThe error appears to have been in '/vols/ansible_19948/ansible/logic_examples.yml': line 5, column 5, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n  - name: Runtime requirements check\n    ^ here\n"}
+	to retry, use: --limit @/vols/ansible_19948/ansible/logic_examples.retry
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1   
 ```
 
 We can fix this by supplying the `installation_dir` using the the `--extra-vars` option. I.e run `ansible-playbook ansible/logic_examples.yml -c local --extra-vars='installation_dir=/var'`
@@ -89,7 +81,7 @@ TASK [Setup runtime] ***********************************************************
 skipping: [127.0.0.1]
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0   
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
@@ -109,18 +101,19 @@ TASK [Setup runtime] ***********************************************************
 skipping: [127.0.0.1]
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0   
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 
 
-To combine multiple conditions you can make use of 'or' and 'and', where the play will execute if one of the conditons is met, or if both of the conditions are met, respectively.
+To combine multiple conditions you can make use of 'or' and 'and', where the play will execute if one of the conditions is met, or if both of the conditions are met, respectively.
 
 Rewrite your file to `ansible/logic_examples.yml` with the following yaml so that you can try running it:
 
 ```
+
 ---
 - name: Global working hours
   hosts: all
@@ -149,7 +142,7 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
@@ -157,6 +150,7 @@ PLAY RECAP *********************************************************************
 Alternatively, we can require both conditions to be met. Overwrite your yaml, `ansible/logic_examples.yml`, with the following yaml:
 
 ```
+
 ---
 - name: Global working hours
   hosts: all
@@ -185,39 +179,36 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
 
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
-
-
 ### Exercise
 
-You are in a team who is required to install Apache on a selection of servers. These servers all have different operating systems. Make use of the when statement and looping to write a playbook that iterates through the servers and installs Apache in the corresponding manner.
 
-Hints:
+You are in a team that is required to install Apache on a selection of servers. These servers all have different operating systems. Make use of the when statement and looping to write a playbook that iterates through the servers and installs Apache in the corresponding manner.
+
+**Hints:**
 Apache has a different package name in Ubuntu and CentOS.
 
+
+
+If you've got everything right then the tests we've written for you should pass. Run `pytest` and you should see the following when they do pass:
 ```
----
-- hosts: webserver
-  become: sudo
-  tasks:
-    - mame: install apache2
-      yum:
-        name:
-        state: latest
-      apt:
-        name:
-        state: latest
+============================= test session starts ==============================
+platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
+rootdir: /vols/pytest_21985, inifile:
+plugins: testinfra-1.16.0
 
-when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+collecting 0 items                                                             
+collecting 2 items                                                             
+collected 2 items                                                              
+
+tests/test_a_test.py ..                                                  [100%]
+
+=========================== 2 passed in 1.30 seconds ===========================
 ```
 
-### Verification test
+  
 
-To check if you have been successful in the exercise please run the following verification test:
-
-
-
-Revision: 938f673b0fb74c63047390dc9b32d7d1
+Revision: a1c7eea5dfc0b901ef995bcf7c408125
