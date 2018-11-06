@@ -234,7 +234,7 @@ The automated tests that accompany this exercise should also pass. Run `pytest` 
 ```
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_650, inifile:
+rootdir: /vols/pytest_30554, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 1 item                                                              collected 1 item                                                               
 
@@ -247,4 +247,4 @@ tests/test_rabbitmq_cluster.py .                                         [100%]
 
   
 
-Revision: e46c90a1ad284f37efe599ad52f614fc
+Revision: 0434dbfe661693799691c4ded4a946ac
