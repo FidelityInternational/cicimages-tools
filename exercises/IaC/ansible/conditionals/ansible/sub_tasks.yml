@@ -1,0 +1,8 @@
+- name: "create group"
+  debug:
+    msg: "crearting group: {{group_name}}"
+
+- name: "create users"
+  debug:
+    msg: "creating user: {{item}}"
+  loop: "{{users}}"

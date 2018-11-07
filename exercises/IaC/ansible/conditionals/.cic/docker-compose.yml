@@ -12,6 +12,6 @@ services:
 
 
   centos-server:
-    image: lvlup/ci_course-centos:0.0.1 
+    image: lvlup/ci_course-centos:0.0.1
     privileged: true
     command: /usr/sbin/init

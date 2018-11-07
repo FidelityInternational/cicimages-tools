@@ -17,14 +17,10 @@ It is assumed that you are familiar with the basics of Ansible, such that you ca
 - `source ./bin/env`
 - `cd <%=env('exercise_path') %>`
 
-Run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`.
+Run `<%= command('cic up') %>` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `<%= after_rendering_run('cic down') %>`.
 
-## Tutorial
-
-### The When Statement
-
+## The When Statement
 The When Statement defines the condition for **when** a certain action should happen.
-
 
 
 <%
@@ -51,7 +47,7 @@ The condition is declared within the task itself using the `when` clause. The fo
 - `Runtime requirements check` - This will fail if the `<%= required_variable_name%>` variable is not supplied
 - `Setup runtime` - which outputs a message if the `<%= optional_variable_name%>` variable is supplied.
 
-```
+```YAML
 
 <%= example_logic_yaml %>
 ```
@@ -61,11 +57,14 @@ In this example the when clause is defined using a 'test'. There are many ways y
 Write the above yaml to `<%= write_to_file(example_logic_path, example_logic_yaml) %>` so that you can try running it.
 
 Running `<%= command("ansible-playbook #{example_logic_path} -c local", fail_on_error: false)%>`, i.e. not supplying the required `<%= required_variable_name %>` causes the first of our tasks to fail:
+
 ```
+
 <%= last_command_output%>
 ```
 
 We can fix this by supplying the `<%= required_variable_name %>` variable using the the `--extra-vars` option. Run `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var'")%>`
+
 ```
 <%= last_command_output %>
 ```
@@ -74,7 +73,10 @@ You'll notice that this time the playbook executed successfully but that the `Se
 
 Run: `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var #{optional_variable_name}=debug'")%>` to see the `Setup runtime`
 task execute.
+
+
 ```
+
 <%= last_command_output%>
 ```
 
@@ -107,23 +109,28 @@ YAML
 YAML
 %>
 
+### And/Or
+
 To combine multiple conditions you can make use of 'or' and 'and', where the play will execute if one of the conditions is met, or if both of the conditions are met, respectively.
 
 Replace the content of `<%= write_to_file(example_logic_path, example_or_yaml) %>` with the following yaml:
 
-```
+```YAML
+
 <%= example_or_yaml %>
 ```
 
 Running `<%= command("ansible-playbook #{example_logic_path} -c local")%>`, will print the out of office statement, because the `day` variable has been set to Saturday.
 
 ```
+
 <%= last_command_output%>
 ```
 
 Alternatively, we can require both conditions to be met by using the `and` operator. Replace your yaml, `<%= write_to_file(example_logic_path, example_and_yaml) %>`, with the following:
 
-```
+```YAML
+
 <%= example_and_yaml %>
 ```
 
@@ -135,7 +142,164 @@ Run `<%= command("ansible-playbook #{example_logic_path} -c local")%>` to see th
 
 <%= last_command_output%>
 ```
-### Now it's your turn!
+## Loops
+Often it will be necessary to perform the same action n times. For example creating new users in a database. This is where loops come in to play.
+
+### Simple loops
+
+Ansible provides the `loop` directive. It expects to be given a list of values. This list can be defined inline or can be the output of a [Jinja2 Expression](http://jinja.pocoo.org/docs/2.10/templates/#expressions).
+
+The following playbook defines a simple task that prints out a message for each item in the loop. The `loop` directive has been given the list of users identified in the `users` variable. By default Ansible will assign the current value which is the subject of a given iteration to a variable called `item`.
+
+```YAML
+
+<%=
+simple_loop =<<YAML
+---
+- name: 'create users'
+  hosts: all
+  vars:
+    users: [user1 user2 user3]
+  tasks:
+    - name: create users
+      debug: "creating user: {{item}}"
+      loop: "{{users}}"
+YAML
+%>
+```
+
+Write this example playbook to `<%= simple_loop_path = write_to_file('ansible/simple_loop.yml', simple_loop) %>` and run it with `<%= command("ansible-playbook #{simple_loop_path}") %>`.
+
+```
+
+<%= last_command_output %>
+```
+
+As you can see the message has been printinted for each of the values in the `users` list.
+
+### Looping through hashes: `dict2items`
+
+In some cases nested data structures such as hash will be the most appropriate structure for storing data. The following playbook shows a variable `user_groups` which holds maps users to the groups they belong to. In order to convert this hash in to a compatible list structure that can be passed to `loop` this is where the [Jinja Filter](https://docs.ansible.com/ansible/2.7/user_guide/playbooks_filters.html) [`dict2items`](https://docs.ansible.com/ansible/2.7/user_guide/playbooks_filters.html#dict-filter) comes in to play. The `dict2items` filter flattens a hash structure in to a list. The filter can be used as part of an expression like the following: `{{user_groups | dict2items}}`
+
+```YAML
+<%=
+hash_to_list=<<YAML
+- name: Hash to list example
+  hosts: all
+  vars:
+    user_groups:
+      Admin:
+      - user1
+      - user2
+      Team:
+      - user3
+      - user4
+      - user5
+
+  tasks:
+  - name: 'create user'
+    debug:
+      msg: "Creating user: {{item['key']}} in group: {{item['value']}}"
+    loop: "{{ user_groups| dict2items  }}"
+YAML
+%>
+```
+
+In the case of the above playbook `dict2items` does the following:
+
+```YAML
+user_groups:
+  admin:
+  - user1
+  - user2
+  team:
+  - user3
+  - user4
+  - user5
+```
+becomes
+
+```YAML
+- key: admin
+  value: [ user1, user2 ]
+- key: team
+  value: [ user3, user4, user5]
+```
+write the playbook to `<%= hash_to_list_path = write_to_file('ansible/hash_to_list.yml', hash_to_list) %>` and Run it with: `<%= command("ansible-playbook #{hash_to_list_path}") %>`. This will output the following:
+```
+
+
+<%= last_command_output %>
+```
+
+As you can see, the `user_groups` variable has been successfully used within the loop.
+
+### Nested loops
+Putting one loop within another is also possible. In order to surround a group of tasks with a loop they must be imported using the `include_tasks` plugin. The tasks below doing the following:
+
+- print a message to say that the group defined in the `group_name` variable is being created
+- print loop through the list defined in the `users` variable and print a message for item in it.
+
+```YAML
+
+<%=
+inner_tasks =<<YAML
+- name: "create group"
+  debug:
+    msg: "crearting group: {{group_name}}"
+
+- name: "create users"
+  debug:
+    msg: "creating user: {{item}}"
+  loop: "{{users}}"
+YAML
+%>
+```
+
+The following playbook then includes the tasks above and puts a `loop` condition against them.
+
+```YAML
+
+<%=
+outer_playbook =<<YAML
+---
+- name: super loop
+  hosts: all
+  vars:
+    user_groups:
+      Admin:
+      - user1
+      - user2
+      Team:
+      - user3
+      - user4
+      - user5
+
+  tasks:
+  - include: create_users_and_groups.yml group_name="{{item['key']}}" users="{{item['value']}}"
+    loop: "{{ user_groups| dict2items }}"
+YAML
+%>
+```
+
+The playbook starts with the same `user_groups` hash as the previous example so uses the `dict2items` filter to convert it. Each time around the loop the group name (`item['key']`) and and list of users (`item['value']`) are assigned to the variable names that are defined in the included tasks.
+
+Write the tasks to `<%= write_to_file('ansible/create_users_and_groups.yml', inner_tasks) %>` and the playbook to `<%= nested_loops_path = write_to_file('ansible/nested_loops.yml', outer_playbook) %>. Now run the playbook with: `<%= command("ansible-playbook #{nested_loops_path}") %>`. This will show the following:
+
+```
+
+<%= last_command_output %>
+```
+
+Here we can see that the included tasks have been run twice, once for each of the user groups, and that the nested loop as also executed correctly.
+
+**Note:** The `item` variable assigned by `loop` is reassigned by the nested `loop` statement. If this becomes a problem, the variable name used can be set using the `loop_control` option. See the [loop_control documentation](https://docs.ansible.com/ansible/2.7/user_guide/playbooks_loops.html#loop-control) for more details.
+
+### Other features
+There are a number of other features that ansible provides regarding loops. For example the `until` clause that can be used to short circuit the execution of a loop when a particular condition is met. For details on the other things that can be done within loops see the [Ansible loops documentation](https://docs.ansible.com/ansible/2.7/user_guide/playbooks_loops.html) for details.
+
+
+## Now it's your turn!
 You are in a team that is required to install the following packages to a selection of servers:
 
 - Apache
@@ -191,7 +355,9 @@ command("ansible-playbook ansible/playbook.yml -i ansible/inventory.yml")
  %>
 
 If you've got everything right then the tests we've written for you should pass. Run `<%=command('pytest')%>` and you should see the following when they do pass:
+
 ```
+
 <%=last_command_output%>
 ```
 

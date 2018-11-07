@@ -12,17 +12,9 @@
       - ftp
       - httpd
   tasks:
-  - name: print the list
-    block:
-    - apt:
-        name: "{{item}}"
-        state: present
-      loop: "{{list_of_packages[ansible_distribution]}}"
-      when: ansible_distribution=="Ubuntu"
-    - yum:
-        name: "{{item}}"
-        state: present
-      loop: "{{list_of_packages[ansible_distribution]}}"
-      when: ansible_distribution=="CentOS"
+  - include: sub_tasks.yml group_name="{{item['key']}}" users="{{item['value']}}"
+    loop: "{{ list_of_packages| dict2items }}"
+
+
 
 
