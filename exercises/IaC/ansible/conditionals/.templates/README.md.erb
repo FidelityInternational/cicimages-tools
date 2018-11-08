@@ -24,7 +24,6 @@ The When Statement defines the condition for **when** a certain action should ha
 
 
 <%
- example_logic_path = 'ansible/logic_examples.yml'
  required_variable_name = 'installation_dir'
  optional_variable_name = 'log_level'
  example_logic_yaml=<<YAML
@@ -54,16 +53,16 @@ The condition is declared within the task itself using the `when` clause. The fo
 
 In this example the when clause is defined using a 'test'. There are many ways you can utilise tests to define your conditionals, more information can be found [here.](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_tests.html)
 
-Write the above yaml to `<%= write_to_file(example_logic_path, example_logic_yaml) %>` so that you can try running it.
+Write the above yaml to `<%= when_path = write_to_file('ansible/when.yml', example_logic_yaml) %>` so that you can try running it.
 
-Running `<%= command("ansible-playbook #{example_logic_path} -c local", fail_on_error: false)%>`, i.e. not supplying the required `<%= required_variable_name %>` causes the first of our tasks to fail:
+Running `<%= command("ansible-playbook #{when_path} -c local", fail_on_error: false)%>`, i.e. not supplying the required `<%= required_variable_name %>` causes the first of our tasks to fail:
 
 ```
 
 <%= last_command_output%>
 ```
 
-We can fix this by supplying the `<%= required_variable_name %>` variable using the the `--extra-vars` option. Run `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var'")%>`
+We can fix this by supplying the `<%= required_variable_name %>` variable using the the `--extra-vars` option. Run `<%= command("ansible-playbook #{when_path} -c local --extra-vars='#{required_variable_name}=/var'")%>`
 
 ```
 <%= last_command_output %>
@@ -71,7 +70,7 @@ We can fix this by supplying the `<%= required_variable_name %>` variable using 
 
 You'll notice that this time the playbook executed successfully but that the `Setup runtime` task did not execute. This is because we did not supply the optional `<%= optional_variable_name%>` variable that our when condition was looking for.
 
-Run: `<%= command("ansible-playbook #{example_logic_path} -c local --extra-vars='#{required_variable_name}=/var #{optional_variable_name}=debug'")%>` to see the `Setup runtime`
+Run: `<%= command("ansible-playbook #{when_path} -c local --extra-vars='#{required_variable_name}=/var #{optional_variable_name}=debug'")%>` to see the `Setup runtime`
 task execute.
 
 
@@ -113,30 +112,30 @@ YAML
 
 To combine multiple conditions you can make use of 'or' and 'and', where the play will execute if one of the conditions is met, or if both of the conditions are met, respectively.
 
-Replace the content of `<%= write_to_file(example_logic_path, example_or_yaml) %>` with the following yaml:
+Write to `<%= or_condition_path = write_to_file('ansible/or_condition.yml', example_or_yaml) %>` with the following yaml:
 
 ```YAML
 
 <%= example_or_yaml %>
 ```
 
-Running `<%= command("ansible-playbook #{example_logic_path} -c local")%>`, will print the out of office statement, because the `day` variable has been set to Saturday.
+Running `<%= command("ansible-playbook #{or_condition_path} -c local")%>`, will print the out of office statement, because the `day` variable has been set to Saturday.
 
 ```
 
 <%= last_command_output%>
 ```
 
-Alternatively, we can require both conditions to be met by using the `and` operator. Replace your yaml, `<%= write_to_file(example_logic_path, example_and_yaml) %>`, with the following:
+Alternatively, we can require both conditions to be met by using the `and` operator. Write the following YAML to `<%= and_condition_path = write_to_file('ansible/and_condition', example_and_yaml) %>`:
 
 ```YAML
 
 <%= example_and_yaml %>
 ```
 
-In this scenario we have met both conditions with values set against `day` and `time` so can expect the message to be printed.
+In this example we have met both conditions with values set against `day` and `time` so can expect the message to be printed.
 
-Run `<%= command("ansible-playbook #{example_logic_path} -c local")%>` to see that this happens.
+Run `<%= command("ansible-playbook #{and_condition_path} -c local")%>` to see that this happens.
 
 ```
 

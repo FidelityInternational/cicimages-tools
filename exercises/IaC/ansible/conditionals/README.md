@@ -15,7 +15,7 @@ It is assumed that you are familiar with the basics of Ansible, such that you ca
 
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd blah`
+- `cd ./exercises/IaC/ansible/conditionals`
 
 Run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`.
 
@@ -48,9 +48,9 @@ The condition is declared within the task itself using the `when` clause. The fo
 
 In this example the when clause is defined using a 'test'. There are many ways you can utilise tests to define your conditionals, more information can be found [here.](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_tests.html)
 
-Write the above yaml to `ansible/logic_examples.yml` so that you can try running it.
+Write the above yaml to `ansible/when.yml` so that you can try running it.
 
-Running `ansible-playbook ansible/logic_examples.yml -c local`, i.e. not supplying the required `installation_dir` causes the first of our tasks to fail:
+Running `ansible-playbook ansible/when.yml -c local`, i.e. not supplying the required `installation_dir` causes the first of our tasks to fail:
 
 ```
 
@@ -60,14 +60,14 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [Runtime requirements check] **********************************************
-fatal: [127.0.0.1]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'installation_dir' is undefined\n\nThe error appears to have been in '/vols/ansible_19656/ansible/logic_examples.yml': line 5, column 5, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n  - name: Runtime requirements check\n    ^ here\n"}
-	to retry, use: --limit @/vols/ansible_19656/ansible/logic_examples.retry
+fatal: [127.0.0.1]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'installation_dir' is undefined\n\nThe error appears to have been in '/vols/ansible_21936/ansible/when.yml': line 5, column 5, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n  - name: Runtime requirements check\n    ^ here\n"}
+	to retry, use: --limit @/vols/ansible_21936/ansible/when.retry
 
 PLAY RECAP *********************************************************************
 127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1   
 ```
 
-We can fix this by supplying the `installation_dir` variable using the the `--extra-vars` option. Run `ansible-playbook ansible/logic_examples.yml -c local --extra-vars='installation_dir=/var'`
+We can fix this by supplying the `installation_dir` variable using the the `--extra-vars` option. Run `ansible-playbook ansible/when.yml -c local --extra-vars='installation_dir=/var'`
 
 ```
 PLAY [setup environment] *******************************************************
@@ -89,7 +89,7 @@ PLAY RECAP *********************************************************************
 
 You'll notice that this time the playbook executed successfully but that the `Setup runtime` task did not execute. This is because we did not supply the optional `log_level` variable that our when condition was looking for.
 
-Run: `ansible-playbook ansible/logic_examples.yml -c local --extra-vars='installation_dir=/var log_level=debug'` to see the `Setup runtime`
+Run: `ansible-playbook ansible/when.yml -c local --extra-vars='installation_dir=/var log_level=debug'` to see the `Setup runtime`
 task execute.
 
 
@@ -118,7 +118,7 @@ PLAY RECAP *********************************************************************
 
 To combine multiple conditions you can make use of 'or' and 'and', where the play will execute if one of the conditions is met, or if both of the conditions are met, respectively.
 
-Replace the content of `ansible/logic_examples.yml` with the following yaml:
+Write to `ansible/or_condition.yml` with the following yaml:
 
 ```YAML
 
@@ -136,7 +136,7 @@ Replace the content of `ansible/logic_examples.yml` with the following yaml:
 
 ```
 
-Running `ansible-playbook ansible/logic_examples.yml -c local`, will print the out of office statement, because the `day` variable has been set to Saturday.
+Running `ansible-playbook ansible/or_condition.yml -c local`, will print the out of office statement, because the `day` variable has been set to Saturday.
 
 ```
 
@@ -156,7 +156,7 @@ PLAY RECAP *********************************************************************
 [ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
-Alternatively, we can require both conditions to be met by using the `and` operator. Replace your yaml, `ansible/logic_examples.yml`, with the following:
+Alternatively, we can require both conditions to be met by using the `and` operator. Write the following YAML to `ansible/and_condition`:
 
 ```YAML
 
@@ -174,9 +174,9 @@ Alternatively, we can require both conditions to be met by using the `and` opera
 
 ```
 
-In this scenario we have met both conditions with values set against `day` and `time` so can expect the message to be printed.
+In this example we have met both conditions with values set against `day` and `time` so can expect the message to be printed.
 
-Run `ansible-playbook ansible/logic_examples.yml -c local` to see that this happens.
+Run `ansible-playbook ansible/and_condition -c local` to see that this happens.
 
 ```
 
@@ -364,8 +364,8 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [include] *****************************************************************
-included: /vols/ansible_11702/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
-included: /vols/ansible_11702/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
+included: /vols/ansible_27194/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
+included: /vols/ansible_27194/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
 
 TASK [create group] ************************************************************
 ok: [127.0.0.1] => {
@@ -438,17 +438,17 @@ If you've got everything right then the tests we've written for you should pass.
 
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_7701, inifile:
+rootdir: /vols/pytest_15817, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 2 items                                                             collected 2 items                                                              
 
 tests/test_a_test.py ..                                                  [100%]
 
-=========================== 2 passed in 1.33 seconds ===========================
+=========================== 2 passed in 1.26 seconds ===========================
 ```
 
 Good Luck!!
 
   
 
-Revision: f03a2f62def39ef41d2e7d64ab3076d6
+Revision: 89f35c0b6bb27bcec1651fbe2a490e7f

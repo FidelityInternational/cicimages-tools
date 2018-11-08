@@ -16,5 +16,5 @@ docker run -t\
   -w "${volume_path}" \
   -e PYTHONDONTWRITEBYTECODE=1 \
    "$(cic_image)" \
-   /bin/bash -ilc "$(build_command "pytest" "$@")"
+   /bin/bash -ilc "PYTHONDONTWRITEBYTECODE=1 $(build_command "pytest" "$@")"
 
