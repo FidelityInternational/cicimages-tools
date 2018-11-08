@@ -13,7 +13,9 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && echo 'export PYENV_
 RUN ["/bin/bash", "-c", "PYENV_ROOT=\"$HOME/.pyenv\" && export PATH=\"$PYENV_ROOT/bin:$PATH\" && eval \"$(pyenv init -)\" && pyenv install 3.7.0 && pyenv global 3.7.0 && pip install ansible pytest testinfra pylint"]
 
 RUN systemctl enable ssh.service
-RUN ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa && cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+ADD ./keys/id_rsa* /root/.ssh/
+RUN chmod 0600 /root/.ssh/id_rsa*
+RUN cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
 RUN echo "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" > ~/.ssh/config
 
 RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash; exit 0

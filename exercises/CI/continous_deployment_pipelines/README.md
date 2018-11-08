@@ -111,7 +111,6 @@ waiting for docker to come up...
 Pulling busybox@sha256:2a03a6059f21e150ae84b0973863609494aad70f0a80eaeb64bddd8d92465812...
 sha256:2a03a6059f21e150ae84b0973863609494aad70f0a80eaeb64bddd8d92465812: Pulling from library/busybox
 90e01955edcd: Pulling fs layer
-90e01955edcd: Verifying Checksum
 90e01955edcd: Download complete
 90e01955edcd: Pull complete
 Digest: sha256:2a03a6059f21e150ae84b0973863609494aad70f0a80eaeb64bddd8d92465812
@@ -328,4 +327,4 @@ Have fun and good luck! :)
 
   
 
-Revision: 33062965d664930c200c220e54dd03e7
+Revision: 96cd69a90a3999d9ae2edf1e96715df8

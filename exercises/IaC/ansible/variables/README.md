@@ -297,14 +297,14 @@ Run `cic down` and then `cic up` to reset the test infrastructure and rerun ansi
 PLAY [all] *********************************************************************
 
 TASK [Gathering Facts] *********************************************************
+ok: [prod1]
 ok: [prod2]
 ok: [dev1]
-ok: [prod1]
 
 TASK [Set root prompt] *********************************************************
-changed: [prod2]
-changed: [dev1]
 changed: [prod1]
+changed: [dev1]
+changed: [prod2]
 
 PLAY RECAP *********************************************************************
 dev1                       : ok=2    changed=1    unreachable=0    failed=0   
@@ -346,7 +346,7 @@ You'll know when you got the job done when you are able to run the command `pyte
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_5024, inifile: pytest.ini
+rootdir: /vols/pytest_6381, inifile: pytest.ini
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 4 items                                                             collected 4 items                                                              
 
@@ -355,7 +355,7 @@ tests/devservers_test.py::test_dev_app2_server PASSED                    [ 50%]
 tests/devservers_test.py::test_prod_app1_server PASSED                   [ 75%]
 tests/devservers_test.py::test_prod_app2_server PASSED                   [100%]
 
-=========================== 4 passed in 1.60 seconds ===========================
+=========================== 4 passed in 1.69 seconds ===========================
 ```
 
 ## Summary
