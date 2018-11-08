@@ -6,7 +6,6 @@ mirage.log
 coverage/
 vendor/
 checkout/
-ci-cd-training.iml
 cic.iml
 .yardoc/
 .DS_Store
