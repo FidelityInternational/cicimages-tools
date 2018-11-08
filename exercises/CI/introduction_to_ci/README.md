@@ -37,7 +37,6 @@ waiting for Concourse to come up:
 waiting for Concourse to come up:
 [OK] Environment cic'd up :)
 
-here
 ```
 
 Click the login button at the top right of the [concourse home page](http://127.0.0.1:8080) and login with username `test` and password `test`. You'll note that there arn't currently any 'pipelines' configured. A pipeline is the name that Concourse gives to one or more tasks/jobs that have been configured to be run in a prescribed order when a particular event happens. E.g. a change is detected in GIT. Pipelines can be can be as simple as a one step process or they can be used to model very complex processes. In a later exercise we'll go in to pipelines and there features in more depth.
@@ -181,4 +180,4 @@ Continuous Integration plays a vital role in ensuring that the software we right
 **Note:** Now that you've finished the exercise, remember to run `cic down` to shutdown your test infrastructure.
   
 
-Revision: 3e258b5c062a86fc0edacd6cb94dda2e
+Revision: 537bd17510880ece753a6f117f688a51

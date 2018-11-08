@@ -59,7 +59,7 @@ E.g. `cic track start ansible --fork youruser/fork-name`
 
 This creates a project in Github to guide you through the track and outputs its URL
 
-Got the the url and you'll see that there is a project board waiting for you. This board contains tickets for each of the exercises that you should complete to cover the topic you have chosen.
+Go to the the url and you'll see that there is a project board waiting for you. This board contains tickets for each of the exercises that you should complete to cover the topic you have chosen.
 
 The board will allow you to track and share progress. When you complete an exercise, raise a pull request on your own fork to and get feedback from a peer to ensure you are getting the most from the exercise.
 
@@ -75,4 +75,4 @@ Many hands make light work and your help is needed! View the [Contributing Guide
 
   
 
-Revision: 355aa222908dc098d0ff5e940468c0b5
+Revision: 0118a2ffaa7cf3850440ef6182702524

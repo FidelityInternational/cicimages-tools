@@ -15,7 +15,7 @@ group :development do
   gem 'chromedriver-helper'
   gem 'i18n'
   gem 'mirage', '4.0.0.alpha10'
-  gem 'page_magic'
+  gem 'page_magic', '>= 1.2.9'
   gem 'rake'
   gem 'redcarpet'
   gem 'rspec', require: 'rspec/core/rake_task'
