@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# shellcheck source=bin/support/sh/functions/output.sh
+source "${CURRENT_PATH}/support/sh/functions/output.sh"
+
+# shellcheck source=bin/support/sh/functions/wrapped_commands.sh
+source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
+
+# shellcheck source=bin/support/sh/functions/cic_docker.sh
+source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
+
+volume_path="$(volume_path ansible)"
+copy_to_cic_volume "$(pwd)/." "${volume_path}"
+
+if docker run -t --privileged \
+    --network "$(cic_network)" \
+    --volumes-from "$(cic_volumes_container)" \
+    -w "${volume_path}" \
+    "cicimages/wrappers-python-ansible" \
+    /bin/bash -ilc "$(build_command "ansible-playbook" "$@")"
+then
+    container_id=$(docker ps -ql)
+
+    tag="$(cic_tag)"
+    docker commit "${container_id}" "${tag}" > /dev/null
+    say "$(ok "FINISHED - start container with: cic start ${tag}")"
+else
+    exit 1
+fi

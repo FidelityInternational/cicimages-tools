@@ -14,9 +14,7 @@ To undertake this course you will need a computer which you have full control ov
 
 Topics covered in this material:
 ```
-Available Tracks:
- ansible
-continuous_integration
+Tracks file not found at: /cic/bin/support/ruby/lib/commands/track/../../../../../../tracks/tracks.yml
 ```
 
 To remove the need for dependencies on an external IaaS (Infrastructure as a Service) solution in order to participate in this course, this course has been designed to use Docker containers to simulate real computers.
@@ -40,20 +38,16 @@ For this material you will need the following:
       login <username>
       password <password>
   ```
-  **Note:** If you are using MacOSX you might find that `~/.netrc` is a directory on your machine. In this case replace the directory for a file as described above.
-2. Set restrictive permissions on `~/.netrc` e.g. by running: `chmod 0600 ~/.netrc`
-3. Fork this repo
-4. Clone your fork: `git clone https://github.com/<youruser>/<fork>.git cic`
-5. cd in to your checkout: `cd cic`
-6. setup the courseware: `./bin/setup`
+2. Fork this repo
+3. Clone your fork: `git clone https://github.com/<youruser>/<fork>.git cic`
+4. cd in to your checkout: `cd cic`
+5. setup the courseware: `./bin/setup`
 
 ### Starting a learning track
 To see the Learning tracks that CIC contains run: `cic track list`
 This will output the following
 ```
-Available Tracks:
- ansible
-continuous_integration
+Tracks file not found at: /cic/bin/support/ruby/lib/commands/track/../../../../../../tracks/tracks.yml
 ```
 
 Start a track by running the `cic track start` command
@@ -77,4 +71,4 @@ Many hands make light work and your help is needed! View the [Contributing Guide
 
   
 
-Revision: e406d0d26109eb53c3a9d2e8f2113309
+Revision: c7ed4ef10ba111e9f089720990081322

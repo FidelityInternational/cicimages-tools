@@ -3,7 +3,7 @@ FROM solita/ubuntu-systemd
 RUN apt-get update -q -y
 
 # USEFUL STUFF
-RUN apt-get -y -q install vim curl bash unzip software-properties-common python-software-properties
+RUN apt-get -y -q install vim curl bash unzip software-properties-common python-software-properties python3
 
 #LATEST GIT
 RUN apt-add-repository ppa:git-core/ppa
