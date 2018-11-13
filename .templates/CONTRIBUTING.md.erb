@@ -30,14 +30,17 @@ Exercises can consist of the following components:
 - **Test Infrastructure** - Many topics require an environment for participants to conduct the exercise within. The complexity of setting up these environments can represent a barrier to participants. CIC is built upon the philosophy that a participant should not be required to provide any infrastructure in order to carry out an exercise and uses docker-compose to achieve this.
 
 
-<% exercise_name='exercise_name' %>
+<%
+exercise_name='exercise_name'
+content_command = 'content'
+%>
 
 ### Getting started
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
 
-On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `<%= command("exercise create #{exercise_name}") %>`. This command will create a skeleton exercise directory with all the files that you are likely to need.
+On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `<%= command("#{content_command} create #{exercise_name}") %>`. This command will create a skeleton exercise directory with all the files that you are likely to need.
 ```
 <%= last_command_output %>
 ```
@@ -87,7 +90,7 @@ string.gsub('\\','')
 ```
 #### Generating documentation
 <% cd exercise_name %>
-To render a template in the `<%= templates_directory_name %>` directory, navigate to the root of your exercise directory pass the template path to the `exercise generate` command. For example running `<%= command("exercise generate #{templates_directory_name}/README.md.erb") %>` will render the example README that was created by `exercise create`.
+To render a template in the `<%= templates_directory_name %>` directory, navigate to the root of your exercise directory pass the template path to the `<%= content_command %> generate` command. For example running `<%= command("#{content_command} generate #{templates_directory_name}/README.md.erb") %>` will render the example README that was created by `content create`.
 
 ```
 <%= last_command_output %>

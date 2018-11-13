@@ -62,21 +62,9 @@ module Exercise
       true
     end
 
-    desc 'checksum', 'generate checksum'
-    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
-
-    def checksum(template)
-      template = Template.new(template)
-
-      say digest(path: template.dir,
-                 digest_component: options[:digest_component],
-                 excludes: excluded_files(template.full_path))
-    end
-
-    desc 'updated', 'generate checksum'
-    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
-
-    def requiring_updated(path)
+    desc 'requiring_update', 'generate checksum'
+    option :digest_component, type: :string, required: false, default: '', desc: 'value to be considered when generating digest'
+    def requiring_update(path)
 
       if File.directory?(path)
         directories = templates(path)
@@ -95,7 +83,7 @@ module Exercise
     desc 'generate', 'render templates'
     option :quiet, type: :boolean, default: false
     option :environment_variables, type: :string, required: false
-    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest'
+    option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest', default: ''
 
     def generate(path)
       set_environment(options[:environment_variables])
@@ -124,7 +112,6 @@ module Exercise
     end
 
     desc 'create <NAME>', 'create a new exercise'
-
     def create(name)
       say "Creating new exercise: #{name}"
       FileUtils.mkdir_p(name)
@@ -189,10 +176,5 @@ module Exercise
         end.flatten
       end
     end
-    private
-
-
-
-
   end
 end
