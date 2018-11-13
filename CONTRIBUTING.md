@@ -37,9 +37,8 @@ Exercises can consist of the following components:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
 
-On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `exercise create exercise_name`. This command will create a skeleton exercise directory with all the files that you are likely to need.
+On the command line navigate to the place where the you intend to create your new exercise. For example the, if you want to create a new exercise for ansible. Navigate to correct location within the CIC exercise directory structure and run `content create exercise_name`. This command will create a skeleton exercise directory with all the files that you are likely to need.
 ```
-eval "$(rbenv init -)" && . /cic/bin/env && TRACKS_PATH=/Users/leon/Projects/cic/cicimages/tools/bin/../tracks EXERCISES_PATH=/Users/leon/Projects/cic/cicimages/tools/bin/../exercises SCAFFOLD_STRUCTURE=/cic/.cic/exercise_scaffold.yml CIC_COURSEWARE_VERSION=0.7.14 CIC_COURSEWARE_IMAGE=cicimages/tools CIC_PWD=/Users/leon/Projects/cic COURSEWARE_IMAGE=cicimages/tools COURSEWARE_VERSION=0.7.14 SCAFFOLD_PATH=/cic/.cic/exercise_scaffold /cic/bin/support/ruby/bin/exercise create exercise_name
 Creating new exercise: exercise_name
 Created: exercise_name/tests
 Created: exercise_name/resources
@@ -90,15 +89,14 @@ E.g.
 ```
 #### Generating documentation
 
-To render a template in the `.templates` directory, navigate to the root of your exercise directory pass the template path to the `exercise generate` command. For example running `exercise generate .templates/README.md.erb` will render the example README that was created by `exercise create`.
+To render a template in the `.templates` directory, navigate to the root of your exercise directory pass the template path to the `content generate` command. For example running `content generate .templates/README.md.erb` will render the example README that was created by `content create`.
 
 ```
-eval "$(rbenv init -)" && . /cic/bin/env && TRACKS_PATH=/Users/leon/Projects/cic/cicimages/tools/bin/../tracks EXERCISES_PATH=/Users/leon/Projects/cic/cicimages/tools/bin/../exercises SCAFFOLD_STRUCTURE=/cic/.cic/exercise_scaffold.yml CIC_COURSEWARE_VERSION=0.7.14 CIC_COURSEWARE_IMAGE=cicimages/tools CIC_PWD=/Users/leon/Projects/cic COURSEWARE_IMAGE=cicimages/tools COURSEWARE_VERSION=0.7.14 SCAFFOLD_PATH=/cic/.cic/exercise_scaffold /cic/bin/support/ruby/bin/exercise generate .templates/README.md.erb --digest-component=cicimages/tools:0.7.14
 #############################################################
 # Generating template: ./.templates/README.md.erb in path:  #
 #############################################################
 Rendering: ./.templates/README.md.erb
-[OK] Finished: /vols/ansible_9769/exercise_name/.templates/README.md.erb
+[OK] Finished: /vols/ansible_4865/exercise_name/.templates/README.md.erb
 
 ```
 
@@ -125,4 +123,4 @@ There will be times where you want to wait for something to happen before the `c
 
   
 
-Revision: fce233051cae82c65097719bded383a2
+Revision: 9ab3081754dfa03a0adf9d95743c0b39

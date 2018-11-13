@@ -14,11 +14,11 @@ function cic_network() {
 }
 
 function cic_image_repository() {
-    echo "${COURSEWARE_IMAGE}"
+    echo "${CIC_IMAGE}"
 }
 
 function cic_image_version() {
-    echo "${COURSEWARE_VERSION}"
+    echo "${CIC_IMAGE_VERSION}"
 }
 
 function cic_image() {

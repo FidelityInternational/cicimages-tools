@@ -7,24 +7,6 @@ source "${CURRENT_PATH}/support/sh/functions/output.sh"
 # shellcheck source=bin/support/sh/functions/cic_docker.sh
 source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
-if ! which docker
-then
-    say "$(error "Install docker")"
-elif ! docker version > /dev/null 2>&1
-then
-    say "$(error "Docker command not working!")"
-    say "Ensure docker is installed and your user has the correct permissions. I.e. you're able to run: docker version"
-    say "Follow the instrcutions at  https://docs.docker.com/install/ to get Docker installed for your O/S"
-    exit 1
-fi
-
-say "$(ok "Fetching course images from dockerhub")"
-if ! (docker pull "$(cic_image)"  && docker pull codeclimate/codeclimate && docker pull lvlup/ci_course-ubuntu:0.0.1 && docker pull lvlup/ci_course-centos:0.0.1)
-then
-    say "$(error "Failed to pull course images")"
-    exit 1
-fi
-
 if ! (docker network inspect "$(cic_network)" > /dev/null)
 then
     say "$(ok "Setting up docker network")"
@@ -36,9 +18,3 @@ then
     say "$(ok "Setting up docker shared volume container")"
     docker create -v /vols --name "$(cic_volumes_container)" alpine:3.4 /bin/true
 fi
-
-# shellcheck source=bin/env
-source "${CURRENT_PATH}/env"
-say "$(ok "Setup path: ${CURRENT_PATH}")"
-
-say "$(ok "environment setup complete :)")"

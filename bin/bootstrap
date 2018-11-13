@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -e
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# shellcheck source=bin/sh/functions/output.sh
+source "${CURRENT_PATH}/sh/functions/output.sh"
+
+if ! which docker
+then
+    say "$(error "Install docker")"
+elif ! docker version > /dev/null 2>&1
+then
+    say "$(error "Docker command not working!")"
+    say "Ensure docker is installed and your user has the correct permissions. I.e. you're able to run: docker version"
+    say "Follow the instrcutions at  https://docs.docker.com/install/ to get Docker installed for your O/S"
+    exit 1
+fi
+
+root_dir="${CURRENT_PATH}/.."
+cic_dir="${root_dir}/.cic"
+bin_dir="${root_dir}/bin/.ignore"
+mountpoint="/mnt/bin"
+
+mkdir -p "${bin_dir}"
+
+cd "${cic_dir}"
+docker-compose pull
+docker run  -it -v "${bin_dir}:${mountpoint}" --entrypoint /cic/bin/init cicimages/tools:0.7.14 "${mountpoint}"
+
+bash "${bin_dir}/setup"
+
+say "$(ok "environment setup complete :)")"
+say "Run: source bin/env to finish up"

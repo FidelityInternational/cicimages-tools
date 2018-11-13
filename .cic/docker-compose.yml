@@ -15,9 +15,9 @@ services:
   wrappers-ansible:
     image: cicimages/wrappers-ansible
   environments-ubuntu:
-    image: cicimages/wrappers-ubuntu
+    image: cicimages/environments-ubuntu
   environments-centos:
-    image: cicimages/wrappers-centos
+    image: cicimages/environments-centos
 
 
 

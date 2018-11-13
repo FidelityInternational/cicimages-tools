@@ -14,7 +14,9 @@ To undertake this course you will need a computer which you have full control ov
 
 Topics covered in this material:
 ```
-Tracks file not found at: /cic/bin/support/ruby/lib/commands/track/../../../../../../tracks/tracks.yml
+Available Tracks:
+ ansible
+continuous_integration
 ```
 
 To remove the need for dependencies on an external IaaS (Infrastructure as a Service) solution in order to participate in this course, this course has been designed to use Docker containers to simulate real computers.
@@ -47,7 +49,9 @@ For this material you will need the following:
 To see the Learning tracks that CIC contains run: `cic track list`
 This will output the following
 ```
-Tracks file not found at: /cic/bin/support/ruby/lib/commands/track/../../../../../../tracks/tracks.yml
+Available Tracks:
+ ansible
+continuous_integration
 ```
 
 Start a track by running the `cic track start` command
@@ -71,4 +75,4 @@ Many hands make light work and your help is needed! View the [Contributing Guide
 
   
 
-Revision: d7ebf39654f92e83d808abd5c1fcbacd
+Revision: 5d03bcc97bec5a9c7997276a26e19905

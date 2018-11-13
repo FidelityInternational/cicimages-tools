@@ -1,5 +1,8 @@
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export PATH="${CURRENT_PATH}:$PATH"
+export PATH="${CURRENT_PATH}/.ignore:$PATH"
 
-export COURSEWARE_IMAGE=$(cat "${CURRENT_PATH}/../.courseware-image")
-export COURSEWARE_VERSION=$(cat "${CURRENT_PATH}/../.courseware-version")
+root_dir="${CURRENT_PATH}/.."
+export CIC_IMAGE=$(cat "${root_dir}/.courseware-image")
+export CIC_IMAGE_VERSION=$(cat "${root_dir}/.courseware-version")
+export TRACKS_PATH="${TRACKS_PATH:-${root_dir}/tracks}"
+export EXERCISES_PATH="${EXERCISES_PATH:-${root_dir}/exercises}"
