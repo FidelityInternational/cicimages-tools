@@ -1,4 +1,10 @@
-FROM cicimages/base
+FROM cicimages/base:latest
+
+RUN apt-get install -q -y bzip2
+
+# TODO REMOVE ONCE all exercises are using cic up and cicimages/environments-ubuntu
+RUN apt-get install -q -y openssh-server
+RUN apt-get install -q -y chromium-browser
 
 #LATEST GIT
 RUN apt-add-repository ppa:git-core/ppa
@@ -19,7 +25,6 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-co
 # TOOLING
 ADD ./bin /cic/bin
 ADD ./.cic /cic/.cic
-ADD .courseware* /cic/
 ADD Gemfile* /cic/
 
 WORKDIR '/cic'

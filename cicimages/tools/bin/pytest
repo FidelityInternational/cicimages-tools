@@ -15,6 +15,6 @@ docker run -t\
   --volumes-from "$(cic_volumes_container)" \
   -w "${volume_path}" \
   -e PYTHONDONTWRITEBYTECODE=1 \
-   "$(cic_image)" \
+   "cicimages/wrappers-pytest:latest" \
    /bin/bash -ilc "PYTHONDONTWRITEBYTECODE=1 $(build_command "pytest" "$@")"
 

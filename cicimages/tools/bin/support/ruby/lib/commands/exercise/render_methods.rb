@@ -47,7 +47,7 @@ module Exercise
 
       say ok "Finished: #{template}"
       true
-    rescue StandardError => e
+    rescue StandardError, RuntimeError => e
       say error "Failed to generate file from: #{template}"
       say "#{e.message}\n#{e.backtrace}"
       false
@@ -103,7 +103,13 @@ module Exercise
       files << '.git'
     end
 
+    def reset
+      @result = nil
+      @after_rendering_commands = []
+    end
+
     def render(template)
+      reset
       template_content = File.read(File.expand_path(template))
 
       erb_template = ERB.new(template_content)

@@ -1,2 +1,2 @@
-FROM cicimages/wrappers-python
+FROM cicimages/wrappers-python:latest
 RUN ["/bin/bash", "-ic", "pip install pylint"]

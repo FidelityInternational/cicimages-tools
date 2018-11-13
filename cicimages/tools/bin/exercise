@@ -14,6 +14,13 @@ copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
 command="$(bootstrap_cic_environment) $(build_command $(cic_bin)/support/ruby/bin/exercise "$@")"
 
+subcommand=$1
+
+if [ "${subcommand}" == "generate" ]; then
+    command="${command} --digest-component=$(cic_image)"
+fi
+
+echo $command
 # shellcheck disable=SC2140
 docker run -t \
     --network "$(cic_network)" \

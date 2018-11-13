@@ -13,18 +13,9 @@ source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 volume_path="$(volume_path ansible)"
 copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
-if docker run -t --privileged \
+docker run -t --privileged \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
     -w "${volume_path}" \
     "cicimages/wrappers-ansible:latest" \
-    /bin/bash -ilc "$(build_command "ansible-playbook" "$@")"
-then
-    container_id=$(docker ps -ql)
-
-    tag="$(cic_tag)"
-    docker commit "${container_id}" "${tag}" > /dev/null
-    say "$(ok "FINISHED - start container with: cic start ${tag}")"
-else
-    exit 1
-fi
+    /bin/bash -ilc "$(build_command "ansible" "$@")"

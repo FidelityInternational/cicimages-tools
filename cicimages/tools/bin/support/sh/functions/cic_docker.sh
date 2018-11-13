@@ -14,11 +14,11 @@ function cic_network() {
 }
 
 function cic_image_repository() {
-    cat "${CIC_DOCKER_CURRENT_PATH}/../../../../../../.courseware-image"
+    echo "${COURSEWARE_IMAGE}"
 }
 
 function cic_image_version() {
-    cat "${CIC_DOCKER_CURRENT_PATH}/../../../../../../.courseware-version"
+    echo "${COURSEWARE_VERSION}"
 }
 
 function cic_image() {

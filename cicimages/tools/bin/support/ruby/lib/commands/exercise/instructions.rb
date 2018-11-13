@@ -11,7 +11,7 @@ module Exercise
     include Commandline::Output
 
     # class TimeoutError - error raised when something has taken to long
-    class TimeoutError < RuntimeError
+    class TimeoutError < StandardError
     end
 
     # class EnvironmentVariableMissingError - error raised when environment variable is missing

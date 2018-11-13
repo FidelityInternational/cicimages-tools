@@ -1,0 +1,5 @@
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export PATH="${CURRENT_PATH}:$PATH"
+
+export COURSEWARE_IMAGE=$(cat "${CURRENT_PATH}/../.courseware-image")
+export COURSEWARE_VERSION=$(cat "${CURRENT_PATH}/../.courseware-version")
