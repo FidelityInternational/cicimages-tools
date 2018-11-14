@@ -297,6 +297,7 @@ playbook=<<PLAYBOOK
       shell: #{start_rabbitmq_command}
 PLAYBOOK
 
+puts playbook
 write_to_file('ansible/playbook.yml', playbook)
 
 config_template=rabbitmq_config_content.gsub('managing-node-name@managing-node-name', '{{management_node}}@{{management_node}}')

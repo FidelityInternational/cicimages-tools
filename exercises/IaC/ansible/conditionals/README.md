@@ -62,7 +62,7 @@ ok: [127.0.0.1]
 
 TASK [Runtime requirements check] **********************************************
 fatal: [127.0.0.1]: FAILED! => {"changed": false, "msg": "Required variable 'installation_dir' not set"}
-	to retry, use: --limit @/vols/ansible_5886/ansible/when.retry
+	to retry, use: --limit @/vols/ansible_30325/ansible/when.retry
 
 PLAY RECAP *********************************************************************
 127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1   
@@ -361,8 +361,8 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [include] *****************************************************************
-included: /vols/ansible_22933/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
-included: /vols/ansible_22933/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
+included: /vols/ansible_9230/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
+included: /vols/ansible_9230/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
 
 TASK [create group] ************************************************************
 ok: [127.0.0.1] => {
@@ -442,17 +442,17 @@ If you've got everything right then the tests we've written for you should pass.
 
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_26953, inifile:
+rootdir: /vols/pytest_21936, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 2 items                                                             collected 2 items                                                              
 
 tests/test_packages_are_installed.py ..                                  [100%]
 
-=========================== 2 passed in 1.35 seconds ===========================
+=========================== 2 passed in 1.27 seconds ===========================
 ```
 
 Good Luck!!
 
   
 
-Revision: 0cefba585dca3c40596fef3ee7480536
+Revision: ac1c06df7724823275d9091d4d560967
