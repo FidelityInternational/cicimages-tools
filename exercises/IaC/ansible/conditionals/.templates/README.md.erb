@@ -20,7 +20,7 @@ It is assumed that you are familiar with the basics of Ansible, such that you ca
 Run `<%= command('cic up') %>` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `<%= after_rendering_run('cic down') %>`.
 
 ## The When Statement
-The When Statement defines the condition for **when** a certain action should happen.
+The When Statement defines the condition for **when** a task should be executed
 
 
 <%
@@ -32,11 +32,12 @@ The When Statement defines the condition for **when** a certain action should ha
   hosts: all
   tasks:
   - name: Runtime requirements check
-    fail: msg="Required variable '{{ #{required_variable_name} }}' not set"
+    fail: msg="Required variable '#{required_variable_name}' not set"
     when: #{required_variable_name} is undefined
 
   - name: Setup runtime
-    shell: echo "Logging at '{{ #{optional_variable_name} }}'"
+    debug: 
+      msg: Logging at '{{ #{optional_variable_name} }}'
     when: #{optional_variable_name} is defined
 
 YAML
@@ -86,11 +87,10 @@ task execute.
   hosts: all
   vars:
     day: Saturday
-    time: 17:00
 
   tasks:
   - debug:
-      msg: "No one will be available globally in the office till Monday 01:00 GMT"
+      msg: "There is currently no one in the office, please try again later"
     when: day=="Saturday" or day=="Sunday"
 YAML
  example_and_yaml=<<YAML
@@ -103,7 +103,7 @@ YAML
 
   tasks:
   - debug:
-      msg: "No one will be available globally in the office till 01:00 GMT"
+      msg: "There is currently no one in the office, please try again later"
     when: day=="Monday" and time>=5
 YAML
 %>
@@ -155,7 +155,7 @@ The following playbook defines a simple task that prints out a message for each 
 <%=
 simple_loop =<<YAML
 ---
-- name: 'create users'
+- name: create users
   hosts: all
   vars:
     users: [user1, user2, user3]
@@ -189,12 +189,12 @@ hash_to_list=<<YAML
   vars:
     user_group_mappings:
       admin:
-      - user1
-      - user2
+        - user1
+        - user2
       team:
-      - user3
-      - user4
-      - user5
+        - user3
+        - user4
+        - user5
 
   tasks:
   - name: 'create user'
@@ -205,29 +205,19 @@ YAML
 %>
 ```
 
-In the case of the above playbook `dict2items` does the following:
-
-```YAML
-user_group_mappings:
-  admin:
-  - user1
-  - user2
-  team:
-  - user3
-  - user4
-  - user5
-```
-becomes
+In the case of the above playbook `dict2items` takes the `user_group_mappings` variable and returns the following:
 
 ```YAML
 - key: admin
   value: [ user1, user2 ]
 - key: team
   value: [ user3, user4, user5]
+
+Which can be iterated over using the standard `loop` construct.
+
 ```
 write the playbook to `<%= hash_to_list_path = write_to_file('ansible/hash_to_list.yml', hash_to_list) %>` and Run it with: `<%= command("ansible-playbook #{hash_to_list_path}") %>`. This will output the following:
 ```
-
 
 <%= last_command_output %>
 ```
