@@ -18,6 +18,7 @@ Ansible is a powerful tool that removes a number of the complexities of working 
 Before we go any further let's break down the anatomy of playbooks. Playbooks are written in [YAML](http://yaml.org/spec/1.2/spec.html). YAML used in playbooks typically takes the following form:
 ```YAML
 ---
+
 # Comment
 - attribute1: name
   attribute2:
@@ -39,11 +40,12 @@ The following is an example Playbook that could be used to install a webserver.
 
 
 ```YAML
+
 <%= yaml =<<YAML
 ---
 # Playbook containing a single play
 - name: Setup a webserver.
-  hosts: webserver
+  hosts: all
   become: sudo
   tasks:
     - name: install apache2
@@ -75,22 +77,31 @@ We are using just a few of the attributes that Ansible provides for customising 
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
 - `cd <%=env('exercise_path') %>`
+- Run `<%=command('cic up')%>` to bring up the infrastructure required for this exercise.
+
+**Note:** Running `<%= after_rendering_run('cic down') %>` at the end of this exercise will shut down the test infrastructure.
 
 ### Scenario
 Your team of devoted and talented web developers have spent several weeks beavering away on possibly the most advanced, inspiring and responsive website ever created. They have now passed the website code over to your for deployment. The website code that your developers have provided you with can be found in the `<%=path('./resources')%>` folder.
 
 To complete this exercise you will need to write a playbook which will take the website code your developers have provided and deploy it onto a webserver.
 
-Your playbook will need to:
+<% server_hostname = 'web1' %>
+
+When `cic up` was run, a server with the hostname `<%= server_hostname %>` was stood up. You can also connect directly to the console of this machine by running `cic connect <%= server_hostname %>` to take a look around. Port 8080 has been mapped from your machine to port 80 of the `<%= server_hostname %>` server meaning that when you're finished you'll be able to visit [http://localhost:8080](http://localhost:8080) and see the website you have deployed. Right now visiting that URL will simply show that nothing is serving requests.
+
+**Your playbook will need to:**
   - install apache2
   - ensure that the service is started and running
   - copies the files from the `<%=path('./resources') %>` directory to the directory `/var/www/html` on the webserver
 
 Because the team wants you to be sure everything is working before you tell them that you're finished, they've helpfully supplied a set of automated acceptance tests for your drive the code that you write. The tests can be found in `<%= path('./tests') %>`.
 
-Execute the tests by running: `<%= command('pytest --ansible-host=unavailable_host', fail_on_error: false) %>`
-**Note** We haven't built anything yet so it's fine to have run the command as it was specified.
-This outputs the following. (We've omitted the stack traces):
+Execute the tests by running: `<%= command('pytest', fail_on_error: false) %>`
+
+**Note:** We haven't built anything yet so we expect these tests to fail.
+
+You should see the following. (The stack traces have been omitted):
 ```
 <%= last_command_output.to_pytest_output.summary %>
 ```
@@ -107,17 +118,22 @@ All of these fail because they are unable to connect to the server we specified 
 Let's create our first playbook using the the YAML we looked at earlier. Write the following YAML in to `<%= playbook_yml = write_to_file(webserver_yaml_path, yaml) %>`
 
 ```YAML
+
 <%= yaml %>
 ```
 
 **Note:** Playbooks can be named anything. By convention we will store them in a folder called 'ansible'.
 
+Now execute playbook with the following command: `<%= command("ansible-playbook #{playbook_yml} -i '#{server_hostname},'")%>`
 
-Now execute playbook with the following command: `<%= command("ansible-playbook #{playbook_yml}")%>`
-<% ansible_output = last_command_output.to_ansible_output %>
+**Note:** `-i '<%= server_hostname %>,'` was specfied as part of the command. The `-i` allows us to specify the [Inventory](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) we wish the Playbook to be run against. This can take either a file or a comma seperated list of hostnames. In this case we have simply passed in the host name `<%= server_hostname %>` given to us earlier. Make sure that you supply the comma on the end of the hostname as it is required.
+
+This should output the following
 ```
 <%= last_command_output %>
 ```
+
+<% ansible_output = last_command_output.to_ansible_output %>
 
 The terminal output shows us that our 2 tasks ran:
  - installing apache2
@@ -129,30 +145,14 @@ The terminal output shows us that our 2 tasks ran:
 <%= ansible_output.tasks[2] %>
 ```
 
-The last line of output came from the courseware installed on your machine and gives us the ID we need to start the container up and run our tests again.
-```
-<%= last_command_output.lines.last %>
-```
-
-Using the actual ID that came out on your console, cic start the container that was created, this time we'll also make the webserver port 80 available locally as port 8080, run: `<%= command("#{last_command_output.to_cic_output.cic_start_command} --map-port 8080:80") %>`
-
-<% cic_output = last_command_output.to_cic_output %>
-<% container_id = cic_output.container_id %>
-<% after_rendering_run(cic_output.cic_stop_command) %>
-
-This should output the following:
-```
-<%= last_command_output %>
-```
-Run the test again, this time however we'll point it at the host that we want to run the test against.
-To do this run: `<%= command("pytest --ansible-host=#{container_id}", fail_on_error: false) %>`
-
-We can see from the output that the tests verifying apache2 is installed, up and running are passing.
+Run the test again with `<%= command("pytest", fail_on_error: false) %>` and we see the from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
 <%= last_command_output.to_pytest_output.summary %>
 ```
 
-The remaining test is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when it apache is installed.
+The remaining test is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when apache is installed.
+
+![apache homepage](<%= capture('http://web1', 'apache-homepage.png') %>)
 
 ### Modules
 Out of the box Ansible comes with a number of modules
@@ -199,8 +199,7 @@ Add a task, using the synchronise module, to deploy the code supplied in the `<%
 
  write_to_file(playbook_yml, hash.to_yaml )
 
- command("ansible-playbook #{playbook_yml}")
- command(last_command_output.to_cic_output.cic_start_command)
+ command("ansible-playbook #{playbook_yml} -i '#{server_hostname},'")
 
  cic_output = last_command_output.to_cic_output
  after_rendering_run(cic_output.cic_stop_command)
@@ -209,7 +208,7 @@ Add a task, using the synchronise module, to deploy the code supplied in the `<%
 You'll know that you've got it right when the acceptance tests pass :)
 
 ```
-<%= command_output("pytest --ansible-host=#{cic_output.container_id}") %>
+<%= command_output("pytest") %>
 ```
 
 Good luck!

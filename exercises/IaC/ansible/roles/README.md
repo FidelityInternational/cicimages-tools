@@ -159,9 +159,7 @@ changed: [jetty-server]
 
 PLAY RECAP *********************************************************************
 jetty-server               : ok=7    changed=6    unreachable=0    failed=0   
-tomcat-server              : ok=7    changed=6    unreachable=0    failed=0   
-
-[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
+tomcat-server              : ok=7    changed=6    unreachable=0    failed=0
 ```
 
 Visit [http://localhost:8080](http://localhost:8080) and [http://localhost:9090](http://localhost:8080) and you will see that both Jetty and Tomcat are both up and running.
@@ -350,9 +348,7 @@ changed: [jetty-server]
 
 PLAY RECAP *********************************************************************
 jetty-server               : ok=7    changed=6    unreachable=0    failed=0   
-tomcat-server              : ok=7    changed=6    unreachable=0    failed=0   
-
-[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
+tomcat-server              : ok=7    changed=6    unreachable=0    failed=0
 ```
 
 ## Now it's your turn
@@ -365,14 +361,14 @@ Before starting, visit [http://localhost:8888/](http://localhost:8888/) and [htt
 Write the new Role and implement it correctly within the Playbook to pass the supplied exercise acceptance tests. Run `pytest` to execute them. When you have been successful you should see the following:
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_16577, inifile:
-plugins: testinfra-1.16.0
-collecting 0 items                                                             collecting 2 items                                                             collected 2 items                                                              
+platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0
+rootdir: /vols/pytest_14638, inifile:
+plugins: testinfra-1.17.0
+collecting ... collected 2 items                                                              
 
 tests/webservers_test.py ..                                              [100%]
 
-=========================== 2 passed in 1.23 seconds ===========================
+=========================== 2 passed in 1.27 seconds ===========================
 ```
 
 #### Helpful Hints
@@ -402,4 +398,4 @@ As Playbooks get larger, Ansible Roles are a good way of encapsulating and shari
 
   
 
-Revision: 1a97ea3a83f0f700adc564e0bec4d4ca
+Revision: 324e1c296b391c118453d30ba82d02ac

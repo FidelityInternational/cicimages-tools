@@ -32,7 +32,7 @@ describe Exercise::Output::Pytest do
       described_class.new pytest_output
     end
     it 'returns the run summary' do
-      expect(subject.summary).to eq(expected_summary)
+      expect(subject.summary).to eq(expected_summary.chomp)
     end
   end
 end

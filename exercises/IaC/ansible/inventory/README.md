@@ -175,9 +175,9 @@ ansible -i ansible/inventory -m debug -a var=dns_server all -o
 Which should show output as follows:
 
 ```
-server1 | SUCCESS => {    "changed": false,    "dns_server": "1.1.1.1"}
 server2 | SUCCESS => {    "changed": false,    "dns_server": "2.2.2.2"}
 server3 | SUCCESS => {    "changed": false,    "dns_server": "3.3.3.3"}
+server1 | SUCCESS => {    "changed": false,    "dns_server": "1.1.1.1"}
 ```
 
 The output shows the result of running the `debug` module on each of the three hosts in the inventory file.
@@ -210,22 +210,27 @@ inventory file and run the playbook successfully:
 
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1 -- /root/.pyenv/versions/3.7.0/bin/python3.7
+platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_20860, inifile: pytest.ini
-plugins: testinfra-1.16.0
-collecting 0 items                                                             collecting 2 items                                                             collecting 3 items                                                             collected 3 items                                                              
+rootdir: /vols/pytest_8074, inifile: pytest.ini
+plugins: testinfra-1.17.0
+collecting ... collected 3 items                                                              
 
 tests/asiaservers_test.py::test_motd[paramiko://server2] PASSED          [ 33%]
 tests/asiaservers_test.py::test_motd[paramiko://server3] PASSED          [ 66%]
 tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
 =============================== warnings summary ===============================
-<unknown>:7: DeprecationWarning: invalid escape sequence \s
-<unknown>:7: DeprecationWarning: invalid escape sequence \s
+tests/asiaservers_test.py:7
+  /vols/pytest_8074/tests/asiaservers_test.py:7: DeprecationWarning: invalid escape sequence \s
+    assert host.file("/etc/issue").contains("Region:\s*asia")
+
+tests/ukservers_test.py:7
+  /vols/pytest_8074/tests/ukservers_test.py:7: DeprecationWarning: invalid escape sequence \s
+    assert host.file("/etc/issue").contains("Region:\s*uk")
 
 -- Docs: https://docs.pytest.org/en/latest/warnings.html
-===================== 3 passed, 2 warnings in 1.22 seconds =====================
+===================== 3 passed, 2 warnings in 1.30 seconds =====================
 ```
 
 ## Summary
@@ -239,4 +244,4 @@ In this tutorial and exercises, you should have seen that:
 
   
 
-Revision: 188a76863e2b3a8f0828f1d09b6983dc
+Revision: 4bb6175a3d60c6b65d3217d228907d78
