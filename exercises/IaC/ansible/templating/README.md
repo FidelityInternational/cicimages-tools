@@ -1,10 +1,10 @@
 ## Introduction
-Quite often configuration for servers is very similar baring a few environment specific value.
+Quite often configuration for servers is very similar barring a few environment specific values.
 
-It is common for servers performing the same functions to have near identical configuration with specific environment specific differences. Consistency between these environments is highly desirable as variations can lead to servers exhibiting different issues and becoming a maintenance nightmare. Maintaining duplicate configuration is a low tech solution that is prone to error. Templates that can be used stamp out configuration is an ideal solution in this situation. In this exercise we look at how to write templates in the Ansible..
+It is common for servers performing the same functions to have near identical configuration with only minor differences. Consistency in configuration is highly desirable as variations can lead to servers exhibiting different issues which make maintenance problematic. Maintaining duplicate configuration is a low tech solution that is prone to error. Templates that can be used stamp out configuration is an ideal solution in this situation. In this exercise we look at how to write templates in Ansible.
 
 ## Learning Objectives
-Using ansible's templating features to make config reusable across different servers.
+Using Ansible's templating features to make configuration reusable.
 
 ## Required prequisite knowledge
 Basic knowledge of Ansible
@@ -31,7 +31,7 @@ The following example declares a simple template contains an expression that ref
   tasks:
     - name: debug message
       vars:
-        template_variable: "World"
+        template_variable: World
       debug: msg="Hello {{template_variable}}"
 
 ```
@@ -86,7 +86,7 @@ In the following example a for loop is used to loop through the contents of a li
 
 ```
 
-write the above playbook to the `ansible/for_loop_example.yaml`. Running `ansible-playbook ansible/for_loop_example.yaml -c local` should produce output listing the users defined in the `users` variable.
+Write the above playbook to the `ansible/for_loop_example.yaml`. Running `ansible-playbook ansible/for_loop_example.yaml -c local` should produce output listing the users defined in the `users` variable.
 ```
 PLAY [for loop example] ********************************************************
 
@@ -108,11 +108,11 @@ For information on using control statements within Jinja2 checkout the [document
 
 
 ## Ansible's Template module
-In line templates are useful, however lengthy strings can become very, very, unwieldy to use within a task definition. Another option is to use ansible's [Template module](https://docs.ansible.com/ansible/latest/modules/template_module.html). The Template module allows templates to be split in to files keeping them separate from the tasks within which they are used. Templates are processed using the Jinja2 and all of the same [substitution and computational features](http://jinja.pocoo.org/docs/2.10/templates/) are available in this context.
+In line templates are useful, however lengthy strings can become unwieldy to use within a task definition. Another option is to use ansible's [Template module](https://docs.ansible.com/ansible/latest/modules/template_module.html). The Template module allows templates to be split in to files keeping them separate from the tasks within which they are used. Templates are processed using the Jinja2 and all of the same [substitution and computational features](http://jinja.pocoo.org/docs/2.10/templates/) are available in this context.
 
 Let's have a go at using the Template module for ourselves.
 
-Imagine the scenario where different departments support their own environments. It would be useful to tell users of a given environment who they need to contact should they have a support query. The Message of The Day (MOTD) is a banner that is shown to users of NIX type environments when they log in. It is usually configured to display useful information to users and is the perfect place to tell them whom to contact if they have a problem.
+Imagine the scenario where different departments support their own environments. It would be useful to tell users of a given environment who they need to contact should they have a support query. The Message of The Day (MOTD) is a banner that is shown to users of UNIX environments when they log in. It is usually configured to display useful information to users and is the perfect place to tell them whom to contact if they have a problem.
 
 
 
@@ -179,7 +179,7 @@ Name each of the nodes. E.g. on rabbit1 write the following to `/etc/rabbitmq/ra
 ```
 NODENAME=rabbit1
 ```
-**Hint:** To keep things DRY, templating might come in useful here.
+**Hint:** To avoid repetition, templating might come in useful here.
 
 ### Configure the cluster
 
@@ -196,6 +196,7 @@ Each cluster node needs to be configured with the following content written to `
 ```
 
 **Note:** replace `managing-node-name` for the name of the managing node.
+
 **Hint:** to avoid hard coding the managing node name, use templating instead.
 
 ### Set the secret
@@ -234,17 +235,17 @@ The automated tests that accompany this exercise should also pass. Run `pytest` 
 ```
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_26462, inifile:
+rootdir: /vols/pytest_22960, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 1 item                                                              collected 1 item                                                               
 
 tests/test_rabbitmq_cluster.py .                                         [100%]
 
-=========================== 1 passed in 0.04 seconds ===========================
+=========================== 1 passed in 0.03 seconds ===========================
 ```
 
 **Note:** Don't forget to run `cic down` to shutdown the test infrastructure once you've finished the exercise.
 
   
 
-Revision: 159e69438608a223d98268706ffb2a1b
+Revision: e3b4ddccfbda380b76a15235a2fffaca
