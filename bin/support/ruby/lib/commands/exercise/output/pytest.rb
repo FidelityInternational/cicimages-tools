@@ -4,7 +4,7 @@ module Exercise
       attr_reader :summary
 
       def initialize(string)
-        @summary = chomp(string[/(=+[\w\s]+=+$.*?)^=+[\w\s]+=+/m, 1])
+        @summary = chomp(string[/(=+.*100%\])/m, 1])
       end
 
       def chomp(string)

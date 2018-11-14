@@ -52,9 +52,7 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
-
-[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
 ```
 
 In the above output we can see that "Hello World" was outputed.
@@ -99,9 +97,7 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
-
-[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
 ```
 
 For information on using control statements within Jinja2 checkout the [documentation](http://jinja.pocoo.org/docs/2.10/templates/#list-of-control-structures)
@@ -234,18 +230,18 @@ If everything is working then you should be able to login in to the [management 
 The automated tests that accompany this exercise should also pass. Run `pytest` to execute them and you should see:
 ```
 ============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_22960, inifile:
-plugins: testinfra-1.16.0
-collecting 0 items                                                             collecting 1 item                                                              collected 1 item                                                               
+platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0
+rootdir: /vols/pytest_23768, inifile:
+plugins: testinfra-1.17.0
+collecting ... collected 1 item                                                               
 
 tests/test_rabbitmq_cluster.py .                                         [100%]
 
-=========================== 1 passed in 0.03 seconds ===========================
+=========================== 1 passed in 0.04 seconds ===========================
 ```
 
 **Note:** Don't forget to run `cic down` to shutdown the test infrastructure once you've finished the exercise.
 
   
 
-Revision: e3b4ddccfbda380b76a15235a2fffaca
+Revision: 04ad173fa05c6a05f82f7c93b7d3a8ee

@@ -22,8 +22,13 @@ Ansible has lots of features that you will learn about in future exercises. The 
   - `cd YOUR_CLONE_OF_THIS REPO`
   - `source ./bin/env`
   - `cd <%=env('exercise_path') %>`
+  - Run `<%=command('cic up')%>` to bring up the infrastructure required for this exercise.
 
-- So that you don't have to worry about supplying your own infrastructure for ansible to work upon, we have configured the courseware to run ansible against docker containers that we stand up for you. You don't need to know how this works simply that when we mention containers we simply mean where you ansible as run. In the exercise, we'll show you how to connect to these containers to inspect them.
+**Note:** Running `<%= after_rendering_run('cic down') %>` at the end of this exercise will shut down the test infrastructure.
+
+<% server_hostname = 'web1' %>
+
+When `cic up` was run, a server with the hostname `<%= server_hostname %>` was stood up. You can also connect directly to the console of this machine by running `cic connect <%= server_hostname %>` to take a look around.
 
 ### ansible-playbook
 The `ansible-playbook` command is used to execute a group of plays against servers identified in the supplied inventory.
@@ -38,8 +43,8 @@ At the simplest level, all that the `ansible-playbook` command requires is to be
  <%= command_output('cat ansible/apache.yml') %>
 ```
 
-To use it run:
-`<%= command('ansible-playbook ansible/apache.yml') %>`
+To execute this playbook agains `<%= server_hostname %>` run:
+`<%= command("ansible-playbook ansible/apache.yml -i 'web1,'" ) %>`
 
 You should see the following output which shows ansible running the playbook:
 ```
@@ -77,26 +82,7 @@ The last line of output looked like this:
 This line wasn't outputed by Ansible itself, but actually the courseware supporting this tutorial. This line gives you the command that you can use to start to the temporary container that was created on your behalf for the Ansible to run against.
 
 ### Validating that everything has worked
-In order to look at what our ansible did, we must first start the container that it ran against.
-
-Start the container that was built for ansible-playbook by running the command that was outputted on your console, e.g: `<%= command(last_command_output.to_cic_output.cic_start_command) %>`
-
-<% cic_output = last_command_output.to_cic_output %>
-<% cic_stop_command = cic_output.cic_stop_command %>
-<% cic_connect_command = cic_output.cic_connect_command %>
-<% container_id = cic_output.container_id %>
-
-This outputs the following:
-```
-<%= last_command_output %>
-```
-
-The container built out for ansible-playbook is now up and running and ready to be looked at.
-
-**Note:** to stop the container simply run `<%= after_rendering_run(cic_stop_command) %>`
-
-Using the actual container name given from the `cic start` command run: `<%= cic_connect_command %>`
-
+Connect to the `<%= server_hostname %>` server itself by running `cic connect <%= server_hostname %>`
 You will now be in a bash shell on the container itself. From here run: `curl localhost:80` to see that apache is alive and well.
 
 #### Testing via automation
@@ -108,7 +94,7 @@ Having tests that can be run on demand provides great power. These tests can be 
 
 This exercise contains a test called <%= path("./tests/apache_ansible_test.py") %> written in python using the pytest and testinfra APIs.
 
-To run this script, execute the following command: `<%= command("pytest --ansible-host=#{container_id}") %>`
+To run this script, execute the following command: `<%= command("pytest") %>`
 
 This should output the following:
 ```

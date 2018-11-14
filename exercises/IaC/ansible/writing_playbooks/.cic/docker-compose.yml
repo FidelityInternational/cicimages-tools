@@ -1,0 +1,13 @@
+version: '3'
+networks:
+  default:
+    external:
+      name: cic
+
+services:
+  web1:
+    hostname: web1
+    privileged: true
+    image: ${CIC_COURSEWARE_IMAGE}:${CIC_COURSEWARE_VERSION}
+    ports: ["8080:80"]
+    command: /sbin/init
