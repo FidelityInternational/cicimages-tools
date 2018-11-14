@@ -20,7 +20,7 @@ It is assumed that you are familiar with the basics of Ansible, such that you ca
 Run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`.
 
 ## The When Statement
-The When Statement defines the condition for **when** a certain action should happen.
+The When Statement defines the condition for **when** a task should be executed
 
 
 
@@ -36,11 +36,12 @@ The condition is declared within the task itself using the `when` clause. The fo
   hosts: all
   tasks:
   - name: Runtime requirements check
-    fail: msg="Required variable '{{ installation_dir }}' not set"
+    fail: msg="Required variable 'installation_dir' not set"
     when: installation_dir is undefined
 
   - name: Setup runtime
-    shell: echo "Logging at '{{ log_level }}'"
+    debug: 
+      msg: Logging at '{{ log_level }}'
     when: log_level is defined
 
 
@@ -60,8 +61,8 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [Runtime requirements check] **********************************************
-fatal: [127.0.0.1]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'installation_dir' is undefined\n\nThe error appears to have been in '/vols/ansible_308/ansible/when.yml': line 5, column 5, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n  - name: Runtime requirements check\n    ^ here\n"}
-	to retry, use: --limit @/vols/ansible_308/ansible/when.retry
+fatal: [127.0.0.1]: FAILED! => {"changed": false, "msg": "Required variable 'installation_dir' not set"}
+	to retry, use: --limit @/vols/ansible_5886/ansible/when.retry
 
 PLAY RECAP *********************************************************************
 127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1   
@@ -127,11 +128,10 @@ Write to `ansible/or_condition.yml` with the following yaml:
   hosts: all
   vars:
     day: Saturday
-    time: 17:00
 
   tasks:
   - debug:
-      msg: "No one will be available globally in the office till Monday 01:00 GMT"
+      msg: "There is currently no one in the office, please try again later"
     when: day=="Saturday" or day=="Sunday"
 
 ```
@@ -147,7 +147,7 @@ ok: [127.0.0.1]
 
 TASK [debug] *******************************************************************
 ok: [127.0.0.1] => {
-    "msg": "No one will be available globally in the office till Monday 01:00 GMT"
+    "msg": "There is currently no one in the office, please try again later"
 }
 
 PLAY RECAP *********************************************************************
@@ -169,7 +169,7 @@ Alternatively, we can require both conditions to be met by using the `and` opera
 
   tasks:
   - debug:
-      msg: "No one will be available globally in the office till 01:00 GMT"
+      msg: "There is currently no one in the office, please try again later"
     when: day=="Monday" and time>=5
 
 ```
@@ -187,7 +187,7 @@ ok: [127.0.0.1]
 
 TASK [debug] *******************************************************************
 ok: [127.0.0.1] => {
-    "msg": "No one will be available globally in the office till 01:00 GMT"
+    "msg": "There is currently no one in the office, please try again later"
 }
 
 PLAY RECAP *********************************************************************
@@ -207,7 +207,7 @@ The following playbook defines a simple task that prints out a message for each 
 ```YAML
 
 ---
-- name: 'create users'
+- name: create users
   hosts: all
   vars:
     users: [user1, user2, user3]
@@ -257,12 +257,12 @@ Often data will be stored in a map structure, I.e. key, value pairs. Maps are al
   vars:
     user_group_mappings:
       admin:
-      - user1
-      - user2
+        - user1
+        - user2
       team:
-      - user3
-      - user4
-      - user5
+        - user3
+        - user4
+        - user5
 
   tasks:
   - name: 'create user'
@@ -272,29 +272,19 @@ Often data will be stored in a map structure, I.e. key, value pairs. Maps are al
 
 ```
 
-In the case of the above playbook `dict2items` does the following:
-
-```YAML
-user_group_mappings:
-  admin:
-  - user1
-  - user2
-  team:
-  - user3
-  - user4
-  - user5
-```
-becomes
+In the case of the above playbook `dict2items` takes the `user_group_mappings` variable and returns the following:
 
 ```YAML
 - key: admin
   value: [ user1, user2 ]
 - key: team
   value: [ user3, user4, user5]
+
+Which can be iterated over using the standard `loop` construct.
+
 ```
 write the playbook to `ansible/hash_to_list.yml` and Run it with: `ansible-playbook ansible/hash_to_list.yml`. This will output the following:
 ```
-
 
 PLAY [Map to list example] *****************************************************
 
@@ -371,8 +361,8 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [include] *****************************************************************
-included: /vols/ansible_17581/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
-included: /vols/ansible_17581/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
+included: /vols/ansible_22933/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
+included: /vols/ansible_22933/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
 
 TASK [create group] ************************************************************
 ok: [127.0.0.1] => {
@@ -452,7 +442,7 @@ If you've got everything right then the tests we've written for you should pass.
 
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-3.8.2, py-1.6.0, pluggy-0.7.1
-rootdir: /vols/pytest_24767, inifile:
+rootdir: /vols/pytest_26953, inifile:
 plugins: testinfra-1.16.0
 collecting 0 items                                                             collecting 2 items                                                             collected 2 items                                                              
 
@@ -465,4 +455,4 @@ Good Luck!!
 
   
 
-Revision: 86e2716882fe9786627f39499f3d50d2
+Revision: 0cefba585dca3c40596fef3ee7480536
