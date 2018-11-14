@@ -70,16 +70,10 @@ Looking at the output in detail:
 <%= ansible_output.tasks[2] %>
 ```
  - Given us a summary of the number of actions that is has taken.
-```
- <%= ansible_output.play_recap %>
-```
 
-The last line of output looked like this:
 ```
-<%= last_command_output.lines.last %>
+ <%= ansible_output.play_recap  %>
 ```
-
-This line wasn't outputed by Ansible itself, but actually the courseware supporting this tutorial. This line gives you the command that you can use to start to the temporary container that was created on your behalf for the Ansible to run against.
 
 ### Validating that everything has worked
 Connect to the `<%= server_hostname %>` server itself by running `cic connect <%= server_hostname %>`

@@ -104,7 +104,7 @@ You should see the following. (The stack traces have been omitted):
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_10308, inifile: pytest.ini
+rootdir: /vols/pytest_18116, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 4 items                                                              
 
@@ -192,7 +192,7 @@ Run the test again with `pytest` and we see the from the output that the tests v
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_29730, inifile: pytest.ini
+rootdir: /vols/pytest_13579, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 4 items                                                              
 
@@ -247,7 +247,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_15431, inifile: pytest.ini
+rootdir: /vols/pytest_11497, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 4 items                                                              
 
@@ -256,7 +256,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.93 seconds ===========================
+=========================== 4 passed in 0.89 seconds ===========================
 ```
 
 Good luck!
@@ -278,4 +278,4 @@ You have just learned how to:
 
   
 
-Revision: 06f246538661d0cb749e9f4a6d132594
+Revision: 874aeb3bdf89b2cd85b660e645f75aab

@@ -105,16 +105,11 @@ changed: [web1]
 
 ```
  - Given us a summary of the number of actions that is has taken.
-```
- 
-```
 
-The last line of output looked like this:
 ```
+ PLAY RECAP *********************************************************************
 web1                       : ok=3    changed=2    unreachable=0    failed=0
 ```
-
-This line wasn't outputed by Ansible itself, but actually the courseware supporting this tutorial. This line gives you the command that you can use to start to the temporary container that was created on your behalf for the Ansible to run against.
 
 ### Validating that everything has worked
 Connect to the `web1` server itself by running `cic connect web1`
@@ -136,7 +131,7 @@ This should output the following:
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_13804, inifile: pytest.ini
+rootdir: /vols/pytest_4685, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 3 items                                                              
 
@@ -144,7 +139,7 @@ tests/apache_ansible_test.py::test_apache_installed PASSED               [ 33%]
 tests/apache_ansible_test.py::test_apache_is_enabled_as_service PASSED   [ 66%]
 tests/apache_ansible_test.py::test_apache_installed_is_running PASSED    [100%]
 
-=========================== 3 passed in 0.84 seconds ===========================
+=========================== 3 passed in 0.88 seconds ===========================
 ```
 
 In just a second or so the test has validated that:
@@ -159,4 +154,4 @@ Ansible is a great tool for configuring infrastructure. Baked in to its philosop
 
   
 
-Revision: cfe7ab289d16ee385861185dc630c1c4
+Revision: fd4276f1757d00345e186d19880742ea

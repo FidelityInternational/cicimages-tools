@@ -8,7 +8,7 @@ module Exercise
 
         @tasks = string.scan(/(TASK .*\**$\n.*\n)/).flatten
         @play = string.scan(/(PLAY \[.*\**$)/).flatten.first
-        @play_recap = string.scan(/(PLAY RECAP.*\**$\n.*\n)/).flatten.first
+        @play_recap = string.scan(/(PLAY RECAP.*\**$\n.*)/).flatten.first
       end
     end
   end
