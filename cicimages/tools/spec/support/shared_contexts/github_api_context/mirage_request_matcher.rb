@@ -78,7 +78,7 @@ class MirageRequestMatcher < RSpec::Matchers::DSL::Matcher
 
   def put(state)
     apply_expectations(state)
-    mirage.updated_templates(template_id).delete if template_id
+    mirage.templates(template_id).delete if template_id
     @template_id = mirage.put(state).id
     self
   end
