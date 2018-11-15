@@ -1,3 +1,0 @@
-Quite often configuration for servers is very similar baring a few environment specific value. 
-
-It is common for servers performing the same functions to have near identical configuration with specific environment specific differences. Consistency between these environments is highly desirable as variations can lead to servers exhibiting different issues and becoming a maintenance nightmare. Maintaining duplicate configuration is a low tech solution that is prone to error. Templates that can be used stamp out configuration is an ideal solution in this situation. In this exercise we look at how to write templates in the Ansible.
