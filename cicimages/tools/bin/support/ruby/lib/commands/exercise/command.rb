@@ -85,7 +85,7 @@ module Exercise
     option :environment_variables, type: :string, required: false
     option :digest_component, type: :string, required: false, desc: 'value to be considered when generating digest', default: ''
 
-    def generate(path)
+    def generate(path='.')
       set_environment(options[:environment_variables])
 
       templates = File.directory?(path) ? templates(path) : [path]
