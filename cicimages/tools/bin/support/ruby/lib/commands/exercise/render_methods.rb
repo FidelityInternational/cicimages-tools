@@ -2,10 +2,7 @@ require 'digest'
 require 'tmpdir'
 require_relative 'instructions'
 module Exercise
-  module RenderMethods
-    include Commandline::Output
-    include Instructions
-
+  module DigestMethods
     def digest(path:, digest_component:, excludes: [])
       excludes = paths(*excludes)
 
@@ -13,16 +10,8 @@ module Exercise
         excludes.include?(f) || ignored?(path, f)
       end
 
-      # puts "path: #{path}"
-      # puts "digest_component: #{digest_component}"
-      # puts "excludes: #{excludes}"
-      # puts "Number of files: #{files.size}"
-      # puts "files: #{files.join("\n")}"
-
       content = files.map { |f| File.read(f) }.join
       Digest::MD5.hexdigest(content << digest_component).to_s
-      # puts "path: #{digest}"
-      # digest
     end
 
     def excluded_files(template)
@@ -34,6 +23,41 @@ module Exercise
     def paths(*paths)
       paths.find_all { |excluded_file| File.exist?(excluded_file) }.collect { |path| full_path(path) }
     end
+
+    private
+
+    def files(path)
+      files = paths(*Dir.glob("#{path}/**/*", ::File::FNM_DOTMATCH))
+      files.find_all { |f| !File.directory?(f) }
+    end
+
+    def filename(template)
+      "#{File.expand_path("#{File.dirname(template)}/..")}/#{File.basename(template, '.erb')}"
+    end
+
+    def full_path(path)
+      File.expand_path(path)
+    end
+
+    def git_ignore_content(path)
+      git_ignore_file = "#{path}/.gitignore"
+      File.exist?(git_ignore_file) ? File.read(git_ignore_file) : ''
+    end
+
+    def ignored?(path, file)
+      ignored_files(path).find { |ignore| file.include?(ignore) || Pathname.new(file).fnmatch?(ignore) }
+    end
+
+    def ignored_files(path)
+      files = git_ignore_content(path).lines.collect { |line| sanitise(line) }
+      files << '.git'
+    end
+  end
+
+  module RenderMethods
+    include Commandline::Output
+    include Instructions
+    include DigestMethods
 
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
@@ -47,13 +71,14 @@ module Exercise
 
       say ok "Finished: #{template}"
       true
-    rescue StandardError, RuntimeError => e
+    rescue StandardError => e
       say error "Failed to generate file from: #{template}"
       say "#{e.message}\n#{e.backtrace}"
       false
     ensure
       Dir.chdir(current_dir)
     end
+
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
@@ -80,29 +105,6 @@ module Exercise
                                 excludes: excluded_files(template))}"
     end
 
-    def files(path)
-      files = paths(*Dir.glob("#{path}/**/*", ::File::FNM_DOTMATCH))
-      files.find_all { |f| !File.directory?(f) }
-    end
-
-    def full_path(path)
-      File.expand_path(path)
-    end
-
-    def git_ignore_content(path)
-      git_ignore_file = "#{path}/.gitignore"
-      File.exist?(git_ignore_file) ? File.read(git_ignore_file) : ''
-    end
-
-    def ignored?(path, file)
-      ignored_files(path).find { |ignore| file.include?(ignore) || Pathname.new(file).fnmatch?(ignore) }
-    end
-
-    def ignored_files(path)
-      files = git_ignore_content(path).lines.collect { |line| sanitise(line) }
-      files << '.git'
-    end
-
     def reset
       @result = nil
       @after_rendering_commands = []
@@ -114,11 +116,9 @@ module Exercise
 
       erb_template = ERB.new(template_content)
 
-      if run_in_temp_dir?(template_content)
-        anonymise(render_in_temp_dir(erb_template))
-      else
-        anonymise(erb_template.result(binding))
-      end
+      result = run_in_temp_dir?(template_content) ? render_in_temp_dir(erb_template) : erb_template.result(binding)
+
+      anonymise(result)
     ensure
       after_rendering_commands.each { |command| test_command(command) }
       say '' if quiet?

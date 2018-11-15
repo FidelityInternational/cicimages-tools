@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-CIC_DOCKER_CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 function volume_path() {
     local prefix=$1
     echo "/vols/${prefix}_${RANDOM}"

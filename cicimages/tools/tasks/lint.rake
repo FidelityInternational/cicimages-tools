@@ -1,4 +1,4 @@
-require_relative 'support/lint'
+require_relative '../support/lint'
 
 desc 'lint project shellscripts'
 task :shellcheck do

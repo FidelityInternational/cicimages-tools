@@ -40,10 +40,12 @@ For this material you will need the following:
       login <username>
       password <password>
   ```
-2. Fork this repo
-3. Clone your fork: `git clone https://github.com/<youruser>/<fork>.git cic`
-4. cd in to your checkout: `cd cic`
-5. setup the courseware: `./bin/setup`
+  **Note:** If you are using MacOSX you might find that `~/.netrc` is a directory on your machine. In this case replace the directory for a file as described above.
+2. Set restrictive permissions on `~/.netrc` e.g. by running: `chmod 0600 ~/.netrc`
+3. Fork this repo
+4. Clone your fork: `git clone https://github.com/<youruser>/<fork>.git cic`
+5. cd in to your checkout: `cd cic`
+6. setup the courseware: `./bin/setup`
 
 ### Starting a learning track
 To see the Learning tracks that CIC contains run: `cic track list`
@@ -75,4 +77,4 @@ Many hands make light work and your help is needed! View the [Contributing Guide
 
   
 
-Revision: 5d03bcc97bec5a9c7997276a26e19905
+Revision: 99cf1aafc06055b35d64900dc28594d8

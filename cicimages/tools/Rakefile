@@ -2,8 +2,13 @@
 
 require 'bundler'
 Bundler.require :development, :default
+$LOAD_PATH.unshift("#{__dir__}/support")
+
+require 'courseware'
 
 Dir["#{__dir__}/tasks/*.rake"].each { |tasks| import tasks }
+
+Courseware.init(version_file: "#{__dir__}/VERSION", repository: 'cicimages/tools')
 
 RSpec::Core::RakeTask.new(:spec) do
   ENV['COVERAGE'] = 'true'

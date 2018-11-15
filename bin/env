@@ -1,5 +1,5 @@
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export PATH="${CURRENT_PATH}/.ignore:$PATH"
+export PATH="${CURRENT_PATH}/bootstrapped-commands:$PATH"
 
 root_dir="${CURRENT_PATH}/.."
 export CIC_IMAGE=$(cat "${root_dir}/.courseware-image")

@@ -15,7 +15,7 @@ It is assumed that you are familiar with the basics of Ansible, such that you ca
 
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd ./exercises/IaC/ansible/conditionals`
+- `cd /exercises/IaC/ansible/conditionals`
 
 Run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`.
 
@@ -62,7 +62,7 @@ ok: [127.0.0.1]
 
 TASK [Runtime requirements check] **********************************************
 fatal: [127.0.0.1]: FAILED! => {"changed": false, "msg": "Required variable 'installation_dir' not set"}
-	to retry, use: --limit @/vols/ansible_9906/ansible/when.retry
+	to retry, use: --limit @/vols/ansible_5628/ansible/when.retry
 
 PLAY RECAP *********************************************************************
 127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=1   
@@ -83,7 +83,9 @@ TASK [Setup runtime] ***********************************************************
 skipping: [127.0.0.1]
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 You'll notice that this time the playbook executed successfully but that the `Setup runtime` task did not execute. This is because we did not supply the optional `log_level` variable that our when condition was looking for.
@@ -106,7 +108,9 @@ TASK [Setup runtime] ***********************************************************
 skipping: [127.0.0.1]
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=1    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 
@@ -147,7 +151,9 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 Alternatively, we can require both conditions to be met by using the `and` operator. Write the following YAML to `ansible/and_condition`:
@@ -185,7 +191,9 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 ## Loops
 Often it will be necessary to perform the same action a multiple number of times. For example creating new users in a database. This is where loops come into play.
@@ -232,7 +240,9 @@ ok: [127.0.0.1] => (item=user3) => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 As you can see the message has been printinted for each of the values in the `users` list.
@@ -290,7 +300,9 @@ ok: [127.0.0.1] => (item={'key': 'team', 'value': ['user3', 'user4', 'user5']}) 
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 As you can see, the `user_group_mappings` variable has been successfully used within the loop.
@@ -349,8 +361,8 @@ TASK [Gathering Facts] *********************************************************
 ok: [127.0.0.1]
 
 TASK [include] *****************************************************************
-included: /vols/ansible_6632/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
-included: /vols/ansible_6632/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
+included: /vols/ansible_23846/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Admin', 'value': ['user1', 'user2']})
+included: /vols/ansible_23846/ansible/create_users_and_groups.yml for 127.0.0.1 => (item={'key': 'Team', 'value': ['user3', 'user4', 'user5']})
 
 TASK [create group] ************************************************************
 ok: [127.0.0.1] => {
@@ -390,7 +402,9 @@ ok: [127.0.0.1] => (item=user5) => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=7    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=7    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 Here we can see that the included tasks have been run twice, once for each of the user groups, and that the nested loop as also executed correctly.
@@ -428,17 +442,17 @@ If you've got everything right then the tests we've written for you should pass.
 
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0
-rootdir: /vols/pytest_23616, inifile:
+rootdir: /vols/pytest_5086, inifile:
 plugins: testinfra-1.17.0
 collecting ... collected 2 items                                                              
 
 tests/test_packages_are_installed.py ..                                  [100%]
 
-=========================== 2 passed in 1.28 seconds ===========================
+=========================== 2 passed in 1.26 seconds ===========================
 ```
 
 Good Luck!!
 
   
 
-Revision: f74cecefaea60dfd34040e6055888288
+Revision: 19e84cc198b8e89a524c2446a974a60e

@@ -11,14 +11,14 @@ module Exercise
     describe '#quiet?' do
       context 'option set to true' do
         it 'returns true' do
-          subject.options = {quiet: true}
+          subject.options = { quiet: true }
           expect(subject.quiet?).to eq(true)
         end
       end
 
       context 'option set to false' do
         it 'returns false' do
-          subject.options = {quiet: false}
+          subject.options = { quiet: false }
           expect(subject.quiet?).to eq(false)
         end
       end
@@ -36,19 +36,18 @@ module Exercise
         "./.templates/#{File.basename(path)}"
       end
 
-
-
       context 'file given' do
-        let!(:template) {create_template}
+        let!(:template) { create_template }
         it 'generates content from the given template' do
-          expect(subject).to receive(:render_exercise).with(relative_template_path(template.path), digest_component: anything).and_return(true)
+          expect(subject).to receive(:render_exercise)
+            .with(relative_template_path(template.path), digest_component: anything)
+            .and_return(true)
           subject.generate(template.path)
         end
 
-
         context 'environment_variables option supplied' do
           it 'makes those variables available' do
-            subject.options = {environment_variables: 'foo=bar, billy=bob'}
+            subject.options = { environment_variables: 'foo=bar, billy=bob' }
             subject.generate(template.path)
             expect(ENV['foo']).to eq('bar')
             expect(ENV['billy']).to eq('bob')
@@ -57,44 +56,55 @@ module Exercise
 
         context '--digest-component' do
           it 'passes it on when rendering the template' do
-            subject.options = {digest_component: :expected}
-            expect(subject).to receive(:render_exercise).with(relative_template_path(template.path), digest_component: :expected).and_return(true)
+            subject.options = { digest_component: :expected }
+
+            expect(subject).to receive(:render_exercise)
+              .with(relative_template_path(template.path), digest_component: :expected)
+              .and_return(true)
+
             subject.generate(template.path)
           end
         end
       end
 
       context 'directory given' do
-
-
-
-        let!(:template1) {create_template}
-        let!(:template2) {create_template}
+        let!(:template1) { create_template }
+        let!(:template2) { create_template }
         it 'renders all templates found in the directory' do
-          expect(subject).to receive(:render_exercise).with(relative_template_path(template1.path), digest_component: anything).and_return(true)
-          expect(subject).to receive(:render_exercise).with(relative_template_path(template2.path), digest_component: anything).and_return(true)
+          expect(subject).to receive(:render_exercise)
+            .with(relative_template_path(template1.path), digest_component: anything)
+            .and_return(true)
+
+          expect(subject).to receive(:render_exercise)
+            .with(relative_template_path(template2.path), digest_component: anything)
+            .and_return(true)
+
           subject.generate(Dir.pwd)
         end
 
         context 'a template fails to render' do
           it 'renders the others' do
-            expect(subject).to receive(:render_exercise).with(relative_template_path(template1.path), digest_component: anything).and_return(false)
-            expect(subject).to receive(:render_exercise).with(relative_template_path(template2.path), digest_component: anything).and_return(true)
+            expect(subject).to receive(:render_exercise)
+              .with(relative_template_path(template1.path), digest_component: anything)
+              .and_return(false)
+
+            expect(subject).to receive(:render_exercise)
+              .with(relative_template_path(template2.path), digest_component: anything)
+              .and_return(true)
+
             expected_error = CourseContentRenderingError.new([template1.path])
-            expect{subject.generate(Dir.pwd)}.to raise_error(expected_error)
+            expect { subject.generate(Dir.pwd) }.to raise_error(expected_error)
           end
         end
       end
-
-
     end
 
     describe '#create' do
-      let(:exercise_name) {'new_exercise'}
-      let(:scaffold_path) {ENV['SCAFFOLD_PATH'] = 'scaffold'}
+      let(:exercise_name) { 'new_exercise' }
+      let(:scaffold_path) { ENV['SCAFFOLD_PATH'] = 'scaffold' }
 
       let(:config) do
-        {'directories' => %w[dir1 dir2]}
+        { 'directories' => %w[dir1 dir2] }
       end
 
       let!(:scaffold_structure_path) do

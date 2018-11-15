@@ -26,6 +26,7 @@ Before we go any further let's break down the anatomy of playbooks. Playbooks ar
     - item2_attribute1: value
 ```
 
+
 - `---` : this denotes the start of a file and is actually optional in both YAML and Playbooks. We've used it here because it is something that's often seen, but is present by convention rather than requirement.
 - `#` Anything following a hash symbol is a comment meant for human readers. Comments are not interpreted.
 - `-` a single hyphen denotes a list. Content that is on the same line and imeditately tabbed in on the following lines is a member of that list entry. In the case of the example above. the YAML consist of a single item list. That item has attributes, one of which (attribute2), is itself a list that contains 2 items.
@@ -74,10 +75,11 @@ We are using just a few of the attributes that Ansible provides for customising 
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd ./exercises/IaC/ansible/writing_playbooks`
+- `cd /exercises/IaC/ansible/writing_playbooks`
 - Run `cic up` to bring up the infrastructure required for this exercise.
 
 **Note:** Running `cic down` at the end of this exercise will shut down the test infrastructure.
+
 
 ### Scenario
 Your team of devoted and talented web developers have spent several weeks beavering away on possibly the most advanced, inspiring and responsive website ever created. They have now passed the website code over to your for deployment. The website code that your developers have provided you with can be found in the `./resources` folder.
@@ -101,17 +103,7 @@ Execute the tests by running: `pytest`
 
 You should see the following. (The stack traces have been omitted):
 ```
-============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
-cachedir: .pytest_cache
-rootdir: /vols/pytest_18116, inifile: pytest.ini
-plugins: testinfra-1.17.0
-collecting ... collected 4 items                                                              
 
-tests/webserver_test.py::test_apache_installed FAILED                    [ 25%]
-tests/webserver_test.py::test_apache_is_enabled_as_service FAILED        [ 50%]
-tests/webserver_test.py::test_apache_installed_is_running FAILED         [ 75%]
-tests/webserver_test.py::test_website_deployed FAILED                    [100%]
 ```
 The output shows us that two tests attempted to verify:
 - the apache2 package was installed.
@@ -168,7 +160,9 @@ TASK [Start service apache2, if not running] ***********************************
 changed: [web1]
 
 PLAY RECAP *********************************************************************
-web1                       : ok=3    changed=2    unreachable=0    failed=0
+web1                       : ok=3    changed=2    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 
@@ -176,30 +170,16 @@ web1                       : ok=3    changed=2    unreachable=0    failed=0
 The terminal output shows us that our 2 tasks ran:
  - installing apache2
 ```
- TASK [install apache2] *********************************************************
-changed: [web1]
-
+ 
 ```
  - starting apache2
 ```
-TASK [Start service apache2, if not running] ***********************************
-changed: [web1]
 
 ```
 
 Run the test again with `pytest` and we see the from the output that the tests verifying apache2 is installed, up and running are passing.
 ```
-============================= test session starts ==============================
-platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
-cachedir: .pytest_cache
-rootdir: /vols/pytest_13579, inifile: pytest.ini
-plugins: testinfra-1.17.0
-collecting ... collected 4 items                                                              
 
-tests/webserver_test.py::test_apache_installed PASSED                    [ 25%]
-tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
-tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
-tests/webserver_test.py::test_website_deployed FAILED                    [100%]
 ```
 
 The remaining test is checking that the website content being served is correct. Currently we have not done anything to deploy the team's site. Take a look at [http://localhost:8080](http://localhost:8080) and you'll see that apache is still serving the default page that you get when apache is installed.
@@ -247,7 +227,7 @@ You'll know that you've got it right when the acceptance tests pass :)
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_11497, inifile: pytest.ini
+rootdir: /vols/pytest_7276, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 4 items                                                              
 
@@ -256,7 +236,7 @@ tests/webserver_test.py::test_apache_is_enabled_as_service PASSED        [ 50%]
 tests/webserver_test.py::test_apache_installed_is_running PASSED         [ 75%]
 tests/webserver_test.py::test_website_deployed PASSED                    [100%]
 
-=========================== 4 passed in 0.89 seconds ===========================
+=========================== 4 passed in 0.91 seconds ===========================
 ```
 
 Good luck!
@@ -278,4 +258,4 @@ You have just learned how to:
 
   
 
-Revision: 874aeb3bdf89b2cd85b660e645f75aab
+Revision: 178b51b963c8a9602d938659184e62ed

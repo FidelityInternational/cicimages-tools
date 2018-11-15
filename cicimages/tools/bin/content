@@ -12,7 +12,7 @@ volume_path="$(volume_path ansible)/${exercise_name}"
 
 copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
-command="$(bootstrap_cic_environment) $(build_command $(cic_bin)/support/ruby/bin/exercise "$@")"
+command="$(bootstrap_cic_environment) $(build_command "$(cic_bin)/support/ruby/bin/exercise" "$@")"
 
 subcommand=$1
 if [ "${subcommand}" == "generate" ] || [ "${subcommand}" == "requiring_update" ]; then

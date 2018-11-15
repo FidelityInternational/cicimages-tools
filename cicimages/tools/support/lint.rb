@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift("#{__dir__}/../../bin/support/ruby/lib")
+$LOAD_PATH.unshift("#{__dir__}/../bin/support/ruby/lib")
 require 'utils/commandline'
 module Lint
   extend Commandline

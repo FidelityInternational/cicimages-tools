@@ -1,30 +1,23 @@
-require_relative 'support/courseware'
+$LOAD_PATH.unshift("#{__dir__}/../bin/support/ruby/lib")
+require_relative '../support/courseware'
+require 'utils/commandline'
 namespace :courseware do
-  require 'pty'
-
-  def run_and_stream(command)
-    stdout, _stdin, _pid = PTY.spawn command
-    while (string = stdout.gets)
-      print string
-    end
-  end
+  include Commandline
 
   desc 'build course image'
   task :build do
-    run_and_stream "docker build . -t #{Courseware.tag}"
+    run "docker build . -t #{Courseware.tag}", silent: false
   end
 
   desc 'publish course image'
   task :publish do
-    puts 'publishing image (docker output is hidden: takes a while)'
-    `docker push #{Courseware.tag}`
+    run "docker push #{Courseware.tag}"
   end
 
   require 'bump'
   class CoursewareVersionBumper < Bump::Bump
     def self.current_info
-      version_file = "#{__dir__}/../.courseware-version"
-      [File.read(version_file), version_file]
+      [Courseware.version, Courseware.version_file]
     end
   end
 

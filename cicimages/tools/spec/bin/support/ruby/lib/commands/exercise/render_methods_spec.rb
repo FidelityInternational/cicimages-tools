@@ -172,16 +172,16 @@ module Exercise
 
       describe 'run_in_temp_directory directive' do
         it 'renders the template in the scope of a temporary directory' do
-          expected_text = 'number of files: %d'
+          expected_text = 'number of files: %<count>d'
           content = <<~CONTENT
             <%# instruction:run_in_temp_directory%>
-            <%= '#{expected_text}' % Dir['*.*'].size %>
+            <%= format('#{expected_text}', count: Dir['*.*'].size) %>
           CONTENT
 
           write_to_file('temp.file', 'content')
           template = create_template(content: content)
           subject.render_exercise(template.path)
-          expect(File.read(template.expected_rendered_filepath)).to include(expected_text % 0)
+          expect(File.read(template.expected_rendered_filepath)).to include(format(expected_text, count: 0))
         end
       end
     end

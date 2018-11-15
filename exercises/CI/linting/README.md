@@ -18,7 +18,7 @@ This exercise assumes that you have basic knowledge of at least one programming.
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd ./exercises/CI/linting`
+- `cd /exercises/CI/linting`
 
 ### Installing a Linter
 All modern Languages have Linters. If your programming in Ruby you might use [Simplcov](https://github.com/colszowka/simplecov). If your using Python then, amongst others, there's [Pylint](https://www.pylint.org/). The means of installing will be specific to the Linter. In the case of Pylint and Simplecov both can be installed using their language's respective package managers (pip and gem).
@@ -128,7 +128,7 @@ Don't forget to make sure that the tests are still passing after making your cha
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_3674, inifile: pytest.ini
+rootdir: /vols/pytest_7215, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 4 items                                                              
 
@@ -137,7 +137,7 @@ tests/test_calculator_add.py::test_adds_on_to_running_total PASSED       [ 50%]
 tests/test_calculator_add.py::test_minus_numbers PASSED                  [ 75%]
 tests/test_calculator_result.py::test_is_0_by_default PASSED             [100%]
 
-=========================== 4 passed in 0.02 seconds ===========================
+=========================== 4 passed in 0.03 seconds ===========================
 ```
 
 ## Summary
@@ -146,4 +146,4 @@ Linter's are an invaluable tool for digging out code smells. They are fast and u
 Linters are opinionated but can also be tuned to the needs of project, this gives the opportunity for team mates to agree on a set of principles and leave policing to the tool and their CI process.
   
 
-Revision: 775b60256125ce77747f6b87ea7c04b4
+Revision: 8be049b2a29a1a80438852ec8eb8f81b

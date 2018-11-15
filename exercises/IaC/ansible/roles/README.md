@@ -16,7 +16,7 @@ It is assumed that you know enough about Ansible to define a simple Playbook and
 **Note:** Before going any further do the following:
 - `cd YOUR_CLONE_OF_THIS REPO`
 - `source ./bin/env`
-- `cd ./exercises/IaC/ansible/roles`
+- `cd /exercises/IaC/ansible/roles`
 
 run `cic up` to bring up all the test infrastructure and support files required to complete this exercise. To stop and reset this infrastructure run `cic down`
 
@@ -159,7 +159,9 @@ changed: [jetty-server]
 
 PLAY RECAP *********************************************************************
 jetty-server               : ok=7    changed=6    unreachable=0    failed=0   
-tomcat-server              : ok=7    changed=6    unreachable=0    failed=0
+tomcat-server              : ok=7    changed=6    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 Visit [http://localhost:8080](http://localhost:8080) and [http://localhost:9090](http://localhost:8080) and you will see that both Jetty and Tomcat are both up and running.
@@ -348,7 +350,9 @@ changed: [jetty-server]
 
 PLAY RECAP *********************************************************************
 jetty-server               : ok=7    changed=6    unreachable=0    failed=0   
-tomcat-server              : ok=7    changed=6    unreachable=0    failed=0
+tomcat-server              : ok=7    changed=6    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 ## Now it's your turn
@@ -362,13 +366,13 @@ Write the new Role and implement it correctly within the Playbook to pass the su
 ```
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0
-rootdir: /vols/pytest_14638, inifile:
+rootdir: /vols/pytest_4557, inifile:
 plugins: testinfra-1.17.0
 collecting ... collected 2 items                                                              
 
 tests/webservers_test.py ..                                              [100%]
 
-=========================== 2 passed in 1.27 seconds ===========================
+=========================== 2 passed in 0.68 seconds ===========================
 ```
 
 #### Helpful Hints
@@ -398,4 +402,4 @@ As Playbooks get larger, Ansible Roles are a good way of encapsulating and shari
 
   
 
-Revision: 324e1c296b391c118453d30ba82d02ac
+Revision: 71cc8ca605bdfe31b78727e18f01282b

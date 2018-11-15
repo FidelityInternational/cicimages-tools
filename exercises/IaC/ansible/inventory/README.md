@@ -176,8 +176,8 @@ Which should show output as follows:
 
 ```
 server2 | SUCCESS => {    "changed": false,    "dns_server": "2.2.2.2"}
-server3 | SUCCESS => {    "changed": false,    "dns_server": "3.3.3.3"}
 server1 | SUCCESS => {    "changed": false,    "dns_server": "1.1.1.1"}
+server3 | SUCCESS => {    "changed": false,    "dns_server": "3.3.3.3"}
 ```
 
 The output shows the result of running the `debug` module on each of the three hosts in the inventory file.
@@ -212,7 +212,7 @@ inventory file and run the playbook successfully:
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_8074, inifile: pytest.ini
+rootdir: /vols/pytest_12653, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 3 items                                                              
 
@@ -222,15 +222,15 @@ tests/ukservers_test.py::test_motd[paramiko://server1] PASSED            [100%]
 
 =============================== warnings summary ===============================
 tests/asiaservers_test.py:7
-  /vols/pytest_8074/tests/asiaservers_test.py:7: DeprecationWarning: invalid escape sequence \s
+  /vols/pytest_12653/tests/asiaservers_test.py:7: DeprecationWarning: invalid escape sequence \s
     assert host.file("/etc/issue").contains("Region:\s*asia")
 
 tests/ukservers_test.py:7
-  /vols/pytest_8074/tests/ukservers_test.py:7: DeprecationWarning: invalid escape sequence \s
+  /vols/pytest_12653/tests/ukservers_test.py:7: DeprecationWarning: invalid escape sequence \s
     assert host.file("/etc/issue").contains("Region:\s*uk")
 
 -- Docs: https://docs.pytest.org/en/latest/warnings.html
-===================== 3 passed, 2 warnings in 1.30 seconds =====================
+===================== 3 passed, 2 warnings in 1.43 seconds =====================
 ```
 
 ## Summary
@@ -244,4 +244,4 @@ In this tutorial and exercises, you should have seen that:
 
   
 
-Revision: 4bb6175a3d60c6b65d3217d228907d78
+Revision: 294f2ea9e42348e82e678160167e7db5

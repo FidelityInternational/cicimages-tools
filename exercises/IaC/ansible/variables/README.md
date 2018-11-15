@@ -18,7 +18,7 @@ In this exercise you'll learn how to use variables to:
 **Note:** Before starting the exercises, please do the following:
   - `cd YOUR_CLONE_OF_THIS REPO`
   - `source ./bin/env`
-  - `cd ./exercises/IaC/ansible/variables`
+  - `cd /exercises/IaC/ansible/variables`
   - `cic up` - This command provisions the test environment that you will need for this exercise.
 
 
@@ -63,7 +63,9 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=2    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 ## Inline variable declarations
@@ -124,7 +126,9 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=3    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=3    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 ## Scope/Precidence
@@ -153,7 +157,9 @@ ok: [127.0.0.1] => {
 }
 
 PLAY RECAP *********************************************************************
-127.0.0.1                  : ok=3    changed=0    unreachable=0    failed=0
+127.0.0.1                  : ok=3    changed=0    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 Take a look at the [Ansible docs on precedence](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) for more information.
@@ -291,19 +297,21 @@ Run `cic down` and then `cic up` to reset the test infrastructure and rerun ansi
 PLAY [all] *********************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [dev1]
 ok: [prod1]
 ok: [prod2]
+ok: [dev1]
 
 TASK [Set root prompt] *********************************************************
+changed: [prod1]
 changed: [dev1]
 changed: [prod2]
-changed: [prod1]
 
 PLAY RECAP *********************************************************************
 dev1                       : ok=2    changed=1    unreachable=0    failed=0   
 prod1                      : ok=2    changed=1    unreachable=0    failed=0   
-prod2                      : ok=2    changed=1    unreachable=0    failed=0
+prod2                      : ok=2    changed=1    unreachable=0    failed=0   
+
+[ OK ] FINISHED - start container with: cic start cic_container-xxxxxxxxxxxxxxxx
 ```
 
 Use the `cic connect` command to connect to any of the servers and you will see that their prompts continue to be set correctly.
@@ -338,7 +346,7 @@ You'll know when you got the job done when you are able to run the command `pyte
 ============================= test session starts ==============================
 platform linux -- Python 3.7.0, pytest-4.0.0, py-1.7.0, pluggy-0.8.0 -- /root/.pyenv/versions/3.7.0/bin/python3.7
 cachedir: .pytest_cache
-rootdir: /vols/pytest_8533, inifile: pytest.ini
+rootdir: /vols/pytest_8298, inifile: pytest.ini
 plugins: testinfra-1.17.0
 collecting ... collected 4 items                                                              
 
@@ -347,7 +355,7 @@ tests/devservers_test.py::test_dev_app2_server PASSED                    [ 50%]
 tests/devservers_test.py::test_prod_app1_server PASSED                   [ 75%]
 tests/devservers_test.py::test_prod_app2_server PASSED                   [100%]
 
-=========================== 4 passed in 1.62 seconds ===========================
+=========================== 4 passed in 1.52 seconds ===========================
 ```
 
 ## Summary
@@ -362,4 +370,4 @@ Ansible provides a rich feature set that makes it easy to:
 
   
 
-Revision: 793e590c8f26077d2a3d03f8ce320558
+Revision: 5cab38ee3b0b9eca3d8709f24c62cc96
