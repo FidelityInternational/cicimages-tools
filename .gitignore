@@ -1,13 +1,3 @@
 .idea/
-**/.pytest_cache/**/*
-*.retry
-mirage.log
-.vagrant/
 coverage/
-vendor/
-checkout/
-cic.iml
-.yardoc/
-.DS_Store
-.vscode/
-bin/.ignore/
+*.iml
