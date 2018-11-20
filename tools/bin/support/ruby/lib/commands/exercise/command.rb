@@ -39,15 +39,18 @@ module Exercise
       File.basename(path)
     end
 
+
+    def relative_path(full_path, root)
+      ".#{File.expand_path(full_path).gsub(File.expand_path(root), '')}"
+    end
+
     private
 
     def parent_directory(dir)
       File.expand_path("#{File.dirname(dir)}/..").to_s
     end
 
-    def relative_path(full_path, root)
-      ".#{File.expand_path(full_path).gsub(File.expand_path(root), '')}"
-    end
+
   end
 
   class CommandError < StandardError
@@ -81,17 +84,18 @@ module Exercise
     def process_template(original_dir, template)
       Dir.chdir template.dir
       ENV['exercise_path'] = template.dir.gsub(original_dir, '')
-
+      ENV['CIC_PWD'] = "#{ENV['CIC_PWD']}/#{template.relative_path(template.dir, original_dir)}"
       print_rendering_banner(template.path)
       begin
         !render_exercise(template.path, digest_component: options[:digest_component])
       ensure
+        ENV['CIC_PWD'] = original_dir
         Dir.chdir original_dir
       end
     end
 
     def quiet?
-      options[:quiet] == true
+      options[:verbose] == false
     end
 
     def scaffold_path
@@ -148,7 +152,7 @@ module Exercise
     end
 
     desc 'generate', 'render templates'
-    option :quiet, type: :boolean, default: false
+    option :verbose, type: :boolean, default: false
     option :environment_variables, type: :string, required: false
     option :digest_component,
            type: :string,

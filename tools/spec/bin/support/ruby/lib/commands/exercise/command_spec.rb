@@ -11,14 +11,14 @@ module Exercise
     describe '#quiet?' do
       context 'option set to true' do
         it 'returns true' do
-          subject.options = { quiet: true }
+          subject.options = { verbose: false }
           expect(subject.quiet?).to eq(true)
         end
       end
 
       context 'option set to false' do
         it 'returns false' do
-          subject.options = { quiet: false }
+          subject.options = { verbose: true }
           expect(subject.quiet?).to eq(false)
         end
       end
