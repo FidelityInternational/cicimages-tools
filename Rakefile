@@ -2,7 +2,7 @@
 
 require 'bundler'
 Bundler.require :development, :default
-$LOAD_PATH.unshift("#{__dir__}/support")
+$LOAD_PATH.unshift("#{__dir__}/tasks/support")
 
 require 'courseware'
 

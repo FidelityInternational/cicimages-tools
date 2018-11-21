@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=bin/support/sh/functions/cic.sh
+# shellcheck source=image/bin/support/sh/functions/cic.sh
 source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
-# shellcheck source=bin/support/sh/functions/wrapped_commands.sh
+# shellcheck source=image/bin/support/sh/functions/wrapped_commands.sh
 source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
 
 exercise_name="$(basename "$(pwd)")"

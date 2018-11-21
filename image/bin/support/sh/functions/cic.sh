@@ -48,7 +48,7 @@ function bootstrap_cic_environment(){
 
 
 CIC_CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=bin/support/sh/functions/cic_docker.sh
+# shellcheck source=image/bin/support/sh/functions/cic_docker.sh
 source "${CIC_CURRENT_PATH}/cic_docker.sh"
 
 
