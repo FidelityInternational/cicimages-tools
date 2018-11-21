@@ -96,7 +96,7 @@ module Exercise
       substitutes.each do |key, value|
         string = string.gsub(key, value)
       end
-      string.gsub(/cic_container-[\w\d-]+/, 'cic_container-xxxxxxxxxxxxxxxx')
+      string
     end
 
     def stamp(digest_component, template)
