@@ -40,30 +40,6 @@ module Commands
       desc 'start IMAGE_TAG', 'log in to a container and see what happened'
       option :map_port, desc: 'map hostport to container port'
 
-      def start(image_tag)
-        container_name = normalise(image_tag)
-
-        msg = if docker_container_running?(container_name)
-                'Container already running (any supplied options ignored)'
-              else
-                create_container(container_name, image_tag, port_mapping: options[:map_port])
-                'Starting container'
-              end
-
-        say ok "#{msg}\n#{start_help_msg(container_name)}"
-      end
-
-      desc 'stop[CONTAINER_NAME]', 'Stop running container'
-
-      def stop(container_name)
-        if docker_container_running?(container_name)
-          remove_container(container_name)
-          say ok CONTAINER_STOPPED_MSG
-        else
-          say ok CONTAINER_NOT_RUNNING_MSG
-        end
-      end
-
       desc 'up', 'Bring up environment to support the current exercise'
 
       def up

@@ -22,13 +22,31 @@ module Exercise
     end
   end
 
+  class Path
+    attr_reader :full
+
+    def initialize(full_path, project_root)
+      @full = full_path
+      @project_root = project_root
+    end
+
+    def relative
+      ".#{File.expand_path(full).gsub(File.expand_path(project_root), '')}"
+    end
+
+    private
+
+    attr_reader :project_root
+  end
+
   class Template
     attr_reader :dir, :path, :full_path
 
-    def initialize(path)
+    def initialize(path, project_root_dir)
       @full_path = path
       @dir = parent_directory(path)
       @path = relative_path(path, dir)
+      @relative_directory = relative_path(dir, project_root_dir)
     end
 
     def rendered_file_path
@@ -39,7 +57,6 @@ module Exercise
       File.basename(path)
     end
 
-
     def relative_path(full_path, root)
       ".#{File.expand_path(full_path).gsub(File.expand_path(root), '')}"
     end
@@ -49,8 +66,6 @@ module Exercise
     def parent_directory(dir)
       File.expand_path("#{File.dirname(dir)}/..").to_s
     end
-
-
   end
 
   class CommandError < StandardError
@@ -63,8 +78,10 @@ module Exercise
       Dir.glob("#{name}/**/*", File::FNM_DOTMATCH).find_all { |file| !%w[. ..].include?(File.basename(file)) }
     end
 
-    def all_updated(paths)
-      paths.find_all { |path| template_updated?(path) }.collect { |template| Template.new(template) }
+    def all_updated(paths, project_root_dir)
+      paths.find_all { |path| template_updated?(path, project_root_dir) }.collect do |template|
+        Template.new(template, project_root_dir)
+      end
     end
 
     def exercise_structure
@@ -82,16 +99,15 @@ module Exercise
     end
 
     def process_template(original_dir, template)
-      Dir.chdir template.dir
-      ENV['exercise_path'] = template.dir.gsub(original_dir, '')
-      ENV['CIC_PWD'] = "#{ENV['CIC_PWD']}/#{template.relative_path(template.dir, original_dir)}"
+      template_dir = template.dir
+      Dir.chdir template_dir
+      ENV['exercise_path'] = template_dir.gsub(original_dir, '')
+      ENV['CIC_PWD'] = "#{ENV['CIC_PWD']}/#{template.relative_path(template_dir, original_dir)}"
       print_rendering_banner(template.path)
-      begin
-        !render_exercise(template.path, digest_component: options[:digest_component])
-      ensure
-        ENV['CIC_PWD'] = original_dir
-        Dir.chdir original_dir
-      end
+      !render_exercise(template.path, digest_component: options[:digest_component])
+    ensure
+      ENV['CIC_PWD'] = original_dir
+      Dir.chdir original_dir
     end
 
     def quiet?
@@ -113,8 +129,8 @@ module Exercise
       end.flatten
     end
 
-    def template_updated?(template)
-      template = template.is_a?(String) ? Template.new(template) : template
+    def template_updated?(template, project_root_dir)
+      template = template.is_a?(String) ? Template.new(template, project_root_dir) : template
 
       return true unless File.exist?(template.rendered_file_path)
 
@@ -137,6 +153,7 @@ module Exercise
            required: false,
            default: '',
            desc: 'value to be considered when generating digest'
+
     def requiring_update(path = '.')
       directories = if File.directory?(path)
                       templates(path)
@@ -145,7 +162,7 @@ module Exercise
                     end
 
       results = directories.find_all do |temp|
-        template_updated?(temp)
+        template_updated?(temp, Dir.pwd)
       end.flatten
 
       say results.to_json
@@ -166,7 +183,7 @@ module Exercise
       templates = File.directory?(path) ? templates(path) : [path]
 
       original_dir = Dir.pwd
-      failures = all_updated(templates).find_all do |template|
+      failures = all_updated(templates, original_dir).find_all do |template|
         process_template(original_dir, template)
       end
 
@@ -174,6 +191,7 @@ module Exercise
     end
 
     desc 'create <NAME>', 'create a new exercise'
+
     def create(name)
       say "Creating new exercise: #{name}"
       FileUtils.mkdir_p(name)
