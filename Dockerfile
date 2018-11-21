@@ -1,25 +1,32 @@
-FROM solita/ubuntu-systemd
+FROM cicimages/base:latest
 
-RUN apt-get update -q -y
+RUN apt-get install -q -y bzip2
 
-# USEFUL STUFF
-RUN apt-get -y -q install vim curl bash unzip software-properties-common python-software-properties python3
-
-# STUFF Required for installing programming runtimes
-RUN apt-get -y -q install build-essential zlib1g-dev libffi-dev
-RUN apt-get -y -q install libssl-dev
-RUN apt-get -y -q install libsqlite3-dev libreadline-gplv2-dev libbz2-dev
-
-# ALLOWS ansible to run on any server than inherits from this image
-RUN apt-get -y -q install rsync
+# TODO REMOVE ONCE all exercises are using cic up and cicimages/environments-ubuntu
+RUN apt-get install -q -y openssh-server
+RUN apt-get install -q -y chromium-browser
 
 #LATEST GIT
 RUN apt-add-repository ppa:git-core/ppa
-RUN apt-get clean && apt-get update && apt-get install -q -y git
+RUN apt-get clean && apt-get update && apt-get -y upgrade git
 
-# SSH KEYS
-RUN mkdir -p /root/.ssh
-ADD ./resources/keys/id_rsa* /root/.ssh/
-RUN chmod 0600 /root/.ssh/id_rsa*
-RUN cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
-RUN echo "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" > ~/.ssh/config
+# RUBY
+RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash; exit 0
+
+ENV PATH "/root/.rbenv/bin:$PATH"
+RUN echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> /root/.bashrc
+RUN echo 'eval "$(rbenv init -)"' >> /root/.bashrc
+RUN bash -c "rbenv install 2.4.3 && rbenv global 2.4.3"
+
+# DOCKER
+RUN curl -sSL https://get.docker.com/ | sh
+RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+
+# TOOLING
+ADD ./bin /cic/bin
+ADD ./.cic /cic/.cic
+ADD Gemfile* /cic/
+
+WORKDIR '/cic'
+RUN ["/bin/bash", "-c", "eval \"$(rbenv init -)\" && gem install bundler && bundle install"]
+
