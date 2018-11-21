@@ -12,7 +12,7 @@ Courseware.init(version_file: "#{__dir__}/VERSION", repository: 'cicimages/tools
 
 desc 'run this on checkout to pull drown required docker images'
 task :init do
-  run("docker-compose pull", silent: false)
+  run('docker-compose pull', silent: false)
 end
 
 RSpec::Core::RakeTask.new(:spec) do
