@@ -24,10 +24,13 @@ jobs:
           command: |
             bundle install --gemfile tools/Gemfile --jobs=4 --retry=3 --path vendor/bundle
 
+      - run: echo 'export PATH="$(pwd)/bin:$PATH"' >> $BASH_ENV
+
       - save_cache:
           paths:
             - ./tools/vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
       # build
+      - run: cd tools && bundle exec rake init
       - run: cd tools && bundle exec rake
