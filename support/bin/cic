@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
+
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=image/bin/support/sh/functions/cic.sh
 source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
-cic_command="$(bootstrap_cic_environment) /cic/bin/support/ruby/bin/cic"
+cic_command="$(bootstrap_cic_environment) cic"
 
 options=""
 subcommand=$1

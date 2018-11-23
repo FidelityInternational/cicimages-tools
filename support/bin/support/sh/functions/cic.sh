@@ -29,13 +29,12 @@ function cic_bin(){
 function cic_exports() {
     local cic_exports
     cic_exports="TRACKS_PATH=$(tracks_path) EXERCISES_PATH=$(exercises_path)"
-    cic_exports="${cic_exports} SCAFFOLD_STRUCTURE=$(cic_config_dir)/exercise_scaffold.yml"
     cic_exports="${cic_exports} CIC_COURSEWARE_VERSION=$(cic_image_version)"
     cic_exports="${cic_exports} CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
     cic_exports="${cic_exports} CIC_PWD=$(cic_pwd)"
     cic_exports="${cic_exports} CIC_IMAGE=$(cic_image_repository)"
     cic_exports="${cic_exports} CIC_IMAGE_VERSION=$(cic_image_version)"
-    echo "${cic_exports} SCAFFOLD_PATH=$(cic_config_dir)/exercise_scaffold"
+    echo "${cic_exports}"
 }
 
 function bootstrap_cic_environment(){
