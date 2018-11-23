@@ -24,7 +24,7 @@ jobs:
           command: |
             bundle install --gemfile Gemfile --jobs=4 --retry=3 --path vendor/bundle
 
-      - run: echo 'export PATH="$(pwd)/bin:$PATH"' >> $BASH_ENV
+      - run: echo 'export PATH="$(pwd)/support/bin:$PATH"' >> $BASH_ENV
 
       - save_cache:
           paths:

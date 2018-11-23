@@ -23,10 +23,8 @@ RUN curl -sSL https://get.docker.com/ | sh
 RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
 
 # TOOLING
-ADD ./bin /cic/bin
-ADD ./.cic /cic/.cic
-ADD Gemfile* /cic/
+ADD support/bin /cic/bin
 
 WORKDIR '/cic'
-RUN ["/bin/bash", "-c", "eval \"$(rbenv init -)\" && gem install bundler && bundle install"]
+RUN ["/bin/bash", "-ilc", "gem install cic-tools -v 0.0.1"]
 

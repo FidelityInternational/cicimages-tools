@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift("#{__dir__}/../bin/support/ruby/lib")
-require_relative '../support/courseware'
+require_relative 'support/courseware'
 require 'utils/commandline'
 namespace :courseware do
   include Commandline
