@@ -15,7 +15,6 @@ RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-ins
 
 ENV PATH "/root/.rbenv/bin:$PATH"
 RUN echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> /root/.bashrc
-RUN echo 'eval "$(rbenv init -)"' >> /root/.bashrc
 RUN bash -c "rbenv install 2.4.3 && rbenv global 2.4.3"
 
 # DOCKER
@@ -24,8 +23,9 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-co
 
 # TOOLING
 ADD support/bin /cic/bin
+RUN echo 'export PATH="/cic/bin:$PATH"' >> /root/.bashrc
 ADD pkg /mnt/gems
+RUN ["/bin/bash", "-ilc", "eval \"$(rbenv init -)\" && gem install /mnt/gems/cic-tools-0.0.2.gem --no-ri --no-rdoc"]
 
 WORKDIR '/cic'
-RUN ["/bin/bash", "-ilc", "gem install /mnt/gems/cic-tools-0.0.2.gem --no-ri --no-rdoc"]
 

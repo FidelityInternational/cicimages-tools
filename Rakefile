@@ -42,7 +42,7 @@ Jeweler::Tasks.new do |gem|
   gem.authors = ['Leon Davis']
   gem.required_ruby_version = '>= 2.3'
   gem.files = Dir.glob(%w[lib/**/*.rb bin/*])
-  gem.executables = %w[cic exercise]
+  gem.executables = %w[cic content]
 end
 
 Jeweler::RubygemsDotOrgTasks.new

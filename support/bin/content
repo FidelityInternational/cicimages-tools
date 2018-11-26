@@ -10,22 +10,9 @@ source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
 exercise_name="$(basename "$(pwd)")"
 volume_path="$(volume_path ansible)/${exercise_name}"
 
-if [[ ! -f "${SCAFFOLD_STRUCTURE}" ]]
-then
-    echo "Please set path to your exercise scaffold YAML file against the environment variable SCAFFOLD_STRUCTURE"
-    exit 1
-fi
-
-if [[ ! -d "${SCAFFOLD_PATH}" ]]
-then
-    echo "Please set path to your exercise scaffold directory file against the environment variable SCAFFOLD_PATH"
-    exit 1
-fi
-
-
 copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
-command="$(bootstrap_cic_environment) SCAFFOLD_PATH=/mnt/scaffold SCAFFOLD_STRUCTURE=/mnt/scaffold_structure.yml $(build_command rbenv exec exercise "$@")"
+command="$(bootstrap_cic_environment) $(build_command rbenv exec content "$@")"
 
 subcommand=$1
 if [ "${subcommand}" == "generate" ] || [ "${subcommand}" == "requiring_update" ]; then
@@ -36,10 +23,7 @@ fi
 docker run -t \
     --network "$(cic_network)" \
     --volumes-from "$(cic_volumes_container)" \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v "$(tracks_path)":/cic/tracks \
-    -v "${SCAFFOLD_PATH}":/mnt/scaffold \
-    -v "${SCAFFOLD_STRUCTURE}":/mnt/scaffold_structure.yml \
+    $(docker_mounts) \
     -w "${volume_path}" \
     "$(cic_image)" \
     /bin/bash -ilc "${command}"

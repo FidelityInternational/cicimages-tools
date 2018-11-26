@@ -17,7 +17,7 @@ GEM
       xpath (~> 2.0)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
-    chromedriver-helper (2.1.0)
+    chromedriver-helper (1.2.0)
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
     colorize (0.8.1)
@@ -167,7 +167,7 @@ PLATFORMS
 DEPENDENCIES
   bump
   capybara (= 2.15.2)
-  chromedriver-helper
+  chromedriver-helper (= 1.2.0)
   colorize
   git
   i18n
