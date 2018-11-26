@@ -2,28 +2,12 @@
 
 CIC_PWD="${CIC_PWD:-$(pwd)}"
 
-function tracks_path(){
-    echo "${TRACKS_PATH}"
-}
-
-function exercises_path(){
-    echo "${EXERCISES_PATH}"
-}
-
 function cic_pwd(){
     echo "${CIC_PWD}"
 }
 
 function cic_dir(){
     echo "/cic"
-}
-
-function cic_config_dir(){
-  echo "$(cic_dir)/.cic"
-}
-
-function cic_bin(){
-    echo "$(cic_dir)/bin"
 }
 
 
@@ -51,8 +35,6 @@ function source_scaffold_structure(){
 function target_scaffold_structure(){
     echo "$(target_scaffold_path)/scaffold.yml"
 }
-
-
 
 function source_exercises_path(){
     echo "${EXERCISES_PATH}"
