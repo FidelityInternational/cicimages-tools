@@ -24,6 +24,7 @@ group :development do
   gem 'rake'
   gem 'redcarpet'
   gem 'rspec', require: 'rspec/core/rake_task'
+  gem 'rspec-bash'
   gem 'rubocop'
   gem 'simplecov', require: false
 

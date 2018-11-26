@@ -12,6 +12,8 @@ module Commandline
       exit_code != 0
     end
 
+    alias has_error? error?
+
     def to_s
       <<~OUTPUT
         EXIT CODE: #{exit_code}

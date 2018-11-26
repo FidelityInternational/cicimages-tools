@@ -8,13 +8,18 @@ require_relative 'helpers'
 module Commands
   module Track
     class Command < Thor
+
+      def self.exit_on_failure?
+        true
+      end
+
       attr_reader :tracks, :tracks_yaml, :api_endpoint
 
       def initialize(args = [],
                      options = {},
                      config = {},
                      api_endpoint = Octokit::Default::API_ENDPOINT,
-                     tracks_yaml = "#{__dir__}/../../../../../../tracks/tracks.yml")
+                     tracks_yaml = "#{ENV['TRACKS_PATH']}/tracks.yml")
         super(args, options, config)
 
         @tracks_yaml = tracks_yaml

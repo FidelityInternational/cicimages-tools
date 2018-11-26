@@ -28,7 +28,8 @@ function cic_bin(){
 
 function cic_exports() {
     local cic_exports
-    cic_exports="TRACKS_PATH=$(tracks_path) EXERCISES_PATH=$(exercises_path)"
+
+    #TODO inline these in to cic script as these are the only places these variables are needed
     cic_exports="${cic_exports} CIC_COURSEWARE_VERSION=$(cic_image_version)"
     cic_exports="${cic_exports} CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
     cic_exports="${cic_exports} CIC_PWD=$(cic_pwd)"

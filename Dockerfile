@@ -24,7 +24,8 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-co
 
 # TOOLING
 ADD support/bin /cic/bin
+ADD pkg /mnt/gems
 
 WORKDIR '/cic'
-RUN ["/bin/bash", "-ilc", "gem install cic-tools -v 0.0.1"]
+RUN ["/bin/bash", "-ilc", "gem install /mnt/gems/cic-tools-0.0.2.gem --no-ri --no-rdoc"]
 

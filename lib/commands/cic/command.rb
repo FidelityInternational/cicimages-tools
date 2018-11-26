@@ -16,6 +16,10 @@ module Commands
       class CICDirectoryMissing < StandardError
       end
 
+      def self.exit_on_failure?
+        true
+      end
+
       desc 'track', 'thing'
       subcommand 'track', Track::Command
 
