@@ -18,6 +18,8 @@ shared_context :shell_spec do |script_root:|
     @last_result = Commandline::Return.new(stdout: stdout, stderr: stderr, exit_code: status.exitstatus)
   end
 
+  alias execute execute_function
+
   def execute_script(args = [], env_vars = {})
     stdout, stderr, status = stubbed_env.execute(
         "#{script_path} #{args.join}",

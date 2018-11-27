@@ -7,11 +7,6 @@ source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 # shellcheck source=image/bin/support/sh/functions/wrapped_commands.sh
 source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
 
-exercise_name="$(basename "$(pwd)")"
-volume_path="$(volume_path ansible)/${exercise_name}"
-
-copy_to_cic_volume "$(pwd)/." "${volume_path}"
-
 command="$(bootstrap_cic_environment) $(build_command rbenv exec content "$@")"
 
 subcommand=$1
@@ -27,6 +22,3 @@ docker run -t \
     -w "$(cic_working_dir)" \
     "$(cic_image)" \
     /bin/bash -ilc "${command}"
-
-exit_code=$?
-exit "${exit_code}"

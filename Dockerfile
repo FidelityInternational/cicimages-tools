@@ -25,7 +25,7 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-co
 ADD support/bin /cic/bin
 RUN echo 'export PATH="/cic/bin:$PATH"' >> /root/.bashrc
 ADD pkg /mnt/gems
-RUN ["/bin/bash", "-ilc", "eval \"$(rbenv init -)\" && gem install /mnt/gems/cic-tools-0.0.2.gem --no-ri --no-rdoc"]
+RUN ["/bin/bash", "-ilc", "eval \"$(rbenv init -)\" && gem install /mnt/gems/cic-tools-0.0.4.gem --no-ri --no-rdoc"]
 
 WORKDIR '/cic'
 

@@ -4,6 +4,12 @@ SURROUNDED_WITH_DOUBLE_QUOTES="^\".*\"$"
 STARTS_WITH_HYPHEN="^-"
 EQUALS_SIGN='='
 
+_FUNCTIONS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# shellcheck source=bin/support/sh/functions/cic.sh
+source "${_FUNCTIONS_PATH}/cic.sh"
+
+
 function content_after() {
     local matcher=$1
     grep -o "${matcher}.*" | sed -e s/"^${matcher}"//
@@ -60,4 +66,23 @@ function build_command(){
     done
 
     echo "${command}"
+}
+
+function standard_docker_options(){
+    echo "-t --privileged" \
+         "--network $(cic_network)" \
+         "-v $(working_directory):$(cic_working_dir)" \
+         "-w $(cic_working_dir)"
+
+}
+
+function run_wrapped_command(){
+    local image=$1
+    shift
+    local command=$1
+    shift
+
+    docker run \
+    $(standard_docker_options) \
+    "${image}" /bin/bash -ilc "$(build_command "${command}" $@)"
 }

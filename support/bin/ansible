@@ -1,18 +1,7 @@
 #!/usr/bin/env bash
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# shellcheck source=image/bin/support/sh/functions/output.sh
-source "${CURRENT_PATH}/support/sh/functions/output.sh"
-
 # shellcheck source=image/bin/support/sh/functions/wrapped_commands.sh
 source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
 
-volume_path="$(volume_path ansible)"
-copy_to_cic_volume "$(pwd)/." "${volume_path}"
-
-docker run -t --privileged \
-    --network "$(cic_network)" \
-    -v "$(working_directory)":"$(cic_working_dir)" \
-    -w "$(cic_working_dir)" \
-    "cicimages/wrappers-ansible:latest" \
-    /bin/bash -ilc "$(build_command "ansible" "$@")"
+run_wrapped_command cicimages/wrappers-ansible:latest ansible $@

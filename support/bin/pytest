@@ -2,20 +2,7 @@
 
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# shellcheck source=image/bin/support/sh/functions/cic.sh
-source "${CURRENT_PATH}/support/sh/functions/cic.sh"
-
 # shellcheck source=image/bin/support/sh/functions/wrapped_commands.sh
 source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
 
-volume_path="$(volume_path pytest)"
-copy_to_cic_volume "$(pwd)/." "${volume_path}"
-
-docker run -t\
-  --network "$(cic_network)" \
-  -v "$(working_directory)":$(cic_working_dir) \
-  -w "$(cic_working_dir)" \
-  -e PYTHONDONTWRITEBYTECODE=1 \
-   "cicimages/wrappers-pytest:latest" \
-   /bin/bash -ilc "PYTHONDONTWRITEBYTECODE=1 $(build_command "pytest" "$@")"
-
+run_wrapped_command cicimages/wrappers-pytest:latest "PYTHONDONTWRITEBYTECODE=1 pytest" $@
