@@ -2,6 +2,23 @@
 
 CIC_PWD="${CIC_PWD:-$(pwd)}"
 
+
+function cic_network() {
+    echo "cic"
+}
+
+function cic_image_repository() {
+    echo "${CIC_IMAGE}"
+}
+
+function cic_image_version() {
+    echo "${CIC_IMAGE_VERSION}"
+}
+
+function cic_image() {
+    echo "$(cic_image_repository):$(cic_image_version)"
+}
+
 function cic_pwd(){
     echo "${CIC_PWD}"
 }
@@ -100,10 +117,3 @@ function docker_mounts(){
 
     echo "${mounts}"
 }
-
-
-CIC_CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=image/bin/support/sh/functions/cic_docker.sh
-source "${CIC_CURRENT_PATH}/cic_docker.sh"
-
-

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=image/bin/support/sh/functions/cic_docker.sh
-source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
 
 # shellcheck source=image/bin/support/sh/functions/wrapped_commands.sh
 source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"

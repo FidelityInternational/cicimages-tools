@@ -10,9 +10,6 @@ source "${CURRENT_PATH}/support/sh/functions/wrapped_commands.sh"
 # shellcheck source=image/bin/support/sh/functions/cic.sh
 source "${CURRENT_PATH}/support/sh/functions/cic.sh"
 
-# shellcheck source=image/bin/support/sh/functions/cic_docker.sh
-source "${CURRENT_PATH}/support/sh/functions/cic_docker.sh"
-
 docker run -t --privileged \
     --network "$(cic_network)" \
     -v "$(working_directory)":"$(cic_working_dir)" \
