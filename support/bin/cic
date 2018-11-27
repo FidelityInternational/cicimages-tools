@@ -34,27 +34,14 @@ else
     if [ "${container_command}" != "" ]; then
         command="${command} '${container_command}'"
     fi
-
-    exercise_name="$(basename "$(pwd)")"
-
-    volume_path="$(volume_path ansible)/${exercise_name}"
-    copy_to_cic_volume "$(pwd)/." "${volume_path}"
 fi
 
 docker run ${options} -t \
-    --volumes-from "$(cic_volumes_container)" \
     --network "$(cic_network)" \
-    -w "${volume_path}" \
     $(docker_mounts) \
+    -w "$(cic_working_dir)" \
     "$(cic_image)" \
     /bin/bash -c "${command}"
 
 result=$?
-
-if [ "${subcommand}" != "track" ]; then
-    if [ "${subcommand}" != "connect" ]; then
-      docker cp "$(cic_volumes_container):${volume_path}/." .
-    fi
-fi
-
 exit "${result}"

@@ -6,6 +6,22 @@ function cic_pwd(){
     echo "${CIC_PWD}"
 }
 
+function working_directory(){
+
+    local current_dir="$(pwd)"
+
+    if [[ "${current_dir}" =~  ^/mnt/cic_working_dir ]]
+    then
+        result=$(echo "${current_dir}" | sed -e "s/^\/mnt\/cic_working_dir//")
+        result="$(cic_pwd)${result}"
+    else
+        result="${current_dir}"
+    fi
+
+    echo "${result}"
+
+}
+
 function cic_dir(){
     echo "/cic"
 }
@@ -44,6 +60,17 @@ function target_exercises_path(){
     echo "$(cic_dir)/exercises"
 }
 
+function cic_working_dir(){
+#    echo "/mnt/cic_working_dir"
+    if [[ "$(pwd)" =~ ^/mnt/cic_working_dir ]]
+    then
+        echo "$(pwd)"
+    else
+        echo "/mnt/cic_working_dir"
+    fi
+
+}
+
 
 function bootstrap_cic_environment(){
     local cic_exports
@@ -69,6 +96,7 @@ function docker_mounts(){
     mounts="${mounts} -v "$(source_scaffold_structure)":$(target_scaffold_structure)"
     mounts="${mounts} -v "$(source_exercises_path)":$(target_exercises_path)"
     mounts="${mounts} -v "${HOME}/.netrc":/root/.netrc"
+    mounts="${mounts} -v $(working_directory):$(cic_working_dir)"
 
     echo "${mounts}"
 }

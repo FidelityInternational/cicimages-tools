@@ -15,7 +15,7 @@ copy_to_cic_volume "$(pwd)/." "${volume_path}"
 
 docker run -t --privileged \
     --network "$(cic_network)" \
-    --volumes-from "$(cic_volumes_container)" \
-    -w "${volume_path}" \
+    -v "$(working_directory)":"$(cic_working_dir)" \
+    -w "$(cic_working_dir)" \
     "cicimages/wrappers-ansible:latest" \
     /bin/bash -ilc "$(build_command "ansible" "$@")"

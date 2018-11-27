@@ -102,11 +102,11 @@ module Exercise
       template_dir = template.dir
       Dir.chdir template_dir
       ENV['exercise_path'] = template_dir.gsub(original_dir, '')
-      ENV['CIC_PWD'] = "#{ENV['CIC_PWD']}/#{template.relative_path(template_dir, original_dir)}"
+      # ENV['CIC_PWD'] = "#{ENV['CIC_PWD']}/#{template.relative_path(template_dir, original_dir)}"
       print_rendering_banner(template.path)
       !render_exercise(template.path, digest_component: options[:digest_component])
     ensure
-      ENV['CIC_PWD'] = original_dir
+      # ENV['CIC_PWD'] = original_dir
       Dir.chdir original_dir
     end
 

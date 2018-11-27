@@ -22,12 +22,11 @@ fi
 # shellcheck disable=SC2140
 docker run -t \
     --network "$(cic_network)" \
-    --volumes-from "$(cic_volumes_container)" \
+    -v "$(working_directory)":"$(cic_working_dir)" \
     $(docker_mounts) \
-    -w "${volume_path}" \
+    -w "$(cic_working_dir)" \
     "$(cic_image)" \
     /bin/bash -ilc "${command}"
 
 exit_code=$?
-docker cp "$(cic_volumes_container):${volume_path}/." .
 exit "${exit_code}"
