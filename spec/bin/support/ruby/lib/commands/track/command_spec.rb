@@ -8,12 +8,15 @@ module Commands
     describe Command do
       include_context :github_api
 
+      let(:exercise_dir1){'ex1'.tap{|name|Dir.mkdir(name)}}
+      let(:exercise_dir2){'ex2'.tap{|name|Dir.mkdir(name)}}
+
       let(:tracks) do
         { 'tracks' => [
           { 'name' => 'ansible',
             'exercises' => [
-              { 'ex1' => Dir.pwd },
-              { 'ex2' => Dir.pwd }
+              { 'ex1' => exercise_dir1 },
+              { 'ex2' => exercise_dir2 }
             ] }
         ] }
       end
@@ -23,7 +26,7 @@ module Commands
       let(:track_name) { tracks['tracks'].first['name'] }
       let(:exercise) do
         exercise = tracks['tracks'].first['exercises'].first
-        Exercise.new(track: "tracks/#{track_name}", name: exercise.keys.first, path: exercise.values.first)
+        Exercise.new(track: "tracks/#{track_name}", name: exercise.keys.first, path: "#{Dir.pwd}/#{exercise.values.first}")
       end
 
       let(:target_repo) { 'user/repo' }
@@ -32,7 +35,10 @@ module Commands
 
       let(:netrc_path) { write_to_file("#{Dir.pwd}/.netrc", "machine #{api_host}", mode: 0o600) }
 
+
       before do
+        ENV['EXERCISES_PATH'] = Dir.pwd
+
         allow(repos_get_api).to be_called.and_return(Repos::GetResponse.new(fork: true))
         write_to_file(tracks_yaml_path, tracks.to_yaml)
 
@@ -50,8 +56,8 @@ module Commands
       describe '#initialize' do
         it 'loads the tracks' do
           learning_track = LearningTrack.new(track_name)
-          learning_track.exercise(name: 'ex1', path: Dir.pwd)
-          learning_track.exercise(name: 'ex2', path: Dir.pwd)
+          learning_track.exercise(name: 'ex1', path: "#{Dir.pwd}/#{exercise_dir1}")
+          learning_track.exercise(name: 'ex2', path: "#{Dir.pwd}/#{exercise_dir2}")
           expected_tracks = { track_name => learning_track }
           expect(subject.tracks).to eq(expected_tracks)
         end

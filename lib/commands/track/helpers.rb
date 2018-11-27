@@ -7,7 +7,7 @@ module Commands
         LearningTrack.new(track['name']).tap do |learning_track|
           track['exercises'].each do |exercise|
             name, path = exercise.flatten.to_a
-            learning_track.exercise(name: name, path: "#{ENV['EXERCISES_PATH']}/../#{path}")
+            learning_track.exercise(name: name, path: File.expand_path("#{ENV['EXERCISES_PATH']}/#{path}"))
           end
 
           learning_track.validate
