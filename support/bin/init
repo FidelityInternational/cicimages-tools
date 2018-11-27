@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
-mountpoint=$1
-echo BootStrapping CIC environment
-cp -R /cic/bin/* "${mountpoint}"
+
+BIN_PATH="${BIN_PATH:-/cic/bin}"
+
+function init(){
+    mountpoint=$1
+    echo BootStrapping CIC environment
+    cp -R "${BIN_PATH}/" "${mountpoint}"
+}
