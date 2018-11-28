@@ -8,11 +8,11 @@ function cic_network() {
 }
 
 function cic_image_repository() {
-    echo "${CIC_IMAGE}"
+    echo "${CIC_COURSEWARE_IMAGE}"
 }
 
 function cic_image_version() {
-    echo "${CIC_IMAGE_VERSION}"
+    echo "${CIC_COURSEWARE_VERSION}"
 }
 
 function cic_image() {
@@ -78,14 +78,12 @@ function target_exercises_path(){
 }
 
 function cic_working_dir(){
-#    echo "/mnt/cic_working_dir"
     if [[ "$(pwd)" =~ ^/mnt/cic_working_dir ]]
     then
         echo "$(pwd)"
     else
         echo "/mnt/cic_working_dir"
     fi
-
 }
 
 
@@ -98,8 +96,6 @@ function bootstrap_cic_environment(){
     cic_exports="${cic_exports} CIC_COURSEWARE_VERSION=$(cic_image_version)"
     cic_exports="${cic_exports} CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
     cic_exports="${cic_exports} CIC_PWD=$(cic_pwd)"
-    cic_exports="${cic_exports} CIC_IMAGE=$(cic_image_repository)"
-    cic_exports="${cic_exports} CIC_IMAGE_VERSION=$(cic_image_version)"
 
     echo "${cic_exports}"
 }

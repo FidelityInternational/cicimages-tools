@@ -2,7 +2,6 @@
 describe 'utils.sh' do
 
   include_context :shell_spec, script_root: 'support/bin/support/sh/functions'
-  let(:stubbed_env) { create_stubbed_env }
 
   describe 'exit_unless_var_defined' do
     context 'var is not defined defined' do
@@ -34,7 +33,6 @@ describe 'utils.sh' do
     end
 
     context 'file does not exist' do
-
       it 'errors' do
         result = execute_function('exit_unless_file_exists missing_path')
         expect(result).to have_error
@@ -56,7 +54,6 @@ describe 'utils.sh' do
     end
 
     context 'directory does not exist' do
-
       it 'errors' do
         result = execute_function('exit_unless_directory_exists missing_path')
         expect(result).to have_error
