@@ -14,7 +14,7 @@ module Commands
       end
 
       def cic_pwd
-        ENV['CIC_PWD']
+        Dir.pwd.gsub(ENV['CIC_MOUNT'].to_s, ENV['CIC_PWD'].to_s)
       end
     end
   end

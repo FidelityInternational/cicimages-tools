@@ -47,11 +47,13 @@ module Commands
       desc 'up', 'Bring up environment to support the current exercise'
 
       def up
+        cic_up_command = "#{courseware_environment} docker-compose up -d --remove-orphans"
         in_cic_directory do
-          commands = ["#{courseware_environment} docker-compose up -d --remove-orphans"]
-
+          commands = []
           before_script = 'before'
           commands << "./#{before_script}" if File.exist?(before_script)
+
+          commands << cic_up_command
 
           after_script = 'after'
           commands << "./#{after_script}" if File.exist?(after_script)

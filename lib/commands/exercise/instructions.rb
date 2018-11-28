@@ -183,6 +183,7 @@ module Exercise
         output.print '.'.green
       else
         say ok("Successfully ran: #{command}")
+        say result.to_s
       end
 
       result

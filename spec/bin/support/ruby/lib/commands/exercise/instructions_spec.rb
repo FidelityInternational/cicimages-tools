@@ -128,7 +128,7 @@ module Exercise
               expected_message = "running: #{cmd}\n#{ok("Successfully ran: #{cmd}")}"
 
               subject.send(:test_command, cmd)
-              expect(subject.output.string.chomp).to eq(expected_message)
+              expect(subject.output.string.chomp).to include(expected_message)
             end
           end
 

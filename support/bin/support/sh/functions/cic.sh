@@ -96,6 +96,7 @@ function bootstrap_cic_environment(){
     cic_exports="${cic_exports} CIC_COURSEWARE_VERSION=$(cic_image_version)"
     cic_exports="${cic_exports} CIC_COURSEWARE_IMAGE=$(cic_image_repository)"
     cic_exports="${cic_exports} CIC_PWD=$(cic_pwd)"
+    cic_exports="${cic_exports} CIC_MOUNT=/mnt/cic_working_dir"
 
     echo "${cic_exports}"
 }
