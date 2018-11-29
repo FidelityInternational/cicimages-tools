@@ -6,7 +6,7 @@ require 'json'
 require_relative 'instructions'
 require_relative 'render_methods'
 
-module Exercise
+module Content
   class CourseContentRenderingError < StandardError
     def initialize(files)
       error = <<~ERROR

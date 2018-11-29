@@ -4,7 +4,7 @@ require 'fileutils'
 require 'yaml'
 require_relative 'headless_browser_driver'
 
-module Exercise
+module Content
   # module Instructions - Helper methods to be used within templates
   module Instructions
     include Commandline

@@ -1,5 +1,5 @@
 require 'exercise'
-module Exercise
+module Content
   describe Instructions do
     include_context :command
     include_context :module_spec
@@ -49,7 +49,7 @@ module Exercise
     describe '#last_command_output' do
       it 'returns the output of the last command' do
         subject.command_output('echo hello')
-        expected_output = Exercise::Output.new('hello')
+        expected_output = Content::Output.new('hello')
         expect(subject.last_command_output).to be_a(expected_output.class).and eq(expected_output)
       end
     end

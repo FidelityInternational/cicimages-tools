@@ -1,4 +1,4 @@
-module Exercise
+module Content
   describe Output do
     it 'inherits from string' do
       expect(described_class).to be < String

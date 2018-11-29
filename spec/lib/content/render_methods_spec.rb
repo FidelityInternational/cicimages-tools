@@ -1,4 +1,4 @@
-module Exercise
+module Content
   describe RenderMethods do
     include_context :command
     include_context :module_spec

@@ -1,7 +1,7 @@
 require 'digest'
 require 'tmpdir'
 require_relative 'instructions'
-module Exercise
+module Content
   module DigestMethods
     def digest(path:, digest_component:, excludes: [])
       excludes = paths(*excludes)

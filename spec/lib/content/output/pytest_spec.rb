@@ -1,4 +1,4 @@
-describe Exercise::Output::Pytest do
+describe Content::Output::Pytest do
   describe '#summary' do
     let(:expected_summary) do
       <<~STRING

@@ -1,7 +1,7 @@
 require_relative 'output/ansible'
 require_relative 'output/pytest'
 require_relative 'output/cic'
-module Exercise
+module Content
   class Output < String
     def initialize(string)
       string = string.scrub

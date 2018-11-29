@@ -1,4 +1,4 @@
-module Exercise
+module Content
   class Output < String
     class Ansible < String
       attr_reader :tasks, :play, :play_recap

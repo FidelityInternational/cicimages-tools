@@ -1,4 +1,4 @@
-module Exercise
+module Content
   class Output < String
     class Pytest < String
       attr_reader :summary

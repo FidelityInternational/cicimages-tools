@@ -1,4 +1,4 @@
-module Exercise
+module Content
   class Output < String
     class CIC < String
       attr_reader :container_id, :cic_start_command, :cic_connect_command, :cic_stop_command

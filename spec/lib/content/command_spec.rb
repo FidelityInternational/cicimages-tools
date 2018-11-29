@@ -1,5 +1,5 @@
 require 'exercise'
-module Exercise
+module Content
   describe Command do
     describe '.exit_on_failure?' do
       it 'returns true' do
