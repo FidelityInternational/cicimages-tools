@@ -1,4 +1,4 @@
-require 'exercise'
+require 'content'
 module Content
   describe Command do
     describe '.exit_on_failure?' do

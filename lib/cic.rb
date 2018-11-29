@@ -74,8 +74,8 @@ module CIC
         end
       end
 
-      def run_command(before_script, env = {})
-        Commandline::Command.new(before_script, env: env).run
+      def run_command(command, env = {})
+        Commandline::Command.new(command, env: env).run
       end
     end
   end
