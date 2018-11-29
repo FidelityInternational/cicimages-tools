@@ -23,6 +23,7 @@ module Commandline
   end
 
   private
+
   def capture_output(io, silent:)
     StringIO.new.tap do |store|
       Thread.new do
@@ -40,5 +41,3 @@ module Commandline
 end
 
 require_relative 'commandline/command'
-
-

@@ -1,7 +1,7 @@
 require 'utils/commandline'
 
 describe Commandline do
-  subject {Object.new.tap {|o| o.extend(described_class)}}
+  subject { Object.new.tap { |o| o.extend(described_class) } }
   describe '#run' do
     it 'gives the return' do
       output = subject.run('garbage')

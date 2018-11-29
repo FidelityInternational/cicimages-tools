@@ -39,7 +39,7 @@ module Track
     end
 
     def default_projects_options
-      {accept: 'application/vnd.github.inertia-preview+json'}
+      { accept: 'application/vnd.github.inertia-preview+json' }
     end
 
     def enable_issues
@@ -56,7 +56,7 @@ module Track
 
     def github_client
       @github_client ||= begin
-        options = {netrc: true, api_endpoint: api_endpoint}
+        options = { netrc: true, api_endpoint: api_endpoint }
         Octokit::Client.new(options).tap do |client|
           raise NetrcMissingError unless File.exist?(client.netrc_file)
 

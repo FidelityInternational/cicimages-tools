@@ -7,7 +7,6 @@ require_relative 'helpers'
 
 module Track
   class Command < Thor
-
     def self.exit_on_failure?
       true
     end
@@ -62,8 +61,8 @@ module Track
       include Commandline::Output
 
       def error_for(error)
-        mapped_errors = {Octokit::Unauthorized => CredentialsError,
-                         Octokit::InvalidRepository => InvalidForkFormatError}
+        mapped_errors = { Octokit::Unauthorized => CredentialsError,
+                          Octokit::InvalidRepository => InvalidForkFormatError }
 
         mapped_errors[error.class] || error
       end

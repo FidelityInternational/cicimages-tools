@@ -1,9 +1,9 @@
 require 'track'
 module Track
   describe Exercise do
-    let(:track) {'track'}
-    let(:name) {'exercise'}
-    let(:path) {Dir.pwd}
+    let(:track) { 'track' }
+    let(:name) { 'exercise' }
+    let(:path) { Dir.pwd }
     subject do
       described_class.new(track: track, name: name, path: path)
     end
@@ -22,7 +22,7 @@ module Track
         end
 
         context 'is not in snake case' do
-          let(:name) {'Name With Spaces'}
+          let(:name) { 'Name With Spaces' }
           it 'is converted to snake case to find the preamble' do
             preamble = 'preamble'
             write_to_file("#{subject.track}/name_with_spaces.md", preamble)
@@ -34,21 +34,21 @@ module Track
     describe '#validate' do
       context 'path and name ok' do
         it 'it does not throw an error' do
-          expect {subject.validate}.to_not raise_error
+          expect { subject.validate }.to_not raise_error
         end
       end
       context 'path does not exist' do
-        let(:path) {'missing'}
+        let(:path) { 'missing' }
         it 'throws an error' do
-          expect {subject.validate}.to raise_error(ArgumentError, subject.path_error_msg)
+          expect { subject.validate }.to raise_error(ArgumentError, subject.path_error_msg)
         end
       end
 
       context 'name empty' do
-        let(:name) {nil}
+        let(:name) { nil }
         it 'throws an error' do
           subject = described_class.new(track: 'track', name: nil, path: 'missing')
-          expect {subject.validate}.to raise_error(ArgumentError, subject.name_error_msg)
+          expect { subject.validate }.to raise_error(ArgumentError, subject.name_error_msg)
         end
       end
     end

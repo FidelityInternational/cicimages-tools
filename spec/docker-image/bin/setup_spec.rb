@@ -1,6 +1,4 @@
-
 describe 'setup' do
-
   include_context :shell_spec, script_root: 'support/bin/'
   let(:stubbed_env) { create_stubbed_env }
 
@@ -10,9 +8,8 @@ describe 'setup' do
         stubbed_env.stub_command('network_exists').returns_exitstatus(1)
         create_network_function = stubbed_env.stub_command('create_network')
 
-        expect(execute_function("init")).to_not have_error
+        expect(execute_function('init')).to_not have_error
         expect(create_network_function).to be_called_with_arguments('cic')
-
       end
     end
   end
@@ -45,6 +42,4 @@ describe 'setup' do
       end
     end
   end
-
-
 end

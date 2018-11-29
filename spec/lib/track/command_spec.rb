@@ -7,33 +7,34 @@ module Track
   describe Command do
     include_context :github_api
 
-    let(:exercise_dir1) {'ex1'.tap {|name| Dir.mkdir(name)}}
-    let(:exercise_dir2) {'ex2'.tap {|name| Dir.mkdir(name)}}
+    let(:exercise_dir1) { 'ex1'.tap { |name| Dir.mkdir(name) } }
+    let(:exercise_dir2) { 'ex2'.tap { |name| Dir.mkdir(name) } }
 
     let(:tracks) do
-      {'tracks' => [
-          {'name' => 'ansible',
-           'exercises' => [
-               {'ex1' => exercise_dir1},
-               {'ex2' => exercise_dir2}
-           ]}
-      ]}
+      { 'tracks' => [
+        { 'name' => 'ansible',
+          'exercises' => [
+            { 'ex1' => exercise_dir1 },
+            { 'ex2' => exercise_dir2 }
+          ] }
+      ] }
     end
 
-    let(:tracks_yaml_path) {"#{Dir.pwd}/tracks/tracks.yaml"}
+    let(:tracks_yaml_path) { "#{Dir.pwd}/tracks/tracks.yaml" }
 
-    let(:track_name) {tracks['tracks'].first['name']}
+    let(:track_name) { tracks['tracks'].first['name'] }
     let(:exercise) do
       exercise = tracks['tracks'].first['exercises'].first
-      Exercise.new(track: "tracks/#{track_name}", name: exercise.keys.first, path: "#{Dir.pwd}/#{exercise.values.first}")
+      Exercise.new(track: "tracks/#{track_name}",
+                   name: exercise.keys.first,
+                   path: "#{Dir.pwd}/#{exercise.values.first}")
     end
 
-    let(:target_repo) {'user/repo'}
-    let(:api_endpoint) {"#{mirage.url}/responses"}
-    let(:api_host) {URI(api_endpoint).host}
+    let(:target_repo) { 'user/repo' }
+    let(:api_endpoint) { "#{mirage.url}/responses" }
+    let(:api_host) { URI(api_endpoint).host }
 
-    let(:netrc_path) {write_to_file("#{Dir.pwd}/.netrc", "machine #{api_host}", mode: 0o600)}
-
+    let(:netrc_path) { write_to_file("#{Dir.pwd}/.netrc", "machine #{api_host}", mode: 0o600) }
 
     before do
       ENV['EXERCISES_PATH'] = Dir.pwd
@@ -48,7 +49,7 @@ module Track
 
     subject do
       described_class.new([], {}, {}, api_endpoint, tracks_yaml_path).tap do |o|
-        o.options = {fork: target_repo}
+        o.options = { fork: target_repo }
       end
     end
 
@@ -57,44 +58,44 @@ module Track
         learning_track = LearningTrack.new(track_name)
         learning_track.exercise(name: 'ex1', path: "#{Dir.pwd}/#{exercise_dir1}")
         learning_track.exercise(name: 'ex2', path: "#{Dir.pwd}/#{exercise_dir2}")
-        expected_tracks = {track_name => learning_track}
+        expected_tracks = { track_name => learning_track }
         expect(subject.tracks).to eq(expected_tracks)
       end
 
       context 'tracks yaml missing' do
         it 'raises an error' do
-          expect {described_class.new([], {}, {}, api_endpoint, 'missing')}.to raise_error(TracksFileNotFoundError)
+          expect { described_class.new([], {}, {}, api_endpoint, 'missing') }.to raise_error(TracksFileNotFoundError)
         end
       end
 
       context 'exercises invalid' do
         let(:tracks) do
-          {'tracks' => [
-              {'name' => 'ansible',
-               'exercises' => [
-                   {'ex1' => 'missing path'}
-               ]}
-          ]}
+          { 'tracks' => [
+            { 'name' => 'ansible',
+              'exercises' => [
+                { 'ex1' => 'missing path' }
+              ] }
+          ] }
         end
 
         it 'raises an error' do
-          expect {subject}.to raise_error(ArgumentError)
+          expect { subject }.to raise_error(ArgumentError)
         end
       end
 
       context 'netrc' do
         context 'netrc missing' do
-          let(:netrc_path) {'missing'}
+          let(:netrc_path) { 'missing' }
           it 'raises and error' do
-            expect {subject.start(track_name)}.to raise_error(NetrcMissingError)
+            expect { subject.start(track_name) }.to raise_error(NetrcMissingError)
           end
         end
 
         context 'netrc missing entry for api host' do
-          let(:netrc_path) {write_to_file("#{Dir.pwd}/.netrc", '', mode: 0o600)}
+          let(:netrc_path) { write_to_file("#{Dir.pwd}/.netrc", '', mode: 0o600) }
           it 'raises and error' do
             expected_error = MissingCredentialsError.new(api_host)
-            expect {subject.start(track_name)}.to raise_error(expected_error)
+            expect { subject.start(track_name) }.to raise_error(expected_error)
           end
         end
       end
@@ -130,7 +131,7 @@ module Track
       end
 
       describe 'project board' do
-        let(:project) {Project::CreateResponse.new}
+        let(:project) { Project::CreateResponse.new }
 
         before do
           allow(projects_api).to be_called.and_return(project)
@@ -144,21 +145,21 @@ module Track
 
         it 'has a todo column' do
           expect(projects_columns_api).to be_called_with(name: 'TODO')
-                                              .and with_uri("/projects/#{project.project_id}/columns")
+            .and with_uri("/projects/#{project.project_id}/columns")
 
           subject.start(track_name)
         end
 
         it 'has a in-progress column' do
           expect(projects_columns_api).to be_called_with(name: 'in-progress')
-                                              .and with_uri("/projects/#{project.project_id}/columns")
+            .and with_uri("/projects/#{project.project_id}/columns")
 
           subject.start(track_name)
         end
 
         it 'has a done column' do
           expect(projects_columns_api).to be_called_with(name: 'done')
-                                              .and with_uri("/projects/#{project.project_id}/columns")
+            .and with_uri("/projects/#{project.project_id}/columns")
 
           subject.start(track_name)
         end
@@ -168,8 +169,8 @@ module Track
         it 'creates issues for each of the exercises' do
           subject.start(track_name)
 
-          issue1 = Issue::CreateRequest.new(data: {title: 'ex1', labels: []}.to_json)
-          issue2 = Issue::CreateRequest.new(data: {title: 'ex2', labels: []}.to_json)
+          issue1 = Issue::CreateRequest.new(data: { title: 'ex1', labels: [] }.to_json)
+          issue2 = Issue::CreateRequest.new(data: { title: 'ex2', labels: [] }.to_json)
           expect(issues_api_requests).to match_array([issue1, issue2])
         end
 
@@ -189,8 +190,8 @@ module Track
 
           subject.start(track_name)
 
-          card1 = Project::Card::CreateRequest.new(data: {content_id: issue1.id, content_type: 'Issue'}.to_json)
-          card2 = Project::Card::CreateRequest.new(data: {content_id: issue2.id, content_type: 'Issue'}.to_json)
+          card1 = Project::Card::CreateRequest.new(data: { content_id: issue1.id, content_type: 'Issue' }.to_json)
+          card2 = Project::Card::CreateRequest.new(data: { content_id: issue2.id, content_type: 'Issue' }.to_json)
           expect(projects_cards_api_requests).to eq([card2, card1])
         end
 
@@ -212,31 +213,31 @@ module Track
           it 'throws an error' do
             repo = Repos::GetResponse.new(fork: false)
             expect(repos_get_api).to be_called.and_return(repo)
-            expect {subject.start(track_name)}.to raise_error(RepoIsNotForkError.new(target_repo))
+            expect { subject.start(track_name) }.to raise_error(RepoIsNotForkError.new(target_repo))
           end
         end
       end
 
       context 'track does exist' do
-        let(:track_name) {'missing_track'}
+        let(:track_name) { 'missing_track' }
         it 'raises an error' do
           expected_error = TrackNotFoundError.new(track_name: track_name,
                                                   track_names: subject.send(:track_names))
-          expect {subject.start(track_name)}.to raise_error(expected_error)
+          expect { subject.start(track_name) }.to raise_error(expected_error)
         end
       end
 
       context 'authorisation fails' do
         it 'raises an error' do
           allow_any_instance_of(Octokit::Client).to receive(:repo).and_raise(Octokit::Unauthorized)
-          expect {subject.start(track_name)}.to raise_error(CredentialsError)
+          expect { subject.start(track_name) }.to raise_error(CredentialsError)
         end
       end
 
       context 'invalid format' do
-        let(:target_repo) {'in-valid'}
+        let(:target_repo) { 'in-valid' }
         it 'raises an error' do
-          expect {subject.start(track_name)}.to raise_error(InvalidForkFormatError)
+          expect { subject.start(track_name) }.to raise_error(InvalidForkFormatError)
         end
       end
     end

@@ -35,10 +35,9 @@ module CIC
 
     def down
       in_cic_directory do
-        Commandline::Command.new("#{courseware_environment} docker-compose down", raise_on_error: true).run
+        Commandline::Command.new("#{courseware_environment} docker-compose down").run
         say ok("Environment cic'd down :)")
       end
-
     rescue Commandline::Command::Error => e
       say error('Failed to cic down the environment see above output for details')
       raise e
@@ -52,19 +51,18 @@ module CIC
     def up
       cic_up_command = "#{courseware_environment} docker-compose up -d --remove-orphans"
       in_cic_directory do
-        before_script = 'before'
-        after_script = 'after'
+        before_script = './before'
+        after_script = './after'
 
-        Commandline::Command.new("./#{before_script}", raise_on_error: true).run if File.exist?(before_script)
-        Commandline::Command.new(cic_up_command, raise_on_error: true).run
-        Commandline::Command.new("./#{after_script}", raise_on_error: true).run if File.exist?(after_script)
+        Commandline::Command.new(before_script).run if File.exist?(before_script)
+        Commandline::Command.new(cic_up_command).run
+        Commandline::Command.new(after_script).run if File.exist?(after_script)
         say ok("Environment cic'd up :)")
       end
     rescue Commandline::Command::Error => e
       say error('Failed to cic up the environment see above output for details')
       raise e
     end
-
 
     no_commands do
       include Commandline::Output

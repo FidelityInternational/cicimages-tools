@@ -175,7 +175,7 @@ module Exercise
     def test_command(command, fail_on_error: true)
       say "running: #{command}" unless quiet?
 
-      result = @result = run(command)
+      result = @result = run(command, silent: quiet?)
 
       if result.error? && fail_on_error
         say error("failed to run: #{command}\n\n#{result}")
@@ -183,7 +183,6 @@ module Exercise
         output.print '.'.green
       else
         say ok("Successfully ran: #{command}")
-        say result.to_s
       end
 
       result

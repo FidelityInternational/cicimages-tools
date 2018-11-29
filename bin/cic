@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#TODO - simple test to check that this command hooks up with the ruby source
+# TODO - simple test to check that this command hooks up with the ruby source
 require_relative '../lib/cic'
 
 CIC::Command.start(ARGV)

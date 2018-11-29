@@ -1,6 +1,4 @@
-
 describe 'init' do
-
   include_context :shell_spec, script_root: 'support/bin/'
 
   describe 'init' do
@@ -19,5 +17,4 @@ describe 'init' do
       expect(File).to exist("#{target_dir}/#{expected_bin_script}")
     end
   end
-
 end

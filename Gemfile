@@ -3,21 +3,20 @@
 source 'https://rubygems.org'
 ruby '> 2.4.0'
 
+gem 'capybara', '2.15.2'
+gem 'chromedriver-helper', '1.2.0'
 gem 'colorize'
 gem 'git'
+gem 'i18n'
 gem 'json'
 gem 'netrc'
 gem 'octokit'
-gem 'thor'
-gem 'capybara', '2.15.2'
-gem 'chromedriver-helper', '1.2.0'
 gem 'page_magic', '>= 1.2.9'
+gem 'thor'
 gem 'watir', '~> 6.1'
-gem 'i18n'
 
 group :development do
   gem 'bump'
-
 
   gem 'jeweler'
   gem 'mirage', '4.0.0.alpha10'

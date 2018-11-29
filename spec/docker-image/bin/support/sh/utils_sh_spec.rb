@@ -1,6 +1,4 @@
-
 describe 'utils.sh' do
-
   include_context :shell_spec, script_root: 'support/bin/support/sh/functions'
 
   describe 'exit_unless_var_defined' do
@@ -38,7 +36,6 @@ describe 'utils.sh' do
         expect(result).to have_error
       end
     end
-
   end
 
   describe 'exit_unless_directory_exists' do
@@ -59,7 +56,5 @@ describe 'utils.sh' do
         expect(result).to have_error
       end
     end
-
   end
-
 end

@@ -1,8 +1,6 @@
 describe 'cic.sh' do
-
   include_context :shell_spec, script_root: 'support/bin/support/sh/functions'
-  let(:stubbed_env) {create_stubbed_env}
-
+  let(:stubbed_env) { create_stubbed_env }
 
   describe '#cic_working_directory' do
     context 'host machine' do
@@ -22,7 +20,6 @@ describe 'cic.sh' do
     end
   end
   describe '#working_directory' do
-
     context 'call made on this host machine' do
       it 'returns the current working directory' do
         expect(execute_function('working_directory').stdout).to eq(Dir.pwd)
@@ -34,7 +31,6 @@ describe 'cic.sh' do
         child_dir = 'first/second'
         stubbed_env.stub_command('pwd').outputs("/mnt/cic_working_dir/#{child_dir}", to: :stdout)
 
-
         FileUtils.mkdir_p(child_dir)
         expected_dir = "#{Dir.pwd}/#{child_dir}"
 
@@ -43,5 +39,4 @@ describe 'cic.sh' do
       end
     end
   end
-
 end
