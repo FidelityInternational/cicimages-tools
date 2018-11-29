@@ -11,7 +11,7 @@ module CIC
     include_context :command
 
     it 'has a track subcommand' do
-      expect(described_class.subcommand_classes['track']).to be(Commands::Track::Command)
+      expect(described_class.subcommand_classes['track']).to be(Track::Command)
     end
 
     describe '#connect' do

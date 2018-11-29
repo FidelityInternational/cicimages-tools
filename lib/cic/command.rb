@@ -2,7 +2,7 @@ require 'thor'
 require 'open3'
 require_relative '../utils/commandline'
 require_relative '../utils/docker'
-require_relative '../commands/track'
+require_relative '../track'
 
 module CIC
   class Command < Thor
@@ -20,7 +20,7 @@ module CIC
     end
 
     desc 'track', 'thing'
-    subcommand 'track', Commands::Track::Command
+    subcommand 'track', Track::Command
 
     desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
     option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
