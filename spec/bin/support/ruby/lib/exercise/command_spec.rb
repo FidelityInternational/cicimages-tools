@@ -1,3 +1,4 @@
+require 'exercise'
 module Exercise
   describe Command do
     describe '.exit_on_failure?' do

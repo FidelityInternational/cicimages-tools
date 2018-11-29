@@ -1,4 +1,4 @@
-require_relative '../../utils/commandline'
+require_relative '../utils/commandline'
 require_relative 'output'
 require 'fileutils'
 require 'yaml'
