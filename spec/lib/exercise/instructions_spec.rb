@@ -1,3 +1,4 @@
+require 'exercise'
 module Exercise
   describe Instructions do
     include_context :command
@@ -125,7 +126,7 @@ module Exercise
 
           context 'command passes' do
             it 'reports the command that has run' do
-              expected_message = "running: #{cmd}\n#{ok("Successfully ran: #{cmd}")}"
+              expected_message = "Successfully ran: #{cmd}"
 
               subject.send(:test_command, cmd)
               expect(subject.output.string.chomp).to include(expected_message)
@@ -135,11 +136,10 @@ module Exercise
           context 'command fails' do
             let(:cmd) { 'bad command' }
             it 'says there has been an error' do
-              allow_any_instance_of(Commandline::Return).to receive(:to_s).and_return('error')
-              expected_message = "running: #{cmd}\n#{error("failed to run: bad command\n\n error")}"
+              expected_message = 'failed to run: bad command'
 
               subject.send(:test_command, cmd)
-              expect(subject.output.string.chomp).to eq(expected_message)
+              expect(subject.output.string.chomp).to include(expected_message)
             end
           end
         end

@@ -35,6 +35,13 @@ module Commandline
         end
       end
 
+      context 'environment variables set' do
+        it 'passes them to the command' do
+          result = described_class.new('echo "hello ${MYVAR}"', env: { 'MYVAR' => 'world' }).run
+          expect(result.stdout).to eq('hello world')
+        end
+      end
+
       it 'returns the result object' do
         command = described_class.new('echo hello')
         result = command.run
