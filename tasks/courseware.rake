@@ -6,7 +6,7 @@ namespace :courseware do
 
   desc 'build course image'
   task :build do
-    run "docker build . -t #{Courseware.tag}", silent: false
+    run "docker build . -t #{Courseware.tag} --build-arg VERSION=#{Courseware.version}", silent: false
   end
 
   desc 'publish course image'
