@@ -49,6 +49,10 @@ module Commands
             end
           end
 
+          context 'a command fails' do
+            pending 'raises an error'
+          end
+
           context '.cic directory missing' do
             it 'raises an error' do
               FileUtils.rm_rf('.cic')
@@ -62,6 +66,12 @@ module Commands
             let(:expected_environment) do
               "CIC_COURSEWARE_VERSION=#{courseware_version} CIC_COURSEWARE_IMAGE=#{courseware_image} CIC_PWD=#{Dir.pwd}"
             end
+          end
+
+          pending 'supports hooks'
+
+          context 'a command fails' do
+            pending 'raises an error'
           end
 
           context '.cic directory missing' do

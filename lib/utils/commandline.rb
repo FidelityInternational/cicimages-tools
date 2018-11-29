@@ -5,12 +5,15 @@ require_relative 'commandline/return'
 require_relative 'commandline/output'
 
 module Commandline
+
+
+
   def capture_output(io, silent: true)
     StringIO.new.tap do |store|
       Thread.new do
         while (line = io.getc)
           store.write(line.dup)
-          print line unless silent || ENV['SILENT']
+          output.write line unless silent || ENV['SILENT']
         end
       end
     end
@@ -30,19 +33,36 @@ module Commandline
     Return.new(stdout: stdout_output.string, stderr: stderr_output.string, exit_code: thread.value.exitstatus)
   end
 
-  # TODO: - think about how to bring the run and execute methods together or give more differentiating names
-  def execute(*commands, fail_message:, pass_message:)
-    fail = false
-    commands.each do |command|
-      result = run command
-      say result.stdout
-      next unless result.error?
 
-      fail = true
-      say result.stderr
-      say error fail_message
+  class Command
+
+    class Error < StandardError
+      attr_reader :command_return
+      def initialize command_return
+        @command_return = command_return
+        super
+      end
     end
-    say ok pass_message unless fail
+
+    include ::Commandline
+    include ::Commandline::Output
+
+    attr_reader :silent, :dir, :raise_on_error, :command
+    def initialize(command, dir: nil, silent: false, raise_on_error: false)
+      @command = command
+      @dir = dir
+      @silent = silent
+      @raise_on_error = raise_on_error
+    end
+
+    alias_method(:run_proxy, :run)
+
+    def run
+      result = super(command, dir: dir, silent: silent)
+      raise Error.new(result) if result.error? && raise_on_error
+
+      result
+    end
   end
 
   private

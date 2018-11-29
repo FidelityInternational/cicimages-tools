@@ -25,6 +25,7 @@ module Commands
 
       desc 'connect [CONTAINER_NAME]', 'log in to a container and see what happened'
       option :command, desc: 'send a command to the container instead of logging in', required: false, default: nil
+
       def connect(container_name)
         command = "-it #{container_id(container_name)} "
         command << (options[:command] || 'bash -l')
@@ -35,10 +36,13 @@ module Commands
 
       def down
         in_cic_directory do
-          execute "#{courseware_environment} docker-compose down",
-                  pass_message: "Environment cic'd down :)",
-                  fail_message: 'Failed to cic down the environment see above output for details'
+          Commandline::Command.new("#{courseware_environment} docker-compose down", raise_on_error: true).run
+          say ok("Environment cic'd down :)")
         end
+
+      rescue Commandline::Command::Error => e
+        say error('Failed to cic down the environment see above output for details')
+        raise e
       end
 
       desc 'start IMAGE_TAG', 'log in to a container and see what happened'
@@ -49,20 +53,19 @@ module Commands
       def up
         cic_up_command = "#{courseware_environment} docker-compose up -d --remove-orphans"
         in_cic_directory do
-          commands = []
           before_script = 'before'
-          commands << "./#{before_script}" if File.exist?(before_script)
-
-          commands << cic_up_command
-
           after_script = 'after'
-          commands << "./#{after_script}" if File.exist?(after_script)
 
-          execute(*commands,
-                  pass_message: "Environment cic'd up :)",
-                  fail_message: 'Failed to cic up the environment see above output for details')
+          Commandline::Command.new(before_script, raise_on_error: true).run if File.exist?(before_script)
+          Commandline::Command.new(cic_up_command, raise_on_error: true).run
+          Commandline::Command.new(after_script, raise_on_error: true).run if File.exist?(after_script)
+          say ok("Environment cic'd up :)")
         end
+      rescue Commandline::Command::Error => e
+        say error('Failed to cic up the environment see above output for details')
+        raise e
       end
+
 
       no_commands do
         include Commandline::Output
