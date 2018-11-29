@@ -44,7 +44,7 @@ module CIC
       describe '#down' do
         it_behaves_like :command_wrapper, 'docker-compose down', :down do
           let(:expected_environment) do
-            { 'CIC_PWD' => "#{Dir.pwd}/.cic" }
+            { CIC_PWD: "#{Dir.pwd}/.cic" }
           end
         end
 
@@ -63,7 +63,7 @@ module CIC
       describe '#up' do
         it_behaves_like :command_wrapper, 'docker-compose up -d --remove-orphans', :up do
           let(:expected_environment) do
-            { 'CIC_PWD' => "#{Dir.pwd}/.cic" }
+            { CIC_PWD: "#{Dir.pwd}/.cic" }
           end
         end
 
